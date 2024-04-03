@@ -1,1 +1,652 @@
+openapi: 3.0.3
+info:
+  title: WaSa Project  - OpenAPI 3.0
+  description: |-
+    This is a project for a web application 
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://petstore3.swagger.io/api/v3
+tags:
+  - name: login
+    description: the login
+  - name: user
+    description: Everything about the users
+  - name: photo
+    description: Everything about the fotos
+  - name: like
+    description: Everything about likes
+  - name: comment
+    description: Everything about comments
+  - name: search
+    description: Everything about the search operation
+  - name: stream
+    description: The stream homepage
+
+#==========================================================================================================
+paths:
+  /session:
+    post:
+      tags: ["login"]
+      summary: Logs in the user
+      description: |-
+        If the user does not exist, it will be created,
+        and an identifier is returned.
+        If the user exists, the user identifier is returned.
+      operationId: doLogin
+      requestBody:
+        description: User details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Maria
+                  pattern: 'ˆ.*?$'
+                  minLength: 3
+                  maxLength: 16
+        required: true
+      responses:
+        '201':
+          description: User log-in action successful
+          content:
+            application/json:
+              schema:
+               type: object
+               properties:
+                  identifier: 
+                    type: string
+                    example: "abcdef012345"
+#==========================================================================================================
+              
+  /user/{id}:
+    put:
+      tags:
+        - user
+      summary: Set my username
+      description: The user can set your own username
+      operationId: setMyUserName
+      parameters:
+        - $ref: '#/components/parameters/user_id'      
+        - $ref: '#/components/parameters/username'   
+      
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/users' 
+        '400':
+            description: Invalid ID supplied
+        '401':
+          description: User unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception
+        '500':
+          description: Internal Server Error
+
+#==========================================================================================================
+          
+    
+    get:
+      tags: 
+        - search
+      summary: Get a profile 
+      description: The user can see a user Profile of onther User (if the user isn´t banned)
+      operationId: getUserProfile
+      parameters:
+        -  $ref: '#/components/parameters/user_id'      
+        -  $ref: '#/components/parameters/username'
+        
+      responses:
+       '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/UserProfile' 
+       '400':
+          description: Invalid ID supplied
+       '401':
+          description: User unauthorized
+       '403':
+          description: Forbidden
+       '404':
+          description: User not found
+       '422':
+          description: Validation exception
+       '500':
+          description: Internal Server Error
+#==========================================================================================================
+          
+  /user/{id}/UploadPhoto:
+    post:
+      tags:
+        - photos
+      summary: Upload a new foto
+      operationId: uploadPhoto
+      parameters:
+      -  $ref: '#/components/parameters/user_id'      
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/raw_photo'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/photos' 
+        '400':
+          description: Invalid ID supplied
+        '401':
+          description: User unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception
+        '500':
+          description: Internal Server Error
+          
+#==========================================================================================================        
+    
+  /user/{id}/photos/{idPhoto}: 
+      
+      get:
+        tags:
+         - photos
+        summary: A user can access a photo if he/she's the owner or if he/she wasn't banned by the owner
+        operationId: getPhoto
+        parameters:
+           -  $ref: '#/components/parameters/user_id'      
+           -  $ref: '#/components/parameters/id_photo' 
+        responses:
+           '200':
+             description: Successful operation
+           '400':
+             description: Invalid ID supplied
+           '404':
+             description: User not found
+           '422':
+             description: Validation exception         
+      
+      
+      delete:
+        tags:
+          - photos
+        summary: Delete a Photo
+        operationId: deletePhoto
+        parameters:
+          -  $ref: '#/components/parameters/user_id'      
+          -  $ref: '#/components/parameters/id_photo' 
+        responses:
+          '200':
+            description: Successful operation
+          '400':
+            description: Invalid ID supplied
+          '404':
+            description: User not found
+          '422':
+            description: Validation exception
+            
+#==========================================================================================================
+  
+  /user/{id}/followers/{follower_id}:
+    post:
+      tags:
+       - user
+      summary: Follow a new user
+      description: Another user is followed by the user of the path
+      operationId: followUser
+      parameters:
+      -   $ref: '#/components/parameters/user_id' 
+      -   $ref: '#/components/parameters/follower_id'  
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception
+    
+    delete:
+      tags:
+        - user
+      summary: Defollow a user
+      description: You delete a specific user from your following list
+      operationId: unfollowUser
+      parameters:
+      -   $ref: '#/components/parameters/user_id'
+      -   $ref: '#/components/parameters/follower_id' 
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception
+ #==========================================================================================================
+ 
+  /user/{id}/ban/{ban_id}:
+    post:
+      tags:
+        - user
+      summary: ban a new user
+      description: A user can ban onther user
+      operationId: banUser
+      parameters:
+      -   $ref: '#/components/parameters/user_id'
+      -   $ref: '#/components/parameters/ban_id'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception
+    
+    delete:
+      tags:
+        - user
+      summary: Unban a user
+      description: You delete a specific user from your banned list
+      operationId: unbanUser
+      parameters:
+      -   $ref: '#/components/parameters/user_id'
+      -   $ref: '#/components/parameters/ban_id'
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception  
+ #==========================================================================================================
+
+
+  /user/{id}/home:
+    get:
+      tags: 
+        - stream
+      summary: Get a strema 
+      description: The user gets a stream of photos
+      operationId: getMyStream
+      parameters:
+        - $ref: '#/components/parameters/user_id'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/stream' 
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception
+ #==========================================================================================================
+ 
+ 
+
+   
+    
+  /user/{id}/photos/{idPhoto}/likes:
+      post:
+        tags:
+          - like
+        summary: like a Photo
+        operationId: likePhoto
+        parameters:
+          - name: id
+            in: path
+            description: the id of the user who want to like a photo
+            required: true
+            schema:
+              type: integer
+              example: 23
+          - name: idPhoto
+            in: path
+            description: the photo that must to be liked
+            required: true
+            schema:
+              type: integer
+              example: 51
+        responses:
+            '200':
+              description: Successful operation
+              content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/photos'             
+            '400':
+              description: Invalid ID supplied
+            '404':
+              description: User not found
+            '422':
+              description: Validation exception
+
+      delete:
+        tags:
+          - like
+        summary: unlike a Photo
+        operationId: unlikePhoto
+        parameters:
+          - name: id
+            in: path
+            description: the id of the user who want to like a photo
+            required: true
+            schema:
+              type: integer
+              example: 23
+          - name: idPhoto
+            in: path
+            description: the photo that must to be uniked
+            required: true
+            schema:
+              type: integer
+              example: 51
+
+        responses:
+            '200':
+              description: Successful operation
+              content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/photos'             
+            '400':
+              description: Invalid ID supplied
+            '404':
+              description: User not found
+            '422':
+              description: Validation exception  
+  
+  /user/{id}/photos/{idPhoto}/comment:
+      post:
+        tags:
+          - comment
+        summary: comment a Photo
+        operationId: commentPhoto
+        parameters:
+          - name: id
+            in: path
+            description: the id of the user who want to comment a photo
+            required: true
+            schema:
+              type: integer
+              example: 23
+          - name: idPhoto
+            in: path
+            description: the photo that must to be commented
+            required: true
+            schema:
+              type: integer
+              example: 51
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: string
+                    description: the comment
+                    example: "Questa foto e´ bellissima"
+        responses:
+            '200':
+              description: Successful operation
+              content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/photos'             
+            '400':
+              description: Invalid ID supplied
+            '404':
+              description: User not found
+            '422':
+              description: Validation exception
+        
+      delete:
+        tags:
+          - comment
+        summary: delete a comment of a Photo
+        operationId: uncommentPhoto
+        parameters:
+          - name: id
+            in: path
+            description: the id of the user who want to uncomment a photo
+            required: true
+            schema:
+              type: integer
+              example: 23
+          - name: idPhoto
+            in: path
+            description: the id of the photo that must to be uncommented
+            required: true
+            schema:
+              type: integer
+              example: 51
+          - name: idComment
+            in: query
+            description: the id of the comment that must to be deleted
+            required: true
+            schema:
+              type: integer
+              example: 358458
+        responses:
+            '200':
+              description: Successful operation
+              content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/photos'             
+            '400':
+              description: Invalid ID supplied
+            '404':
+              description: User not found
+            '422':
+              description: Validation exception  
+  
+  
+  
+#____________________________________________________________________________________________________________________________________ 
+  
+
+components:
+  
+  parameters:
+    
+    user_id:
+         name: id
+         in: path
+         description: the id of the user who want to delete the photo
+         required: true
+         schema:
+           type: integer
+           example: 23
+      
+    follower_id:
+         name: follower_id
+         in: path
+         description: the id of the user who we want to follow/defollow
+         required: true
+         schema:
+           type: integer
+           example: 23 
+    
+    ban_id:
+         name: ban_id
+         in: path
+         description: the id of the user who we want to follow/defollow
+         required: true
+         schema:
+           type: integer
+           example: 23     
+    
+    username:
+          name: newName
+          in: query
+          description: the new name to set
+          required: true
+          schema:
+              description: String between 3-16 characters
+              type: string
+              pattern: '^[a-zA-Z0-9]+$'
+              example: "Mangione82"
+              minLength: 3
+              maxLength: 16
+              readOnly: true
+  
+    id_photo:
+      name: idPhoto
+      in: path
+      description: the photo that must to be deleted
+      required: true
+      schema:
+          type: integer
+          example: 51
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ #____________________________________________________________________________________________________________________________________  
+  
+  
+  
+  schemas:
+
+    users:
+      type: object
+      properties:
+        id:
+          description: The id of the user
+          type: integer
+          example: 26
+        username:
+          description: String between 3-16 characters
+          type: string
+          pattern: '^[a-zA-Z0-9]+$'
+          example: "CiaoBello"
+          minLength: 3
+          maxLength: 16
+          readOnly: true
+         
+
+#==========================================================================================================
+
+
+    photos:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1524
+        date:
+          type: string
+          format: date-time
+          example: "2024-04-02T12:00:00Z"
+        owner:
+          $ref: '#/components/schemas/users' 
+        likes:
+          type: integer
+          example: 124
+          description: the number of likes
+        comments:
+          type: integer
+          example: 23
+          description: the number of comments
+        image:
+          $ref: '#/components/schemas/raw_photo' 
+#==========================================================================================================
+
+
+    raw_photo:
+      description: the raw file of the photo
+      type: string
+      format: binary
+      example: "00110011110"
+      minLength: 0
+      maxLength: 1500      
+#==========================================================================================================
+
+
+    UserProfile:
+      type: object
+      properties:
+        UserId:
+          type: integer
+          format: int64
+          example: 100000
+        username:
+          type: string
+          example: DajeRoma
+        followers:
+          type: integer
+          format: int64
+          minLength: 0
+          maxLength: 5000
+          example: 500
+        following:
+          type: integer
+          format: int64
+          minLength: 0
+          maxLength: 5000
+          example: 500
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/photos'
+
+    stream:
+      description: the stream that the user get on the homepage
+      type: string
+      format: binary
+      example: "0100001"
+      minLength: 30
+      maxLength: 1500
+      
+        
+        
+        
+        
+        
 
