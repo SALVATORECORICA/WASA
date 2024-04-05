@@ -576,7 +576,6 @@ components:
         owner:
           $ref: '#/components/schemas/users' 
         likes:
-          description: how man like had
           type: integer
           example: 124
           description: Number of likes on a photo
