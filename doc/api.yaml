@@ -345,6 +345,7 @@ paths:
         tags:
           - like
         summary: like a Photo
+        description: The user can like another photo
         operationId: likePhoto
         parameters:
           - $ref: '#/components/parameters/user_id'
@@ -563,19 +564,22 @@ components:
       type: object
       properties:
         id:
+          description: the id of the photo
           type: integer
           format: int64
           example: 1524
         date:
+          description: the date when the photo was uploaded 
           type: string
           format: date-time
           example: "2024-04-02T12:00:00Z"
         owner:
           $ref: '#/components/schemas/users' 
         likes:
+          description: how man like had
           type: integer
           example: 124
-          description: the number of likes
+          description: Number of likes on a photo
         comments:
           type: integer
           example: 23
