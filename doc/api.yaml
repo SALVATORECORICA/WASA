@@ -630,27 +630,25 @@ components:
     UserProfile:
       type: object
       properties:
-        UserId:
-          type: integer
-          format: int64
-          example: 100000
-        username:
-          type: string
-          example: DajeRoma
+        User:
+          $ref: '#/components/schemas/users' 
         followers:
-          type: integer
-          format: int64
-          minLength: 0
-          maxLength: 5000
-          example: 500
+          type: array
+          minItems: 0
+          maxItems: 99
+          items:
+                $ref: '#/components/schemas/users'
+
         following:
-          type: integer
-          format: int64
-          minLength: 0
-          maxLength: 5000
-          example: 500
+          type: array
+          minItems: 0
+          maxItems: 99
+          items:
+                $ref: '#/components/schemas/users'
         photos:
           type: array
+          minItems: 0
+          maxItems: 10
           items:
             $ref: '#/components/schemas/photos'
 #==========================================================================================================
