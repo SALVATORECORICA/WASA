@@ -135,7 +135,7 @@ paths:
   /user/{id}/UploadPhoto:
     post:
       tags:
-        - photos
+        - photo
       summary: Upload a new foto
       operationId: uploadPhoto
       parameters:
@@ -174,7 +174,7 @@ paths:
       
       get:
         tags:
-         - photos
+         - photo
         summary: A user can access a photo if he/she's the owner or if he/she wasn't banned by the owner
         operationId: getPhoto
         parameters:
@@ -198,7 +198,7 @@ paths:
       
       delete:
         tags:
-          - photos
+          - photo
         summary: Delete a Photo
         operationId: deletePhoto
         parameters:
