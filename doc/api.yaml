@@ -80,11 +80,11 @@ paths:
               schema:
                   $ref: '#/components/schemas/users' 
         '400':
-            description: Invalid ID supplied
+             $ref: '#/components/responses/Invalid_ID_supplied'
         '401':
-          description: User unauthorized
+              $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
+              $ref: '#/components/responses/Forbidden'
         '404':
           description: User not found
         '422':
@@ -665,7 +665,96 @@ components:
  
  
  
- #____________________________________________________________________________________________________________________________________         
+ #____________________________________________________________________________________________________________________________________   
+ 
+ 
+ 
+  responses:
+  
+    no_content:
+      description: Response associated to the 204 http status (No content to send for this reques)
+    
+    partial_content:
+      description: Response associated to the 206 http status (The requested resource has partial info)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserProfile"
+    
+    Unauthorized:
+      description: Response associated to the 401 Unauthorized request 
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Non sei autorizzato ad accedere a questa risorsa."
+            
+    Forbidden:
+      description: Response associated to the 403 Forbidden request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Non hai i permessi necessari per accedere a questa risorsa."
+    Not_Found:
+      description: Response associated to the 404 Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "La risorsa richiesta non è stata trovata."
+
+    Invalid_ID_supplied:
+        description: Response associated to the 400 Invalid ID supplied
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifier: 
+                  type: string
+                  example: "abcdef012345"
+    
+    Unprocessable_Entity:
+      description: Response associated to the 422 Unprocessable Entity
+      content:
+       application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "La richiesta non può essere elaborata a causa di dati non validi."
+            errors:
+              type: array
+              items:
+                type: string
+                example: ["Campo 'email' non può essere vuoto.", "Campo 'password' deve essere di almeno 8 caratteri."]
+      
+    Internal_Server_Error:
+      description: Response associated to the 500 Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Si è verificato un errore interno del server."
+              error_code:
+                type: string
+                example: "SERVER_ERROR_500"
+
+
         
   securitySchemes:
     bearerAuth:
