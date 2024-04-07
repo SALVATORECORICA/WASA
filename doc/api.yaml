@@ -86,11 +86,11 @@ paths:
         '403':
               $ref: '#/components/responses/Forbidden'
         '404':
-          description: User not found
+              $ref: '#/components/responses/Not_Found'
         '422':
-          description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
         '500':
-          description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
       
       security:
         - bearerAuth: [] 
@@ -116,17 +116,17 @@ paths:
               schema:
                   $ref: '#/components/schemas/UserProfile' 
        '400':
-          description: Invalid ID supplied
+            $ref: '#/components/responses/Invalid_ID_supplied'
        '401':
-          description: User unauthorized
+            $ref: '#/components/responses/Unauthorized'
        '403':
-          description: Forbidden
+            $ref: '#/components/responses/Forbidden'
        '404':
-          description: User not found
+            $ref: '#/components/responses/Not_Found'
        '422':
-          description: Validation exception
+            $ref: '#/components/responses/Unprocessable_Entity'
        '500':
-          description: Internal Server Error
+            $ref: '#/components/responses/Internal_Server_Error'
           
       security:
         - bearerAuth: [] 
@@ -153,17 +153,17 @@ paths:
               schema:
                   $ref: '#/components/schemas/photos' 
         '400':
-          description: Invalid ID supplied
+             $ref: '#/components/responses/Invalid_ID_supplied'
         '401':
-          description: User unauthorized
+              $ref: '#/components/responses/Unauthorized'
         '403':
-          description: Forbidden
+              $ref: '#/components/responses/Forbidden'
         '404':
-          description: User not found
+              $ref: '#/components/responses/Not_Found'
         '422':
-          description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
         '500':
-          description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
           
       security:
         - bearerAuth: [] 
@@ -182,15 +182,23 @@ paths:
            -  $ref: '#/components/parameters/photo_id' 
         responses:
            '200':
-             description: Successful operation
+            description: Successful operation
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/photos' 
            '400':
-             description: Invalid ID supplied
+              $ref: '#/components/responses/Invalid_ID_supplied'
+           '401':
+               $ref: '#/components/responses/Unauthorized'
+           '403':
+              $ref: '#/components/responses/Forbidden'
            '404':
-             description: User not found
+              $ref: '#/components/responses/Not_Found'
            '422':
-             description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
            '500':
-              description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
         
         security:
           - bearerAuth: [] 
@@ -206,15 +214,19 @@ paths:
           -  $ref: '#/components/parameters/photo_id' 
         responses:
           '200':
-            description: Successful operation
+              $ref: '#/components/responses/success'
           '400':
-            description: Invalid ID supplied
+              $ref: '#/components/responses/Invalid_ID_supplied'
+          '401':
+               $ref: '#/components/responses/Unauthorized'
+          '403':
+              $ref: '#/components/responses/Forbidden'
           '404':
-            description: User not found
+              $ref: '#/components/responses/Not_Found'
           '422':
-            description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
           '500':
-              description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
     
         security:
          - bearerAuth: [] 
@@ -232,16 +244,20 @@ paths:
         -   $ref: '#/components/parameters/user_id' 
         -   $ref: '#/components/parameters/follower_id'  
       responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: User not found
-        '422':
-          description: Validation exception
-        '500':
-          description: Internal Server Error
+          '200':
+              $ref: '#/components/responses/success'
+          '400':
+              $ref: '#/components/responses/Invalid_ID_supplied'
+          '401':
+               $ref: '#/components/responses/Unauthorized'
+          '403':
+              $ref: '#/components/responses/Forbidden'
+          '404':
+              $ref: '#/components/responses/Not_Found'
+          '422':
+              $ref: '#/components/responses/Unprocessable_Entity'
+          '500':
+              $ref: '#/components/responses/Internal_Server_Error'
   
       security:
         - bearerAuth: [] 
@@ -256,16 +272,20 @@ paths:
         -   $ref: '#/components/parameters/user_id'
         -   $ref: '#/components/parameters/follower_id' 
       responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: User not found
-        '422':
-          description: Validation exception
-        '500':
-           description: Internal Server Error
+          '200':
+              $ref: '#/components/responses/success'
+          '400':
+              $ref: '#/components/responses/Invalid_ID_supplied'
+          '401':
+               $ref: '#/components/responses/Unauthorized'
+          '403':
+              $ref: '#/components/responses/Forbidden'
+          '404':
+              $ref: '#/components/responses/Not_Found'
+          '422':
+              $ref: '#/components/responses/Unprocessable_Entity'
+          '500':
+              $ref: '#/components/responses/Internal_Server_Error'
       
       security:
         - bearerAuth: [] 
@@ -282,16 +302,20 @@ paths:
       -   $ref: '#/components/parameters/user_id'
       -   $ref: '#/components/parameters/ban_id'
       responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: User not found
-        '422':
-          description: Validation exception
-        '500':
-           description: Internal Server Error
+          '200':
+              $ref: '#/components/responses/success'
+          '400':
+              $ref: '#/components/responses/Invalid_ID_supplied'
+          '401':
+               $ref: '#/components/responses/Unauthorized'
+          '403':
+              $ref: '#/components/responses/Forbidden'
+          '404':
+              $ref: '#/components/responses/Not_Found'
+          '422':
+              $ref: '#/components/responses/Unprocessable_Entity'
+          '500':
+              $ref: '#/components/responses/Internal_Server_Error'
       
       security:
         - bearerAuth: [] 
@@ -306,16 +330,20 @@ paths:
       -   $ref: '#/components/parameters/user_id'
       -   $ref: '#/components/parameters/ban_id'
       responses:
-        '200':
-          description: Successful operation
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: User not found
-        '422':
-          description: Validation exception
-        '500':
-          description: Internal Server Error
+          '200':
+              $ref: '#/components/responses/success'
+          '400':
+              $ref: '#/components/responses/Invalid_ID_supplied'
+          '401':
+               $ref: '#/components/responses/Unauthorized'
+          '403':
+              $ref: '#/components/responses/Forbidden'
+          '404':
+              $ref: '#/components/responses/Not_Found'
+          '422':
+              $ref: '#/components/responses/Unprocessable_Entity'
+          '500':
+              $ref: '#/components/responses/Internal_Server_Error'
       
       security:
         - bearerAuth: [] 
@@ -339,13 +367,17 @@ paths:
               schema:
                   $ref: '#/components/schemas/stream' 
         '400':
-          description: Invalid ID supplied
+              $ref: '#/components/responses/Invalid_ID_supplied'
+        '401':
+               $ref: '#/components/responses/Unauthorized'
+        '403':
+              $ref: '#/components/responses/Forbidden'
         '404':
-          description: User not found
+              $ref: '#/components/responses/Not_Found'
         '422':
-          description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
         '500':
-          description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
   
       security:
         - bearerAuth: [] 
@@ -373,13 +405,17 @@ paths:
                     schema:
                       $ref: '#/components/schemas/photos'             
             '400':
-              description: Invalid ID supplied
+              $ref: '#/components/responses/Invalid_ID_supplied'
+            '401':
+               $ref: '#/components/responses/Unauthorized'
+            '403':
+              $ref: '#/components/responses/Forbidden'
             '404':
-              description: User not found
+              $ref: '#/components/responses/Not_Found'
             '422':
-              description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
-              description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
     
         security:
         - bearerAuth: [] 
@@ -401,13 +437,17 @@ paths:
                     schema:
                       $ref: '#/components/schemas/photos'             
             '400':
-              description: Invalid ID supplied
+              $ref: '#/components/responses/Invalid_ID_supplied'
+            '401':
+               $ref: '#/components/responses/Unauthorized'
+            '403':
+              $ref: '#/components/responses/Forbidden'
             '404':
-              description: User not found
+              $ref: '#/components/responses/Not_Found'
             '422':
-              description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
-              description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
         
         security:
         - bearerAuth: [] 
@@ -437,13 +477,17 @@ paths:
                     schema:
                       $ref: '#/components/schemas/photos'             
             '400':
-              description: Invalid ID supplied
+              $ref: '#/components/responses/Invalid_ID_supplied'
+            '401':
+               $ref: '#/components/responses/Unauthorized'
+            '403':
+              $ref: '#/components/responses/Forbidden'
             '404':
-              description: User not found
+              $ref: '#/components/responses/Not_Found'
             '422':
-              description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
-              description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
         
         security:
         - bearerAuth: [] 
@@ -467,13 +511,17 @@ paths:
                     schema:
                       $ref: '#/components/schemas/photos'             
             '400':
-              description: Invalid ID supplied
+              $ref: '#/components/responses/Invalid_ID_supplied'
+            '401':
+               $ref: '#/components/responses/Unauthorized'
+            '403':
+              $ref: '#/components/responses/Forbidden'
             '404':
-              description: User not found
+              $ref: '#/components/responses/Not_Found'
             '422':
-              description: Validation exception
+              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
-              description: Internal Server Error
+              $ref: '#/components/responses/Internal_Server_Error'
               
         security:
         - bearerAuth: [] 
@@ -670,6 +718,17 @@ components:
  
  
   responses:
+  
+    success:
+      description: Response associated to the 200 http status. Operation successed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Operazione effettuata con successo"
   
     no_content:
       description: Response associated to the 204 http status (No content to send for this reques)
