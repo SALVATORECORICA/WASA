@@ -141,7 +141,7 @@ paths:
                 $ref: '#/components/schemas/raw_photo'
       responses:
         '201':
-             $ref: '#/components/responses/photos'   
+             $ref: '#/components/responses/photo'   
         '400':
              $ref: '#/components/responses/Invalid_ID_supplied'
         '401':
@@ -170,7 +170,7 @@ paths:
            -  $ref: '#/components/parameters/photo_id' 
         responses:
            '200':
-              $ref: '#/components/responses/photos'   
+              $ref: '#/components/responses/photo'   
            '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
            '401':
@@ -506,7 +506,7 @@ paths:
           - $ref: '#/components/parameters/comment_id'
         responses:
             '200':
-              $ref: '#/components/responses/photos'               
+              $ref: '#/components/responses/comments'               
             '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
             '401':
@@ -642,7 +642,7 @@ components:
       example:
         username:: "MarioKart1990"
 
-    photos:
+    photo:
       type: object
       description: It´s a complete photo 
       properties:
@@ -714,16 +714,29 @@ components:
           minItems: 0
           maxItems: 10
           items:
-            $ref: '#/components/schemas/photos'
+            $ref: '#/components/schemas/photo'
 #==========================================================================================================
 
     stream:
-      description: the stream that the user get on the homepage
-      type: string
-      format: binary
-      example: "0100001"
-      minLength: 30
-      maxLength: 1500
+      description: Represents a list of photos
+      type: object
+      properties:
+        photos_list:
+          description: List of photos
+          type: array
+          minItems: 0
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/photo"
+          example:
+           id:       1824
+           date:    "2024-04-02T12:00:00Z"     
+           owner:
+            - id: 152403
+            - username: "Billiballo"
+           likes:    20
+           comments: 35
+           image:   "00110011110"
       
 
  
@@ -821,12 +834,12 @@ components:
                   $ref: '#/components/schemas/users' 
 
     
-    photos:
+    photo:
       description: Successful operation
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/photos' 
+            $ref: '#/components/schemas/photo' 
     
     UserProfile:
       description: Successful operation
