@@ -72,7 +72,11 @@ paths:
       operationId: setMyUserName
       parameters:
         - $ref: '#/components/parameters/user_id'      
-        - $ref: '#/components/parameters/username'   
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/username'
       
       responses:
         '200':
@@ -653,6 +657,21 @@ components:
           maxLength: 16
           readOnly: true
   #==========================================================================================================
+  
+  
+    username:
+      description: It's a user's nickname
+      type: object
+      properties:
+        username:
+          description: Any string between 3-16 characters
+          type: string
+          minLength: 3
+          maxLength: 16
+          pattern: '^.*?$'
+          example: "SuperMario"
+      example:
+        username:: "MarioKart1990"
 
     photos:
       type: object
@@ -888,7 +907,7 @@ components:
                 $ref: '#/components/schemas/users'
 
 
- #_________________________________________________________________________________________________________________________________       
+        
   securitySchemes:
     bearerAuth:
       type: http
