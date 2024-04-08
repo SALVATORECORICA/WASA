@@ -79,7 +79,7 @@ paths:
               $ref: '#/components/schemas/username'
       
       responses:
-        '200':
+        '201':
              $ref: '#/components/responses/users'  
         '400':
              $ref: '#/components/responses/Invalid_ID_supplied'
@@ -140,7 +140,7 @@ paths:
             schema:
                 $ref: '#/components/schemas/raw_photo'
       responses:
-        '200':
+        '201':
              $ref: '#/components/responses/photos'   
         '400':
              $ref: '#/components/responses/Invalid_ID_supplied'
@@ -224,7 +224,7 @@ paths:
         -   $ref: '#/components/parameters/user_id' 
         -   $ref: '#/components/parameters/follower_id'  
       responses:
-          '200':
+          '201':
               $ref: '#/components/responses/success'
           '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
@@ -278,7 +278,7 @@ paths:
       -   $ref: '#/components/parameters/user_id'
       -   $ref: '#/components/parameters/ban_id'
       responses:
-          '200':
+          '201':
               $ref: '#/components/responses/success'
           '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
@@ -391,7 +391,7 @@ paths:
           - $ref: '#/components/parameters/user_id'
           - $ref: '#/components/parameters/photo_id'
         responses:
-            '200':
+            '201':
               $ref: '#/components/responses/success'              
             '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
@@ -455,7 +455,7 @@ paths:
               schema:
                   $ref: '#/components/schemas/photo_comment'
         responses:
-            '200':
+            '201':
               $ref: '#/components/responses/comments'             
             '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
