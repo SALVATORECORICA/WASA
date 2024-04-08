@@ -22,6 +22,8 @@ tags:
     description: Everything about the search operation
   - name: stream
     description: The stream homepage
+  - name: ban
+    description: Everything about ban users
 
 #==========================================================================================================
 paths:
@@ -74,11 +76,7 @@ paths:
       
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                  $ref: '#/components/schemas/users' 
+             $ref: '#/components/responses/users'  
         '400':
              $ref: '#/components/responses/Invalid_ID_supplied'
         '401':
@@ -110,11 +108,7 @@ paths:
         
       responses:
        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                  $ref: '#/components/schemas/UserProfile' 
+            $ref: '#/components/responses/UserProfile'   
        '400':
             $ref: '#/components/responses/Invalid_ID_supplied'
        '401':
@@ -147,11 +141,7 @@ paths:
                 $ref: '#/components/schemas/raw_photo'
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                  $ref: '#/components/schemas/photos' 
+             $ref: '#/components/responses/photos'   
         '400':
              $ref: '#/components/responses/Invalid_ID_supplied'
         '401':
@@ -182,11 +172,7 @@ paths:
            -  $ref: '#/components/parameters/photo_id' 
         responses:
            '200':
-            description: Successful operation
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/photos' 
+              $ref: '#/components/responses/photos'   
            '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
            '401':
@@ -294,7 +280,7 @@ paths:
   /user/{id}/ban/{ban_id}:
     post:
       tags:
-        - user
+        - ban
       summary: ban a new user
       description: A user can ban onther user
       operationId: banUser
@@ -322,7 +308,7 @@ paths:
     
     delete:
       tags:
-        - user
+        - ban
       summary: Unban a user
       description: You delete a specific user from your banned list
       operationId: unbanUser
@@ -346,7 +332,36 @@ paths:
               $ref: '#/components/responses/Internal_Server_Error'
       
       security:
-        - bearerAuth: [] 
+        - bearerAuth: []
+        
+  
+    get:
+      tags:
+        - ban
+      summary: banned users
+      description: See the list of banned users
+      operationId: ListBanUser
+      parameters:
+      -   $ref: '#/components/parameters/user_id'
+      -   $ref: '#/components/parameters/ban_id'
+      responses:
+          '200':
+              $ref: '#/components/responses/banned_users'
+          '400':
+              $ref: '#/components/responses/Invalid_ID_supplied'
+          '401':
+               $ref: '#/components/responses/Unauthorized'
+          '403':
+              $ref: '#/components/responses/Forbidden'
+          '404':
+              $ref: '#/components/responses/Not_Found'
+          '422':
+              $ref: '#/components/responses/Unprocessable_Entity'
+          '500':
+              $ref: '#/components/responses/Internal_Server_Error'
+      
+      security:
+        - bearerAuth: []
  #==========================================================================================================
 
 
@@ -361,11 +376,7 @@ paths:
         - $ref: '#/components/parameters/user_id'
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                  $ref: '#/components/schemas/stream' 
+              $ref: '#/components/responses/stream'   
         '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
         '401':
@@ -399,11 +410,7 @@ paths:
           - $ref: '#/components/parameters/photo_id'
         responses:
             '200':
-              description: Successful operation
-              content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/photos'             
+              $ref: '#/components/responses/success'              
             '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
             '401':
@@ -431,11 +438,7 @@ paths:
 
         responses:
             '200':
-              description: Successful operation
-              content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/photos'             
+              $ref: '#/components/responses/success'             
             '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
             '401':
@@ -450,7 +453,11 @@ paths:
               $ref: '#/components/responses/Internal_Server_Error'
         
         security:
-        - bearerAuth: [] 
+        - bearerAuth: []
+        
+        
+        
+
 
  #==========================================================================================================
   
@@ -471,11 +478,7 @@ paths:
                   $ref: '#/components/schemas/photo_comment'
         responses:
             '200':
-              description: Successful operation
-              content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/photos'             
+              $ref: '#/components/responses/comments'             
             '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
             '401':
@@ -490,7 +493,31 @@ paths:
               $ref: '#/components/responses/Internal_Server_Error'
         
         security:
-        - bearerAuth: [] 
+        - bearerAuth: []
+  
+      get:
+        tags:
+          - comment
+        summary: get comment of Photo
+        operationId: getCommentPhoto
+        parameters:
+          - $ref: '#/components/parameters/user_id'
+          - $ref: '#/components/parameters/photo_id'
+        responses:
+            '200':
+              $ref: '#/components/responses/comments'             
+            '400':
+              $ref: '#/components/responses/Invalid_ID_supplied'
+            '401':
+               $ref: '#/components/responses/Unauthorized'
+            '403':
+              $ref: '#/components/responses/Forbidden'
+            '404':
+              $ref: '#/components/responses/Not_Found'
+            '422':
+              $ref: '#/components/responses/Unprocessable_Entity'
+            '500':
+              $ref: '#/components/responses/Internal_Server_Error'
   
   
   /user/{id}/photos/{idPhoto}/comment/{idComment}:      
@@ -505,11 +532,7 @@ paths:
           - $ref: '#/components/parameters/comment_id'
         responses:
             '200':
-              description: Successful operation
-              content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/photos'             
+              $ref: '#/components/responses/photos'               
             '400':
               $ref: '#/components/responses/Invalid_ID_supplied'
             '401':
@@ -812,9 +835,60 @@ components:
               error_code:
                 type: string
                 example: "SERVER_ERROR_500"
+                
+    users:
+        description: Successful operation
+        content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/users' 
+
+    
+    photos:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/photos' 
+    
+    UserProfile:
+      description: Successful operation
+      content:
+          application/json:
+              schema:
+                  $ref: '#/components/schemas/UserProfile'
+    
+    stream:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/stream'
+      
+    comments:
+      description: The comments of the photo
+      content:
+        application/json:
+          schema:
+            type: array
+            minItems: 0
+            maxItems: 10
+            items:
+                $ref: '#/components/schemas/photo_comment'
+      
+    banned_users:
+      description: The list of banned users
+      content:
+        application/json:
+          schema:
+            type: array
+            minItems: 0
+            maxItems: 10
+            items:
+                $ref: '#/components/schemas/users'
 
 
-        
+ #_________________________________________________________________________________________________________________________________       
   securitySchemes:
     bearerAuth:
       type: http
