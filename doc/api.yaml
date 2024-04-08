@@ -89,8 +89,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
         '404':
               $ref: '#/components/responses/Not_Found'
-        '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
         '500':
               $ref: '#/components/responses/Internal_Server_Error'
       
@@ -121,8 +119,6 @@ paths:
             $ref: '#/components/responses/Forbidden'
        '404':
             $ref: '#/components/responses/Not_Found'
-       '422':
-            $ref: '#/components/responses/Unprocessable_Entity'
        '500':
             $ref: '#/components/responses/Internal_Server_Error'
           
@@ -154,8 +150,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
         '404':
               $ref: '#/components/responses/Not_Found'
-        '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
         '500':
               $ref: '#/components/responses/Internal_Server_Error'
           
@@ -185,8 +179,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
            '404':
               $ref: '#/components/responses/Not_Found'
-           '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
            '500':
               $ref: '#/components/responses/Internal_Server_Error'
         
@@ -213,8 +205,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
           '404':
               $ref: '#/components/responses/Not_Found'
-          '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
           '500':
               $ref: '#/components/responses/Internal_Server_Error'
     
@@ -244,8 +234,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
           '404':
               $ref: '#/components/responses/Not_Found'
-          '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
           '500':
               $ref: '#/components/responses/Internal_Server_Error'
   
@@ -272,8 +260,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
           '404':
               $ref: '#/components/responses/Not_Found'
-          '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
           '500':
               $ref: '#/components/responses/Internal_Server_Error'
       
@@ -302,8 +288,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
           '404':
               $ref: '#/components/responses/Not_Found'
-          '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
           '500':
               $ref: '#/components/responses/Internal_Server_Error'
       
@@ -330,8 +314,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
           '404':
               $ref: '#/components/responses/Not_Found'
-          '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
           '500':
               $ref: '#/components/responses/Internal_Server_Error'
       
@@ -359,8 +341,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
           '404':
               $ref: '#/components/responses/Not_Found'
-          '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
           '500':
               $ref: '#/components/responses/Internal_Server_Error'
       
@@ -389,8 +369,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
         '404':
               $ref: '#/components/responses/Not_Found'
-        '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
         '500':
               $ref: '#/components/responses/Internal_Server_Error'
   
@@ -423,8 +401,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
             '404':
               $ref: '#/components/responses/Not_Found'
-            '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
               $ref: '#/components/responses/Internal_Server_Error'
     
@@ -451,8 +427,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
             '404':
               $ref: '#/components/responses/Not_Found'
-            '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
               $ref: '#/components/responses/Internal_Server_Error'
         
@@ -491,8 +465,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
             '404':
               $ref: '#/components/responses/Not_Found'
-            '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
               $ref: '#/components/responses/Internal_Server_Error'
         
@@ -518,8 +490,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
             '404':
               $ref: '#/components/responses/Not_Found'
-            '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
               $ref: '#/components/responses/Internal_Server_Error'
   
@@ -545,8 +515,6 @@ paths:
               $ref: '#/components/responses/Forbidden'
             '404':
               $ref: '#/components/responses/Not_Found'
-            '422':
-              $ref: '#/components/responses/Unprocessable_Entity'
             '500':
               $ref: '#/components/responses/Internal_Server_Error'
               
@@ -643,6 +611,7 @@ components:
 
     users:
       type: object
+      description: the id and username of the user
       properties:
         id:
           description: The id of the user
@@ -675,6 +644,7 @@ components:
 
     photos:
       type: object
+      description: It´s a complete photo 
       properties:
         id:
           description: the id of the photo
@@ -719,10 +689,12 @@ components:
 
     UserProfile:
       type: object
+      description: It´s the complete user profile
       properties:
         User:
           $ref: '#/components/schemas/users' 
         followers:
+          description: the number of followers
           type: array
           minItems: 0
           maxItems: 99
@@ -730,12 +702,14 @@ components:
                 $ref: '#/components/schemas/users'
 
         following:
+          description: the number of users followed
           type: array
           minItems: 0
           maxItems: 99
           items:
                 $ref: '#/components/schemas/users'
         photos:
+          description: the photos of the user
           type: array
           minItems: 0
           maxItems: 10
@@ -824,22 +798,6 @@ components:
                 identifier: 
                   type: string
                   example: "abcdef012345"
-    
-    Unprocessable_Entity:
-      description: Response associated to the 422 Unprocessable Entity
-      content:
-       application/json:
-        schema:
-          type: object
-          properties:
-            message:
-              type: string
-              example: "La richiesta non può essere elaborata a causa di dati non validi."
-            errors:
-              type: array
-              items:
-                type: string
-                example: ["Campo 'email' non può essere vuoto.", "Campo 'password' deve essere di almeno 8 caratteri."]
       
     Internal_Server_Error:
       description: Response associated to the 500 Internal Server Error
