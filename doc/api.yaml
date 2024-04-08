@@ -354,7 +354,7 @@ paths:
     get:
       tags: 
         - stream
-      summary: Get a strema 
+      summary: Get a stream 
       description: The user gets a stream of photos
       operationId: getMyStream
       parameters:
