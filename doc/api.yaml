@@ -408,11 +408,11 @@ paths:
       security:
         - bearerAuth: [] 
 #=====================================================================================
-  /users/{id}/photos/{photo_id}/likes/{like_id}:
+  /users/{id}/photos/{photo_id}/likes:
     parameters: 
         - $ref: '#/components/parameters/identifier'
         - $ref: '#/components/parameters/photo_id'
-        - $ref: '#/components/parameters/like_id'
+
   
     put:
       tags: 
@@ -435,7 +435,14 @@ paths:
       
       security:
         - bearerAuth: [] 
-    
+  /users/{id}/photos/{photo_id}/likes/{like_id}:
+
+    parameters:
+      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/photo_id'
+      - $ref: '#/components/parameters/like_id'
+
+
     delete:
       tags: 
         - likes
