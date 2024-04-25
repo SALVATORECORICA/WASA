@@ -74,3 +74,62 @@ func New(db *sql.DB) (AppDatabase, error) {
 func (db *appdbimpl) Ping() error {
 	return db.c.Ping()
 }
+
+// Creates all the necessary sql tables for the WASAPhoto app.
+func createDatabase(db *sql.DB) error {
+	tables := [6]string{
+		`CREATE TABLE IF NOT EXISTS users (
+			id_user INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			nickname VARCHAR(16) NOT NULL UNIQUE
+			);`,
+		`CREATE TABLE IF NOT EXISTS photos (
+			id_photo INTEGER PRIMARY KEY AUTOINCREMENT,
+			id_user VARCHAR(16) NOT NULL,
+			date DATETIME NOT NULL,
+			path VARCHAR(150) NOT NULL,
+			FOREIGN KEY(id_user) REFERENCES users (id_user) ON DELETE CASCADE
+			);`,
+		`CREATE TABLE IF NOT EXISTS  likes (
+			id_photo INTEGER NOT NULL,
+			id_user INTEGER NOT NULL,
+			PRIMARY KEY (id_photo,id_user),
+			FOREIGN KEY(id_photo) REFERENCES photos (id_photo) ON DELETE CASCADE
+			);
+			FOREIGN KEY(id_user) REFERENCES users (id_user) ON DELETE CASCADE
+			);`,
+		`CREATE TABLE IF NOT EXISTS comments (
+			id_comment INTEGER PRIMARY KEY AUTOINCREMENT,
+			id_photo INTEGER NOT NULL,
+			id_user INTEGER NOT NULL,
+			comment VARCHAR(150) NOT NULL,
+			FOREIGN KEY(id_photo) REFERENCES photos (id_photo) ON DELETE CASCADE,
+			FOREIGN KEY(id_user) REFERENCES users (id_user) ON DELETE CASCADE
+			);`,
+		`CREATE TABLE IF NOT EXISTS banned_users (
+			banner_id INTEGER NOT NULL,
+			banned_id INTEGER NOT NULL,
+			PRIMARY KEY (banner,banned),
+			FOREIGN KEY(banner) REFERENCES users (id_user) ON DELETE CASCADE,
+			FOREIGN KEY(banned) REFERENCES users (id_user) ON DELETE CASCADE
+			);`,
+		`CREATE TABLE IF NOT EXISTS followers(
+			follower_id INTEGER NOT NULL,
+			followed_id INTEGER NOT NULL,
+			PRIMARY KEY (follower,followed),
+			FOREIGN KEY(follower) REFERENCES users (id_user) ON DELETE CASCADE,
+			FOREIGN KEY(followed) REFERENCES users (id_user) ON DELETE CASCADE
+			);`,
+	}
+
+	// Iteration to create all the needed sql schemas
+	for i := 0; i < len(tables); i++ {
+
+		sqlStmt := tables[i]
+		_, err := db.Exec(sqlStmt)
+
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
