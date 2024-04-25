@@ -2,7 +2,6 @@ package api
 
 import (
 	"github.com/julienschmidt/httprouter"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -13,11 +12,6 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 
 	//Set a reply as JSON
 	w.Header().Set("Content-Type", "application/json")
-
-	nickname, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-	}
 
 	//Check of the Server is ready:
 	if err := rt.DB.Ping(); err != nil {
@@ -31,21 +25,37 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 		return
 	}
 
-	nickname, err := ioutil.ReadAll(r.Body)
+	// the structure that take the vaules from thw Json
+	type Data struct {
+		nickname string `json:"nickname"`
+	}
+
+	// We read the nickname
+	var data Data
+	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		http.Error(w, "Error by parsing of the JSON", http.StatusBadRequest)
+		return
+	}
+
+	//We check that the field is not empty
+	if data.nickname == "" {
+		http.Error(w, "The field username is empty", http.StatusBadRequest)
 		return
 	}
 
 }
 
-//Check of the id is valid and if it already exists, if not we create a new entry in the db for the table "User" and "Session" if yes we create a new entry only for the table "session"
-
+//Check of the id is valid and if it already exists, if not we create a new entry in the db for the table "User" and return a new user_id if yes we return only the id
 func checkAndAddUser(string nickname) {
 	if !isValidID(nickname) {
 		w.WriteHeader(http.StatuBadRequest)
 		return
 	}
-	_, err := putNewUser(nickname)
+	//
+	id, err := putNewUser(nickname)
+	if err != nil{
+		http.Error(w."Error with the DB", http.StatusBadRequest)
+	}
 
 }
