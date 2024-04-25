@@ -36,6 +36,12 @@ import (
 	"fmt"
 )
 
+var ErrUserDoesNotExist = errors.New("user does not exist")
+
+// The structures that we use for the answers
+type User struct {
+}
+
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	GetName() (string, error)
