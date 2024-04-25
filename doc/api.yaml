@@ -512,7 +512,7 @@ components:
       required: true
       schema: 
         $ref: "#/components/schemas/user_nickname/properties/nickname"
-      example: "Piccioni"
+      example: "Fefo"
 #........................................................       
     like_id:
       name: like_id
@@ -521,7 +521,7 @@ components:
       required: true
       schema: 
         $ref: "#/components/schemas/user_nickname/properties/nickname"
-      example: "LauraZ"
+      example: "VanessaP"
 #........................................................       
     banned_user_id:
       name: banned_user_id
@@ -530,7 +530,7 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/user_nickname/properties/nickname"
-      example: "Akille"
+      example: "Aristotele98"
 #........................................................      
     query_id:
       name: id
@@ -542,8 +542,8 @@ components:
         pattern: '^.*?$'
         minLength: 3
         maxLength: 16
-        example: "Luis64"
-      example: "luigi64"
+        example: "Lambrene99"
+      example: "lambre98"
 #........................................................  
 #_____________________________________________________________________________________________________
   schemas:
@@ -558,9 +558,9 @@ components:
           minLength: 3
           maxLength: 16
           pattern: '^.*?$'
-          example: "PulpFiction"
+          example: "BigMama"
       example:
-        nickname: "PolpoFizione"
+        nickname: "Kaido"
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||   
     complete_user:
       description: Contains both *unique identifier and nickname of a user
@@ -571,8 +571,8 @@ components:
         nickname:
           $ref: "#/components/schemas/user_nickname/properties/nickname"
       example:
-        user_id: "Bro9999"
-        nickname: "YourBro"
+        user_id: "27"
+        nickname: "Luffy"
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||   
     comment_identifier:
       description: It's a comment *unique* id
@@ -607,10 +607,10 @@ components:
         comment_id:
           $ref: "#/components/schemas/comment_identifier/properties/comment_id"
       example:
-        user_id: "PannaBoy22"
-        nickname: "22creammm"
+        user_id: "784512675"
+        nickname: "Luffy"
         photo_id: 873
-        comment: "Wow che foto spectacularesss"    
+        comment: "Che tramonto!"    
         comment_id: 16
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     raw_photo:
@@ -640,8 +640,8 @@ components:
             $ref: "#/components/schemas/comment"
           example:
             - comments:
-              - user_id: "miky"
-                nickname: "ErMike"
+              - user_id: "4618163"
+                nickname: "Luffy"
                 photo_id: 3821
                 comment: "bella foto!"
                 comment_id: 23
@@ -653,10 +653,10 @@ components:
           items:
             $ref: "#/components/schemas/complete_user"
           example: 
-            -  user_id: "Bro9999"
-               nickname: "YourBro"
-            -  user_id: "brrrrr"
-               nickname: "rkomi"
+            -  user_id: "46518115"
+               nickname: "Kaido"
+            -  user_id: "648131861"
+               nickname: "Luccy"
         date:
           description: Date and time of upload.
           type: string
@@ -669,14 +669,14 @@ components:
           $ref: "#/components/schemas/user_nickname/properties/nickname"
       example: 
         comments:
-          - user_id: "miky"
-            nickname: "ErMike"
+          - user_id: "1812721"
+            nickname: "Franky"
             photo_id: 3821
             comment: "bella foto!"
             comment_id: 99
         likes:
-          - user_id: "miky"
-            nickname: "ErMike"
+          - user_id: "181518181"
+            nickname: "Doflamingo"
         date: 2017-07-21T17:32:28Z
         photo_id: 3821
         owner: "Mariucc"
@@ -694,21 +694,21 @@ components:
             $ref: "#/components/schemas/photo"
           example:
             - comments:
-                - user_id: "Michelangelo"
-                  nickname: "Miky99"
+                - user_id: "4828448"
+                  nickname: "Niko Robin"
                   photo_id: 8321
                   comment: "i love you"
                   comment_id: 7
-                - user_id: "DelPiero"
-                  nickname: "Delpiero99"
+                - user_id: "182489223"
+                  nickname: "Zoro"
                   photo_id: 8321
                   comment: "great goal!"
                   comment_id: 76
             - likes:
-              - user_id: "Michelangelo"
-                nickname: "Miky99"
-              - user_id: "DelPiero"
-                nickname: "Delpiero99"
+              - user_id: "7562139"
+                nickname: "Franky99"
+              - user_id: "78521582"
+                nickname: "BabyReeinder"
               date: 2017-07-21T17:32:28Z
               photo_id: 8321
               owner: "Corichetto"
@@ -754,10 +754,10 @@ components:
               items:
                 $ref: "#/components/schemas/complete_user"
               example:
-                - user_id: "Wario21"
-                  nickname: "warietto21"
-                - user_id: "giulio"
-                  nickname: "Milioo"
+                - user_id: "195195121172"
+                  nickname: "Usoppp"
+                - user_id: "48154815"
+                  nickname: "Cecchino74"
 
             following:
               description: Array of followed users
@@ -767,8 +767,8 @@ components:
               items:
                 $ref: "#/components/schemas/complete_user"
               example:
-                - user_id: "giulio"
-                  nickname: "Milioo"
+                - user_id: "481830"
+                  nickname: "Carpentiere22"
                 
             photos:
               description: Array of photos
@@ -797,7 +797,7 @@ components:
                     
                   date: 2022-11-22T13:10:14Z
                   photo_id: 7836
-                  owner: "PulpFiction"
+                  owner: "Cecchino74"
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||            
     user_login:
       description: Identifier sent by user during the login
