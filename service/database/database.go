@@ -84,7 +84,7 @@ func createDatabase(db *sql.DB) error {
 			);`,
 		`CREATE TABLE IF NOT EXISTS photos (
 			id_photo INTEGER PRIMARY KEY AUTOINCREMENT,
-			id_user VARCHAR(16) NOT NULL,
+			id_user INTEGER NOT NULL,
 			date DATETIME NOT NULL,
 			path VARCHAR(150) NOT NULL,
 			FOREIGN KEY(id_user) REFERENCES users (id_user) ON DELETE CASCADE
