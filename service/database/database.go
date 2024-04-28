@@ -46,7 +46,7 @@ type User struct {
 type AppDatabase interface {
 	GetName() (string, error)
 	SetName(name string) error
-	SearchUser(nickname string) (int, error)
+	SearchUser(nickname string) (float64, error)
 	PutNewUser(nickname string) (int, error)
 	Ping() error
 }
@@ -64,10 +64,9 @@ func New(db *sql.DB) (AppDatabase, error) {
 
 	// Check if table exists. If not, the database is empty, and we need to create the structure
 	var tableName string
-	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='example_table';`).Scan(&tableName)
+	err := db.QueryRow(`SELECT name FROM sqlite_master WHERE type='table' AND name='users';`).Scan(&tableName)
 	if errors.Is(err, sql.ErrNoRows) {
-		sqlStmt := `CREATE TABLE example_table (id INTEGER NOT NULL PRIMARY KEY, name TEXT);`
-		_, err = db.Exec(sqlStmt)
+		err = createDatabase(db)
 		if err != nil {
 			return nil, fmt.Errorf("error creating database structure: %w", err)
 		}
@@ -100,8 +99,7 @@ func createDatabase(db *sql.DB) error {
 			id_photo INTEGER NOT NULL,
 			id_user INTEGER NOT NULL,
 			PRIMARY KEY (id_photo,id_user),
-			FOREIGN KEY(id_photo) REFERENCES photos (id_photo) ON DELETE CASCADE
-			);
+			FOREIGN KEY(id_photo) REFERENCES photos (id_photo) ON DELETE CASCADE,
 			FOREIGN KEY(id_user) REFERENCES users (id_user) ON DELETE CASCADE
 			);`,
 		`CREATE TABLE IF NOT EXISTS comments (

@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -15,7 +14,6 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 
 	// Set a reply as JSON
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Println("ciao")
 
 	//Check of the Server is ready:
 	if err := rt.db.Ping(); err != nil {
@@ -31,10 +29,10 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 
 	// the structure that take the values from the Json
 	type Data struct {
-		nickname string `json:"nickname"`
+		Nickname string `json:"nickname"`
 	}
 	type DataId struct {
-		id int `json:"id"`
+		Id int `json:"id"`
 	}
 	var data Data
 	var Req DataId
@@ -47,30 +45,29 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 	}
 	w.WriteHeader(http.StatusOK)
 	//Check of the nickname is valid
-	if !isValidID(data.nickname) {
+	if !isValidID(data.Nickname) {
 		http.Error(w, "The username is not valid", http.StatusBadRequest)
 		return
 	}
 
 	// search the user in the db
-	id, err := rt.db.SearchUser(data.nickname)
+	id, err := rt.db.SearchUser(data.Nickname)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, "Error by parsing of the JSON", http.StatusBadRequest)
 		return
 	}
-	if id == 0 {
-		id, err := rt.db.PutNewUser(data.nickname)
+
+	if id == -1 {
+		id, err := rt.db.PutNewUser(data.Nickname)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		Req.id = id
-		w.WriteHeader(http.StatusOK)
+		Req.Id = id
 		_ = json.NewEncoder(w).Encode(Req)
 		return
 	}
-	Req.id = id
-	w.WriteHeader(http.StatusOK)
+	Req.Id = int(id)
 	_ = json.NewEncoder(w).Encode(Req)
 	return
 }

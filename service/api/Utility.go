@@ -1,8 +1,8 @@
 package api
 
 // Utility function
-func isValidID(id string) bool {
-	if len(id) >= 3 && len(id) <= 16 {
+func isValidID(nickname string) bool {
+	if len(nickname) >= 3 && len(nickname) <= 16 {
 		return true
 	} else {
 		return false

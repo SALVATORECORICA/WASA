@@ -1,9 +1,5 @@
 package database
 
-import (
-	"fmt"
-)
-
 // Query to insert a user
 
 func (db *appdbimpl) PutNewUser(nickname string) (int, error) {
@@ -12,6 +8,5 @@ func (db *appdbimpl) PutNewUser(nickname string) (int, error) {
 		return 0, err
 	}
 	id, err := db.SearchUser(nickname)
-	fmt.Println(id)
-	return id, err
+	return int(id), err
 }
