@@ -3,6 +3,8 @@ package api
 import (
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"github.com/SALVATORECORICA/WASA/tree/main/service/api/reqcontext"
+	"github.com/SALVATORECORICA/WASA/tree/main/service/database"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
