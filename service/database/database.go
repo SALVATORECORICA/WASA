@@ -46,7 +46,8 @@ type User struct {
 type AppDatabase interface {
 	GetName() (string, error)
 	SetName(name string) error
-
+	SearchUser(nickname string) (int, error)
+	PutNewUser(nickname string) (int, error)
 	Ping() error
 }
 
@@ -138,26 +139,4 @@ func createDatabase(db *sql.DB) error {
 		}
 	}
 	return nil
-}
-
-// Query to search a user with the unique nickname
-func (db *appdbimpl) searchUser(nickname string) (int, error) {
-	var id int
-	row := db.c.QueryRow(`SELECT id  FROM users   WHERE nickname = ?`, nickname)
-	err := row.Scan(&id)
-
-	if err != nil {
-		return 0, err
-	}
-	return id, nil
-}
-
-// Query to insert a user
-
-func (db *appdbimpl) putNewUser(nickname string) (int, error) {
-	_, err := db.c.Exec("INSERT INTO users (nickname) VALUES (?)", nickname)
-	if err != nil {
-		return 0, err
-	}
-	return db.searchUser(nickname)
 }
