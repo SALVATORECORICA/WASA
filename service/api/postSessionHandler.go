@@ -30,12 +30,7 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 	}
 
 	// the structure that take the values from the Json
-	type Data struct {
-		Nickname string `json:"nickname"`
-	}
-	type DataId struct {
-		Id int `json:"id"`
-	}
+
 	var data Data
 	var Req DataId
 

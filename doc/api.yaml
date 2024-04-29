@@ -55,7 +55,7 @@ paths:
     get:
       tags:
         - search
-      summary: Gets the profile of the user with a certain id
+      summary: Gets the profile of the user with a certain nickname
       description: A user can find another user's profile only if he's not banned by the latter. Multiple users might match partially the nickname being searched
       operationId: getUserProfile
 
@@ -602,7 +602,7 @@ components:
           minLength: 1
           maxLength: 30
           pattern: '^.*?$'
-          example: OK my bruh
+          example: "OK my bruh"
           description: String value of the comment
         comment_id:
           $ref: "#/components/schemas/comment_identifier/properties/comment_id"

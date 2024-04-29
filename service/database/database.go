@@ -48,6 +48,7 @@ type AppDatabase interface {
 	SetName(name string) error
 	SearchUser(nickname string) (float64, error)
 	PutNewUser(nickname string) (int, error)
+
 	Ping() error
 }
 

@@ -10,7 +10,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/session", rt.wrap(rt.postSessionHandler))
 
 	//search
-	// rt.router.GET("/users", rt.wrap(rt.getUsersHandler))
+	rt.router.GET("/users", rt.wrap(rt.getUsersHandler))
 
 	//user
 	// rt.router.GET("/users/:id", rt.wrap(rt.getUserProfile))
