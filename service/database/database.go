@@ -38,16 +38,13 @@ import (
 
 var ErrUserDoesNotExist = errors.New("user does not exist")
 
-// The structures that we use for the answers
-type User struct {
-}
-
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	GetName() (string, error)
 	SetName(name string) error
 	SearchUser(nickname string) (float64, error)
 	PutNewUser(nickname string) (int, error)
+	SearchUserFromNick(nickname string)
 
 	Ping() error
 }

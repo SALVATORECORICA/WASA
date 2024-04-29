@@ -10,7 +10,7 @@ import (
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
 // resources are not ready), this should reply with HTTP Status 500. Otherwise, with HTTP Status 200
 // We have 3 input parameters, the first is the reply of the HTTP Request, the second one is the URL and Body request, the third one is the parameters of the URL Path
-func (rt *_router) getUserHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
@@ -25,7 +25,7 @@ func (rt *_router) getUserHandler(w http.ResponseWriter, r *http.Request, ps htt
 
 	// Search the user
 	var users []User
-	rows, err := rt.db.Query("SELECT * FROM users WHERE nickname LIKE ?", nicknameSearched+"%")
+	rows, err := rt.db.SearchUserFromNick(nicknameSearched)
 	if err != nil {
 		http.Error(w, "Error by searching of user", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")

@@ -1,5 +1,11 @@
 package api
 
+import (
+	"os"
+	"path/filepath"
+	"strings"
+)
+
 // Utility function
 func isValidID(nickname string) bool {
 	if len(nickname) >= 3 && len(nickname) <= 16 {
@@ -36,4 +42,13 @@ func createFolders(nickname string) error {
 		return err
 	}
 	return nil
+}
+
+// function to extract the bearer
+func extractBearer(authorization string) string {
+	var tokens = strings.Split(authorization, " ")
+	if len(tokens) == 2 {
+		return strings.Trim(tokens[1], " ")
+	}
+	return ""
 }
