@@ -112,7 +112,6 @@ func createDatabase(db *sql.DB) error {
 			id_photo INTEGER NOT NULL,
 			id_user INTEGER NOT NULL,
 			comment VARCHAR(150) NOT NULL,
-    		PRIMARY KEY (id_comment),
 			FOREIGN KEY(id_photo) REFERENCES photos (id_photo) ON DELETE CASCADE,
 			FOREIGN KEY(id_user) REFERENCES users (id_user) ON DELETE CASCADE
 			);`,
@@ -134,7 +133,7 @@ func createDatabase(db *sql.DB) error {
 
 	// Iteration to create all the needed sql schemas
 	for i := 0; i < len(tables); i++ {
-
+		fmt.Println(i)
 		sqlStmt := tables[i]
 		_, err := db.Exec(sqlStmt)
 

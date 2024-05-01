@@ -29,7 +29,6 @@ func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps ht
 	}
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
-	print("id:", idOfUser)
 
 	// If the user is not logged in then respond with a 403 http status
 	if idOfUser == "" {
@@ -65,12 +64,12 @@ func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps ht
 	}
 
 	// Show users who haven't blocked the user searching for profiles
-	/*users, err = rt.db.CheckBan(users, idUser)
+	users, err = rt.db.CheckBan(users, idUser)
 	if err != nil {
 		http.Error(w, "Error encoding response", http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("The check ban has encountered in error")
 		return
-	}*/
+	}
 	// return the users
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(users)
