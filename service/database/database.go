@@ -44,8 +44,9 @@ type AppDatabase interface {
 	SetName(name string) error
 	SearchUser(nickname string) (float64, error)
 	PutNewUser(nickname string) (int, error)
-	SearchUserFromNick(nickname string)
-
+	SearchUserFromNick(nickname string) ([]User, error)
+	SearchUserID(id int) (bool, error)
+	CheckBan(users []User, idUser int) ([]User, error)
 	Ping() error
 }
 
@@ -105,22 +106,23 @@ func createDatabase(db *sql.DB) error {
 			id_photo INTEGER NOT NULL,
 			id_user INTEGER NOT NULL,
 			comment VARCHAR(150) NOT NULL,
+    		PRIMARY KEY (id_comment),
 			FOREIGN KEY(id_photo) REFERENCES photos (id_photo) ON DELETE CASCADE,
 			FOREIGN KEY(id_user) REFERENCES users (id_user) ON DELETE CASCADE
 			);`,
 		`CREATE TABLE IF NOT EXISTS banned_users (
 			banner_id INTEGER NOT NULL,
 			banned_id INTEGER NOT NULL,
-			PRIMARY KEY (banner,banned),
-			FOREIGN KEY(banner) REFERENCES users (id_user) ON DELETE CASCADE,
-			FOREIGN KEY(banned) REFERENCES users (id_user) ON DELETE CASCADE
+			PRIMARY KEY (banner_id,banned_id),
+			FOREIGN KEY(banner_id) REFERENCES users (id_user) ON DELETE CASCADE,
+			FOREIGN KEY(banned_id) REFERENCES users (id_user) ON DELETE CASCADE
 			);`,
 		`CREATE TABLE IF NOT EXISTS followers(
 			follower_id INTEGER NOT NULL,
 			followed_id INTEGER NOT NULL,
-			PRIMARY KEY (follower,followed),
-			FOREIGN KEY(follower) REFERENCES users (id_user) ON DELETE CASCADE,
-			FOREIGN KEY(followed) REFERENCES users (id_user) ON DELETE CASCADE
+			PRIMARY KEY (follower_id,followed_id),
+			FOREIGN KEY(follower_id) REFERENCES users (id_user) ON DELETE CASCADE,
+			FOREIGN KEY(followed_id) REFERENCES users (id_user) ON DELETE CASCADE
 			);`,
 	}
 

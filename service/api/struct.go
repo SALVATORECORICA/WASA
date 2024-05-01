@@ -1,5 +1,9 @@
 package api
 
+import (
+	"time"
+)
+
 // only the nickname of the user
 type Data struct {
 	Nickname string `json:"nickname"`
@@ -16,7 +20,7 @@ type User struct {
 	Nickname string `json:"nickname"`
 }
 
-//the comments
+// the comments
 type Comments struct {
 	Comment_id int    `json:"comment_id"`
 	Comment    string `json:"comment"`
@@ -27,11 +31,11 @@ type Comments struct {
 // the photos
 
 type Photos struct {
-	Photo_id int       `json:"photo_Id"`
-	Owner    User      `json:"owner"`
-	date     Date      `json:"date"`
-	likes    []User    `json:"likes"`
-	comments []Comment `json:"comments"`
+	Photo_id int        `json:"photo_Id"`
+	Owner    User       `json:"owner"`
+	date     time.Time  `json:"date"`
+	likes    []User     `json:"likes"`
+	comments []Comments `json:"comments"`
 }
 
 // the complete Profile of the user

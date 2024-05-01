@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -41,6 +42,7 @@ func createFolders(nickname string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("IL path e: ", subfolderPath)
 	return nil
 }
 

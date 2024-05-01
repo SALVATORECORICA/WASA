@@ -25,7 +25,7 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 	// Check of the HTTP method is POST
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		ctx.Logger.WithError(err).Error("Method is not correct, the method should be POST")
+		ctx.Logger.Error("Method is not correct, the method should be POST")
 		return
 	}
 
@@ -51,10 +51,10 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 	}
 
 	// search the user in the db
-	id, err := rt.db.SearchUser(data.Nickname)
-	if err != nil {
+	id, err2 := rt.db.SearchUser(data.Nickname)
+	if err2 != nil {
 		http.Error(w, "Error by DB", http.StatusBadRequest)
-		ctx.Logger.WithError(err).Error("Error by DB")
+		ctx.Logger.WithError(err2).Error("Error by DB")
 		return
 	}
 
@@ -67,7 +67,7 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 			return
 		}
 		// create the folder for the new user
-		err = createFolders(nickname)
+		err = createFolders(data.Nickname)
 		if err != nil {
 			ctx.Logger.WithError(err).Error("Error by creating new user")
 			http.Error(w, "Error by creating the folder of the user", http.StatusBadRequest)

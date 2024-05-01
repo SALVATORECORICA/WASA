@@ -29,3 +29,9 @@ func (db *appdbimpl) SearchUserFromNick(nickname string) ([]User, error) {
 
 	return users, nil
 }
+
+// the Profile of the user
+type User struct {
+	Id       int    `json:"id"`
+	Nickname string `json:"nickname"`
+}
