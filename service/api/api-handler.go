@@ -14,7 +14,7 @@ func (rt *_router) Handler() http.Handler {
 
 	//user
 	// rt.router.GET("/users/:id", rt.wrap(rt.getUserProfile))
-	// rt.router.PUT("/users/:id", rt.wrap(rt.putNewNickname))
+	rt.router.PUT("/users/:id", rt.wrap(rt.putNewNickname))
 
 	//ban
 	// rt.router.PUT("/users/:id/banned_users/:banned_user_id", rt.wrap(rt.putNewBan))
@@ -46,7 +46,7 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.GET("/context", rt.wrap(rt.getContextReply))
 
 	// Special routes
-	// rt.router.GET("/liveness", rt.liveness)
+	rt.router.GET("/liveness", rt.liveness)
 
 	return rt.router
 }
