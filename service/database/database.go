@@ -47,6 +47,12 @@ type AppDatabase interface {
 	SearchUserFromNick(nickname string) ([]User, error)
 	SearchUserID(id int) (bool, error)
 	CheckBan(users []User, idUser int) ([]User, error)
+	PutNewBan(id_banner int, id_banned int) (bool, error)
+	DeleteBan(id_banner int, id_banned int) error
+	ExistsBan(id_banner int, id_banned int) (bool, error)
+	PutFollowing(follower_id int, followed_id int) error
+	DeleteFollowing(follower_id int, followed_id int) error
+	ExistsFollowing(follower_id int, followed_id int) (bool, error)
 	Ping() error
 }
 

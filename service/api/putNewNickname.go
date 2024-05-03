@@ -35,6 +35,13 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	// Check of the path id correspond to the beaerer
+	pathId := ps.ByName("id")
+	if pathId != idOfUser {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	// Convert the string to id
 	idUser, err := strconv.Atoi(idOfUser)
 

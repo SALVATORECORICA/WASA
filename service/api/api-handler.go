@@ -17,12 +17,12 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.PUT("/users/:id", rt.wrap(rt.putNewNickname))
 
 	//ban
-	// rt.router.PUT("/users/:id/banned_users/:banned_user_id", rt.wrap(rt.putNewBan))
-	// rt.router.DELETE("/users/:id/banned_users/:banned_user_id", rt.wrap(rt.deleteBan))
+	rt.router.PUT("/users/:id/banned_users/:banned_user_id", rt.wrap(rt.putNewBan))
+	rt.router.DELETE("/users/:id/banned_users/:banned_user_id", rt.wrap(rt.deleteBan))
 
 	//followers
-	// rt.router.PUT("/users/:id/followers/:follower_id", rt.wrap(rt.putFollowing))
-	// rt.router.DELETE("/users/:id/followers/:follower_id", rt.wrap(rt.deleteFollowing))
+	rt.router.PUT("/users/:id/followers/:followed_id", rt.wrap(rt.putFollowing))
+	rt.router.DELETE("/users/:id/followers/:followed_id", rt.wrap(rt.deleteFollowing))
 
 	//stream
 	// rt.router.GET("/users/:id/home", rt.wrap(rt.getStream))
@@ -43,7 +43,7 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.DELETE("/users/:id/photos/:photo_id/likes/:like_id", rt.wrap(rt.deleteLike))
 
 	//example
-	// rt.router.GET("/context", rt.wrap(rt.getContextReply))
+	rt.router.GET("/context", rt.wrap(rt.getContextReply))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)
