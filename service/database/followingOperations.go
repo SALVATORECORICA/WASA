@@ -9,7 +9,7 @@ func (db *appdbimpl) PutFollowing(follower_id int, followed_id int) error {
 // Check of the following exists
 func (db *appdbimpl) ExistsFollowing(follower_id int, followed_id int) (bool, error) {
 	var exists bool
-	err := db.QueryRow("SELECT EXISTS(SELECT * FROM followers WHERE follower_id = ? AND followed_id = (?,?)", follower_id, followed_id).Scan(&exists)
+	err := db.c.QueryRow("SELECT EXISTS(SELECT * FROM followers WHERE follower_id = ? AND followed_id = (?,?)", follower_id, followed_id).Scan(&exists)
 	if err != nil {
 		return false, err
 	}

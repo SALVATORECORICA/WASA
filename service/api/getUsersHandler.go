@@ -56,7 +56,7 @@ func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps ht
 	nicknameSearched := r.URL.Query().Get("nickname")
 
 	// Search the user
-	users, err := rt.db.SearchUserFromNick(nicknameSearched)
+	users, err := rt.db.SearchUserFromNick(nicknameSearched, idUser)
 	if err != nil {
 		http.Error(w, "Error by searching of user", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")

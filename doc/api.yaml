@@ -136,8 +136,8 @@ paths:
 #=====================================================================================
   /users/{id}/banned_users/{banned_user_id}:
     parameters:
-        - $ref: "#/components/parameters/banned_user_id"
         - $ref: '#/components/parameters/identifier'
+        - $ref: "#/components/parameters/banned_user_id"
   
     put:
       tags: 

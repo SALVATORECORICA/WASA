@@ -27,16 +27,9 @@ func (rt *_router) putNewBan(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
-	print("id:", idOfUser)
 
 	// If the user is not logged in then respond with a 403 http status
 	if idOfUser == "" {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
-
-	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -48,11 +41,16 @@ func (rt *_router) putNewBan(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	// Convert the string to id
+	// Convert the id from string to int
 	idUser, err := strconv.Atoi(idOfUser)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	// Search in the DB of the id is valid
+	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
@@ -60,19 +58,19 @@ func (rt *_router) putNewBan(w http.ResponseWriter, r *http.Request, ps httprout
 	banned_id := ps.ByName("banned_user_id")
 
 	// Convert the string to id
-	banned_id, err = strconv.Atoi(banned_id)
+	banned_idInt, err := strconv.Atoi(banned_id)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(Banned_id); !valid || err != nil {
+	if valid, err := rt.db.SearchUserID(banned_idInt); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 	// Insert the Ban
-	err = PutNewBan(idUser, banned_id)
+	err = rt.db.PutNewBan(idUser, banned_idInt)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("inserting-ban: error by the inserting of the ban")
 		w.WriteHeader(http.StatusBadRequest)

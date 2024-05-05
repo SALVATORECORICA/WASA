@@ -1,6 +1,8 @@
 package api
 
 import (
+	"encoding/json"
+	"fmt"
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -27,24 +29,24 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 	}
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
-	print("id:", idOfUser)
 
 	// If the user is not logged in then respond with a 403 http status
 	if idOfUser == "" {
 		w.WriteHeader(http.StatusForbidden)
+		ctx.Logger.Error("The user is not logged")
 		return
 	}
 
-	// Check of the path id correspond to the beaerer
+	// Confirm the identity of the user
 	pathId := ps.ByName("id")
 	if pathId != idOfUser {
 		w.WriteHeader(http.StatusForbidden)
+		ctx.Logger.Error("The user is not allowed to change the nickname of other users")
 		return
 	}
 
-	// Convert the string to id
+	// Convert the string to int
 	idUser, err := strconv.Atoi(idOfUser)
-
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -54,12 +56,13 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 	// Search in the DB of the id is valid
 	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
+		ctx.Logger.Error("The bearer and the user id not exist in the db")
 		return
 	}
 
 	// Get the new nickname from the body
-	var nick Nickname
-	err := json.NewDecoder(r.Body).Decode(&nick)
+	var nick Data
+	err = json.NewDecoder(r.Body).Decode(&nick)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("update-nickname: error decoding json")
 		w.WriteHeader(http.StatusBadRequest)
@@ -67,7 +70,8 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// Update the nickname
-	err := PutNewNickname(nickname, idUser)
+	fmt.Println(nick.Nickname)
+	err = rt.db.PutNewNickname(nick.Nickname, idUser)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("update-nickname: error by the updating of the nickname")
 		w.WriteHeader(http.StatusBadRequest)

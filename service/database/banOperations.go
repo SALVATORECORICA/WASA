@@ -1,5 +1,7 @@
 package database
 
+import "fmt"
+
 // Get the list of users whose profiles can be viewed from a list of users
 // that match the search performed"
 
@@ -33,14 +35,14 @@ func (db *appdbimpl) CheckBan(u []User, idUser int) ([]User, error) {
 
 // To put a new Ban
 func (db *appdbimpl) PutNewBan(id_banner int, id_banned int) error {
-	_, err := db.c.Exec("INSERT INTO ban (id_banner, id_banned) VALUES (?,?)", id_banner, id_banned)
+	_, err := db.c.Exec("INSERT INTO banned_users (banner_id, banned_id) VALUES (?,?)", id_banner, id_banned)
 	return err
 }
 
 // Check of a ban exists
 func (db *appdbimpl) ExistsBan(id_banner int, id_banned int) (bool, error) {
 	var exists bool
-	err := db.QueryRow("SELECT EXISTS(SELECT * FROM banned_users WHERE banner_id, banned_id = (?,?)", id_banner, id_banned).Scan(&exists)
+	err := db.c.QueryRow("SELECT EXISTS(SELECT * FROM banned_users WHERE banner_id = ? AND banned_id = ?)", id_banner, id_banned).Scan(&exists)
 	if err != nil {
 		return false, err
 	}
@@ -50,6 +52,7 @@ func (db *appdbimpl) ExistsBan(id_banner int, id_banned int) (bool, error) {
 func (db *appdbimpl) DeleteBan(id_banner int, id_banned int) error {
 	_, err := db.c.Exec("DELETE FROM banned_users WHERE banner_id = ? AND banned_id = ?", id_banner, id_banned)
 	if err != nil {
+		fmt.Println("problema durante l eliminazione della entry")
 		return err
 	}
 	return nil

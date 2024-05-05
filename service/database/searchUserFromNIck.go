@@ -1,10 +1,10 @@
 package database
 
 // Query to search a user with the unique nickname (also partially)
-func (db *appdbimpl) SearchUserFromNick(nickname string) ([]User, error) {
+func (db *appdbimpl) SearchUserFromNick(nickname string, idUser int) ([]User, error) {
 
 	// Search a users
-	rows, err := db.c.Query("SELECT * FROM users WHERE nickname LIKE ?", nickname+"%")
+	rows, err := db.c.Query("SELECT * FROM users WHERE nickname LIKE ? AND id_user != ?", nickname+"%", idUser)
 	if err != nil {
 		return nil, err
 	}

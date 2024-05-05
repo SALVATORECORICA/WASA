@@ -10,7 +10,7 @@ import (
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
 // resources are not ready), this should reply with HTTP Status 500. Otherwise, with HTTP Status 200
 // We have 3 input parameters, the first is the reply of the HTTP Request, the second one is the URL and Body request, the third one is the parameters of the URL Path
-func (rt *_router) DeleteBan(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
+func (rt *_router) deleteBan(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	//Check of the Server is ready:
 	if err := rt.db.Ping(); err != nil {
@@ -42,7 +42,7 @@ func (rt *_router) DeleteBan(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// Convert the string to id
-	idUser, err := strconv.Atoi(idOfUser)
+	banner_id, err := strconv.Atoi(idOfUser)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -53,13 +53,13 @@ func (rt *_router) DeleteBan(w http.ResponseWriter, r *http.Request, ps httprout
 	banned_id := ps.ByName("banned_user_id")
 
 	// Convert the string to id
-	banned_id, err = strconv.Atoi(banned_id)
+	banned_idInt, err := strconv.Atoi(banned_id)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
-	exists, err := ExistsBan(idUser, banned_id)
+	exists, err := rt.db.ExistsBan(banner_id, banned_idInt)
 	if err != nil {
 		http.Error(w, "Error by searching of the ban", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -70,7 +70,7 @@ func (rt *_router) DeleteBan(w http.ResponseWriter, r *http.Request, ps httprout
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	} else {
-		err = DeleteBan(idUser, banned_id)
+		err = rt.db.DeleteBan(banner_id, banned_idInt)
 		if err != nil {
 			http.Error(w, "Error by deleting of the ban", http.StatusBadRequest)
 			ctx.Logger.WithError(err).Error("Database has encountered an error")

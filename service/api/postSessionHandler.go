@@ -57,22 +57,22 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 		ctx.Logger.WithError(err2).Error("Error by DB")
 		return
 	}
-
+	// user not in DB --> we create a new user
 	if id == -1 {
 		// user not in DB --> we create a new user
 		id, err := rt.db.PutNewUser(data.Nickname)
 		if err != nil {
 			ctx.Logger.WithError(err).Error("Error by creating new user")
 			http.Error(w, "Error by creating new user", http.StatusBadRequest)
+			err = createFolders(data.Nickname)
+			if err != nil {
+				ctx.Logger.WithError(err).Error("Error by creating new user")
+				http.Error(w, "Error by creating the folder of the user", http.StatusBadRequest)
+				return
+			}
 			return
 		}
-		// create the folder for the new user
-		err = createFolders(data.Nickname)
-		if err != nil {
-			ctx.Logger.WithError(err).Error("Error by creating new user")
-			http.Error(w, "Error by creating the folder of the user", http.StatusBadRequest)
-			return
-		}
+
 		Req.Id = id
 		_ = json.NewEncoder(w).Encode(Req)
 		return

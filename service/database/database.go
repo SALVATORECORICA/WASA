@@ -44,15 +44,16 @@ type AppDatabase interface {
 	SetName(name string) error
 	SearchUser(nickname string) (float64, error)
 	PutNewUser(nickname string) (int, error)
-	SearchUserFromNick(nickname string) ([]User, error)
+	SearchUserFromNick(nickname string, idUser int) ([]User, error)
 	SearchUserID(id int) (bool, error)
 	CheckBan(users []User, idUser int) ([]User, error)
-	PutNewBan(id_banner int, id_banned int) (bool, error)
-	DeleteBan(id_banner int, id_banned int) error
+	PutNewBan(id_banner int, id_banned int) error
 	ExistsBan(id_banner int, id_banned int) (bool, error)
+	DeleteBan(id_banner int, id_banned int) error
 	PutFollowing(follower_id int, followed_id int) error
-	DeleteFollowing(follower_id int, followed_id int) error
 	ExistsFollowing(follower_id int, followed_id int) (bool, error)
+	DeleteFollowing(follower_id int, followed_id int) error
+	PutNewNickname(nicknameNew string, idUser int) error
 	Ping() error
 }
 

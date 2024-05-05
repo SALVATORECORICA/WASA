@@ -1,5 +1,12 @@
 package api
 
+import (
+	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
+	"github.com/julienschmidt/httprouter"
+	"net/http"
+	"strconv"
+)
+
 func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
 	//Check of the Server is ready:
@@ -25,12 +32,6 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
-
 	// Check of the path id correspond to the beaerer
 	pathId := ps.ByName("id")
 	if pathId != idOfUser {
@@ -45,24 +46,29 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
+	// Search in the DB of the id is valid
+	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
 
 	// Exract and check the followed id
 	followed_id := ps.ByName("followed_id")
 
 	// Convert the string to id
-	followed_id, err = strconv.Atoi(followed_id)
+	followed_idInt, err := strconv.Atoi(followed_id)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(followed_id); !valid || err != nil {
+	if valid, err := rt.db.SearchUserID(followed_idInt); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 	// Insert the following
-	err = PutFollowing(idUser, followed_id)
+	err = rt.db.PutFollowing(idUser, followed_idInt)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("inserting-ban: error by the inserting of the ban")
 		w.WriteHeader(http.StatusBadRequest)
