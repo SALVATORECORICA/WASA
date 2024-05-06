@@ -54,6 +54,8 @@ type AppDatabase interface {
 	ExistsFollowing(follower_id int, followed_id int) (bool, error)
 	DeleteFollowing(follower_id int, followed_id int) error
 	PutNewNickname(nicknameNew string, idUser int) error
+	SearchNickname(id int) (string, error)
+	PostNewPhoto(nickname string, complete_path string, timestamp time.Time) (int, error)
 	Ping() error
 }
 

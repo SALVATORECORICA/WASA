@@ -277,7 +277,7 @@ paths:
             schema:
               $ref: "#/components/schemas/raw_photo"
             example:
-              photo_data: "010110010"
+              photo_data: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"
         required: true
 
       responses:
@@ -432,13 +432,7 @@ paths:
           $ref: "#/components/responses/internal_server_error"
       
       security:
-        - bearerAuth: [] 
-  /users/{id}/photos/{photo_id}/likes/{like_id}:
-
-    parameters:
-      - $ref: '#/components/parameters/identifier'
-      - $ref: '#/components/parameters/photo_id'
-      - $ref: '#/components/parameters/like_id'
+        - bearerAuth: []
 
 
     delete:
@@ -618,14 +612,14 @@ components:
       type: object
       properties:
         photo_data:
-          description: "Raw data of the photo"
+          description: "Base64 data of the photo"
           type: string
           minLength: 0
-          maxLength: 100
-          pattern: '^[01]*$'
-          example: "011100010011111100"
+          maxLength: 10000
+          format: base64
+          example: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"
       example: 
-        photo_data: "010110010"
+        photo_data: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     photo:
       description: Contains the essential info of a photo

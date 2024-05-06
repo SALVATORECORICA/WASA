@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -70,7 +69,6 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// Update the nickname
-	fmt.Println(nick.Nickname)
 	err = rt.db.PutNewNickname(nick.Nickname, idUser)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("update-nickname: error by the updating of the nickname")

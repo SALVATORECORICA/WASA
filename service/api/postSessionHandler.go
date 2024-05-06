@@ -59,11 +59,11 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 	}
 	// user not in DB --> we create a new user
 	if id == -1 {
-		// user not in DB --> we create a new user
 		id, err := rt.db.PutNewUser(data.Nickname)
 		if err != nil {
 			ctx.Logger.WithError(err).Error("Error by creating new user")
 			http.Error(w, "Error by creating new user", http.StatusBadRequest)
+			//
 			err = createFolders(data.Nickname)
 			if err != nil {
 				ctx.Logger.WithError(err).Error("Error by creating new user")

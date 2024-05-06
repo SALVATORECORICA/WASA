@@ -46,3 +46,13 @@ type User_Profile struct {
 	Followings []User   `json:"following"`
 	Photos     []Photos `json:"photos"`
 }
+
+type Image struct {
+	Photo_data image64 `json:"photo_Data"`
+}
+
+// the likes
+type Like struct {
+	id_photo int `json:"id_Photo"`
+	id_user  int `json:"id_User"`
+}

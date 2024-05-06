@@ -1,5 +1,33 @@
 package database
 
+import "database/sql"
+
+// Query to search a user with the unique nickname
+func (db *appdbimpl) SearchUser(nickname string) (float64, error) {
+	var id float64
+	row := db.c.QueryRow(`SELECT id_user  FROM users   WHERE nickname = ?`, nickname)
+	err := row.Scan(&id)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return -1, nil
+		}
+		return -1, err
+	}
+	return id, nil
+}
+
+// Check of the user exists
+func (db *appdbimpl) ExistsUser(id int) (bool, error) {
+
+	var exists bool
+	err := db.c.QueryRow("SELECT EXISTS(SELECT * FROM users WHERE  id_user = ?)", id).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
+}
+
 // Query to search a user with the unique nickname (also partially)
 func (db *appdbimpl) SearchUserFromNick(nickname string, idUser int) ([]User, error) {
 
