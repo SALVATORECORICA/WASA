@@ -52,3 +52,12 @@ func extractBearer(authorization string) string {
 	}
 	return ""
 }
+
+// function to check of the comment is valid
+
+func validComment(comment string) bool {
+	if len(comment) == 0 || len(comment) > 30 {
+		return false
+	}
+	return true
+}

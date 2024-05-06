@@ -56,3 +56,11 @@ type Like struct {
 	id_photo int `json:"id_Photo"`
 	id_user  int `json:"id_User"`
 }
+
+// the comment
+type Comment struct {
+	id_comment int    `json:"id_comment"`
+	id_photo   int    `json:"id_photo"`
+	id_user    int    `json:"id_user"`
+	comment    string `json:"comment"`
+}
