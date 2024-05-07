@@ -61,12 +61,12 @@ func (rt *_router) deleteFollowing(w http.ResponseWriter, r *http.Request, ps ht
 	}
 	exists, err := rt.db.ExistsFollowing(idUser, followed_idInt)
 	if err != nil {
-		http.Error(w, "Error by searching of the ban", http.StatusBadRequest)
+		http.Error(w, "Error by searching of following", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
 	if !exists {
-		http.Error(w, "The ban not exists also can not deleted", http.StatusBadRequest)
+		http.Error(w, "The following not exists also can not deleted", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	} else {

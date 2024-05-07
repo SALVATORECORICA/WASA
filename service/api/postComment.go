@@ -64,7 +64,7 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// Extract the comment from the request body
-	var comment Comment
+	var comment Comments
 	err = json.NewDecoder(r.Body).Decode(&comment)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("comment: error decoding json")
@@ -72,14 +72,14 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 	// Check of the comment is valid
-	valid := validComment(comment.comment)
+	valid := validComment(comment.Comment)
 	if !valid {
 		ctx.Logger.Error("comment: error validating comment")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	// Save the comment in the db
-	err = rt.db.PostComment(id_photo, idUser, comment.comment)
+	err = rt.db.PostComment(id_photo, idUser, comment.Comment)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Inserting-Comment: error by inserting comment in the db")
 		w.WriteHeader(http.StatusBadRequest)

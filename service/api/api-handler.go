@@ -32,11 +32,11 @@ func (rt *_router) Handler() http.Handler {
 
 	//photo
 	// rt.router.GET("/users/:id/photos/:photo_id", rt.wrap(rt.getPhoto))
-	// rt.router.DELETE("/users/:id/photos/:photo_id", rt.wrap(rt.deletePhoto))
+	// rt.router.DELETE("/users/:id/photos/:photo_id", rt.wrap(rt.deletePhoto))   // ricordati che devi eliminare i like e i commenti che sono legati alla foto, oltre che la foto stessa dal folder
 
 	//comments
-	// rt.router.POST("users/:id/photos/:photo_id/comments", rt.wrap(rt.postComment))
-	// rt.router.DELETE("users/:id/photos/:photo_id/comments/:comment_id", rt.wrap(rt.deleteComment))
+	rt.router.POST("users/:id/photos/:photo_id/comments", rt.wrap(rt.postComment))
+	rt.router.DELETE("users/:id/photos/:photo_id/comments/:comment_id", rt.wrap(rt.deleteComment))
 
 	//likes
 	rt.router.PUT("/users/:id/photos/:photo_id/likes", rt.wrap(rt.putLike))

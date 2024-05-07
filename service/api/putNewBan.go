@@ -75,8 +75,26 @@ func (rt *_router) putNewBan(w http.ResponseWriter, r *http.Request, ps httprout
 		ctx.Logger.WithError(err).Error("inserting-ban: error by the inserting of the ban")
 		w.WriteHeader(http.StatusBadRequest)
 		return
-	} else {
+	}
+	// Check if exist a following
+	exists, err := rt.db.ExistsFollowing(idUser, banned_idInt)
+	if err != nil {
+		http.Error(w, "Error by searching of following", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	if !exists {
 		// Respond with 204 http status
 		w.WriteHeader(http.StatusNoContent)
+		return
+	} else {
+		err = rt.db.DeleteFollowing(idUser, banned_idInt)
+		if err != nil {
+			http.Error(w, "Error by deleting of the ban", http.StatusBadRequest)
+			ctx.Logger.WithError(err).Error("Database has encountered an error")
+			return
+		}
 	}
+	// Respond with 204 http status
+	w.WriteHeader(http.StatusNoContent)
 }
