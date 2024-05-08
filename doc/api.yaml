@@ -276,8 +276,6 @@ paths:
           image/*:
             schema:
               $ref: "#/components/schemas/raw_photo"
-            example:
-              photo_data: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"
         required: true
 
       responses:
@@ -661,6 +659,8 @@ components:
           $ref: "#/components/schemas/comment_identifier/properties/comment_id"
         owner:
           $ref: "#/components/schemas/user_nickname/properties/nickname"
+        raw_data:
+          $ref:  "#/components/schemas/raw_photo"
       example: 
         comments:
           - user_id: "1812721"
@@ -674,6 +674,7 @@ components:
         date: 2017-07-21T17:32:28Z
         photo_id: 3821
         owner: "Mariucc"
+        raw_data: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||      
     photos:
       description: Represents a list of photos
@@ -703,9 +704,10 @@ components:
                 nickname: "Franky99"
               - user_id: "78521582"
                 nickname: "BabyReeinder"
-              date: 2017-07-21T17:32:28Z
-              photo_id: 8321
-              owner: "Corichetto"
+            date: 2017-07-21T17:32:28Z
+            photo_id: 8321
+            owner: "Corichetto"
+            raw_data: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"
 
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||      
     users_list:
@@ -720,20 +722,20 @@ components:
           items:
             $ref: "#/components/schemas/complete_user"
           example:
-            - user_id: Currywurst15
-              nickname: Marietto
-            - user_id: Carota
-              nickname: Karrot
-            - user_id: Vegeta
-              nickname: Sayan
-            - user_id: Goku
-              nickname: GokuSS4
+            - user_id: "Currywurst15"
+              nickname: "Marietto"
+            - user_id: "Carota"
+              nickname: "Karrot"
+            - user_id: "Vegeta"
+              nickname: "Sayan"
+            - user_id: "Goku"
+              nickname: "GokuSS4"
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||  
     complete_profile:
           description: Object containing all the profile info
           type: object
           properties:
-          
+
             user_id:
               $ref: "#/components/schemas/user_nickname/properties/nickname"
               
@@ -772,7 +774,7 @@ components:
               items:
                 $ref: "#/components/schemas/photo"
               example:
-                - comments:
+                comments:
                   - user_id: "gatto"
                     nickname: "stivali"
                     comment: "special"
@@ -781,17 +783,22 @@ components:
                     nickname: "ontas"
                     comment: "wow!"
                     comment_id: 99
-                - likes:
+                likes:
                   - user_id: "mondo"
                     nickname: "marcio"
                   - user_id: "fabri"
                     nickname: "fibra"
                   - user_id: "Ingo"
                     nickname: "ohneFlamingo"
-                    
-                  date: 2022-11-22T13:10:14Z
-                  photo_id: 7836
-                  owner: "Cecchino74"
+                date: 2022-11-22T13:10:14Z
+                photo_id: 1845
+                owner: "Francesco"
+                raw_data: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"
+
+            nFollowers:
+              $ref: "#/components/schemas/comment_identifier/properties/comment_id"
+            nFollowing:
+              $ref: "#/components/schemas/comment_identifier/properties/comment_id"
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||            
     user_login:
       description: Identifier sent by user during the login
