@@ -34,6 +34,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 )
 
 var ErrUserDoesNotExist = errors.New("user does not exist")
@@ -56,6 +57,8 @@ type AppDatabase interface {
 	PutNewNickname(nicknameNew string, idUser int) error
 	SearchNickname(id int) (string, error)
 	PostNewPhoto(nickname string, complete_path string, timestamp time.Time) (int, error)
+	OwnerPhoto(photoId int) (int, error)
+	GetLikes(photoId int) ([]Like, int, error)
 	Ping() error
 }
 

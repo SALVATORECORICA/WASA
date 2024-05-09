@@ -50,4 +50,48 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
+
+	// Extract Photo_id
+	id := ps.ByName("photo_id")
+
+	// Convert the string to id
+	photoId, err := strconv.Atoi(id)
+	if err != nil {
+		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	// Search the owner of the photo
+	owner, err := OwnerPhoto(photoId)
+	if err != nil {
+		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	// Check of the ban exists
+	exists, err := ExistsBan(owner, idUser)
+	if err != nil {
+		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	if exists {
+		http.Error(w, "The user who serch to obtain a photo was banned", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("The user who serch to obtain a photo was banned")
+		return
+	}
+
+	// Now we start to take the infos of the photo
+	//Send a photo
+	var photo Photo
+
+	// obtain the likes
+	likes, nLikes, err := rt.db.GetLikes(photoId)
+	if err != nil {
+		http.Error(w, "Error by obtaining the likes of the Photo", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error: by obtaining the likes of the Photo")
+		return
+	}
+	// obtain the comments
+
 }

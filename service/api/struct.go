@@ -24,18 +24,19 @@ type User struct {
 type Comments struct {
 	Comment_id int    `json:"comment_id"`
 	Comment    string `json:"comment"`
-	photo_id   int    `json:"photo_id"`
-	id_user    int    `json:"id_user"`
+	Photo_id   int    `json:"photo_id"`
+	User       User   `json:"id_user"`
 }
 
 // the photos
 
-type Photos struct {
+type Photo struct {
 	Photo_id int        `json:"photo_Id"`
 	Owner    User       `json:"owner"`
-	date     time.Time  `json:"date"`
-	likes    []User     `json:"likes"`
-	comments []Comments `json:"comments"`
+	Date     time.Time  `json:"date"`
+	Likes    []User     `json:"likes"`
+	Comments []Comments `json:"comments"`
+	nLikes   int        `json:"nLIkes"`
 }
 
 // the complete Profile of the user
@@ -53,6 +54,6 @@ type Image struct {
 
 // the likes
 type Like struct {
-	id_photo int `json:"id_Photo"`
-	id_user  int `json:"id_User"`
+	IdPhoto int `json:"id_Photo"`
+	IdUser  int `json:"id_User"`
 }

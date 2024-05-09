@@ -688,26 +688,19 @@ components:
           items:
             $ref: "#/components/schemas/photo"
           example:
-            - comments:
-                - user_id: "4828448"
-                  nickname: "Niko Robin"
-                  photo_id: 8321
-                  comment: "i love you"
-                  comment_id: 7
-                - user_id: "182489223"
-                  nickname: "Zoro"
-                  photo_id: 8321
-                  comment: "great goal!"
-                  comment_id: 76
-            - likes:
-              - user_id: "7562139"
-                nickname: "Franky99"
-              - user_id: "78521582"
-                nickname: "BabyReeinder"
+            comments:
+              - user_id: "1812721"
+                nickname: "Franky"
+                photo_id: 3821
+                comment: "bella foto!"
+                comment_id: 99
+            likes:
+              - user_id: "181518181"
+                nickname: "Doflamingo"
             date: 2017-07-21T17:32:28Z
-            photo_id: 8321
-            owner: "Corichetto"
-            raw_data: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"
+            photo_id: 3821
+            owner: "Mariucc"
+            raw_data: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA"s
 
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||      
     users_list:
