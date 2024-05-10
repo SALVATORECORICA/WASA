@@ -13,7 +13,7 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users", rt.wrap(rt.getUsersHandler)) // verificato
 
 	//user
-	// rt.router.GET("/users/:id", rt.wrap(rt.getUserProfile))
+	// rt.router.GET("/users/:id", rt.wrap(rt.getUserProfile)) // controlla che non c´e´ il ban
 	rt.router.PUT("/users/:id", rt.wrap(rt.putNewNickname)) // verificato
 
 	//ban
@@ -31,8 +31,8 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/users/:id/photos", rt.wrap(rt.postPhoto))
 
 	//photo
-	// rt.router.GET("/users/:id/photos/:photo_id", rt.wrap(rt.getPhoto))
-	// rt.router.DELETE("/users/:id/photos/:photo_id", rt.wrap(rt.deletePhoto))   // ricordati che devi eliminare i like e i commenti che sono legati alla foto, oltre che la foto stessa dal folder
+	rt.router.GET("/users/:id/photos/:photo_id", rt.wrap(rt.getPhoto))
+	rt.router.DELETE("/users/:id/photos/:photo_id", rt.wrap(rt.deletePhoto)) // ricordati che devi eliminare i like e i commenti che sono legati alla foto, oltre che la foto stessa dal folder
 
 	//comments
 	rt.router.POST("users/:id/photos/:photo_id/comments", rt.wrap(rt.postComment))

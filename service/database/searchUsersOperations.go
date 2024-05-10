@@ -2,7 +2,7 @@ package database
 
 import "database/sql"
 
-// Query to search a user with the unique nickname
+// Query to search a user with the unique nickname and obtain the id
 func (db *appdbimpl) SearchUser(nickname string) (float64, error) {
 	var id float64
 	row := db.c.QueryRow(`SELECT id_user  FROM users   WHERE nickname = ?`, nickname)
@@ -56,6 +56,21 @@ func (db *appdbimpl) SearchUserFromNick(nickname string, idUser int) ([]User, er
 	}
 
 	return users, nil
+}
+
+// Query to search a user from id to obtain the nickname
+func (db *appdbimpl) GetNickname(id int) (string, error) {
+	var nickname string
+	row := db.c.QueryRow(`SELECT nickname  FROM users   WHERE id_user = ?`, id)
+	err := row.Scan(&nickname)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", nil
+		}
+		return "", err
+	}
+	return nickname, nil
 }
 
 // the Profile of the user

@@ -98,7 +98,7 @@ func (rt *_router) postPhoto(w http.ResponseWriter, r *http.Request, ps httprout
 
 	}
 	// create the complete path of the photo
-	completePath := filepath.Join(path, idPhoto)
+	completePath := filepath.Join(path, idPhoto+".jpg")
 
 	// Save the bytes
 	file, err := os.Create(completePath)

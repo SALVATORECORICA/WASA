@@ -64,7 +64,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 	// Search the owner of the photo
 	owner, err := OwnerPhoto(photoId)
 	if err != nil {
-		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
+		http.Error(w, "Error by searching the User Owner of the Photo", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
@@ -82,8 +82,6 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	// Now we start to take the infos of the photo
-	//Send a photo
-	var photo Photo
 
 	// obtain the likes
 	likes, nLikes, err := rt.db.GetLikes(photoId)
@@ -93,5 +91,69 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 	// obtain the comments
+	comments, err := rt.db.CommentsPhoto(photoId)
+	if err != nil {
+		http.Error(w, "Error by obtaining the comments of the Photo", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error: by obtaining the comments of the Photo")
+		return
+	}
 
+	// Obtain the date
+	date, err := GetPhotoDate(photoId)
+	if err != nil {
+		http.Error(w, "Error by obtaining the date of the Photo", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error: by obtaining the date of the Photo")
+		return
+	}
+	// Obtain the image
+
+	// Obtain the path where we can find the photo
+	path, err := GetPhotoPath(photoId)
+	if err != nil {
+		http.Error(w, "Error by obtaining the date of the Path", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error: by obtaining the date of the Path")
+		return
+	}
+	// create the complete path of the photo
+	completePath := filepath.Join(path, photoId+".jpg")
+
+	// Take the photo
+
+	imageData, err := ioutil.ReadFile(completePath)
+	if err != nil {
+		http.Error(w, "Error by uploading the Photo", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error: by Uploading the Photo")
+		return
+	}
+
+	// Convert the image
+	ImageEncoded := base64.StdEncoding.EncodeToString(imageData)
+
+	// Now we are ready to send the
+	var photo Photo
+	photo.Photo_id = photoId
+	photo.Image = ImageEncoded
+	photo.Comments = comments
+	photo.nLikes = nLikes
+	photo.Date = date
+	photo.Likes = likes
+	photo.Owner = owner
+
+	// We send the Photo
+	photoJSON, err := json.Marshal(photo)
+	if err != nil {
+		http.Error(w, "Error by creating the JSON, http.StatusInternalServerError)
+		ctx.Logger.WithError(err).Error("Error by creating the JSON")
+		return
+	}
+
+	// Impostare l'header della risposta
+	w.Header().Set("Content-Type", "application/json")
+
+	// Scrivere il JSON nella risposta
+	_, err = w.Write(photoJSON)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Error by writing the JSON")
+	}
 }
+

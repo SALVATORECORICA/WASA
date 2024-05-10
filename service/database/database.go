@@ -57,8 +57,12 @@ type AppDatabase interface {
 	PutNewNickname(nicknameNew string, idUser int) error
 	SearchNickname(id int) (string, error)
 	PostNewPhoto(nickname string, complete_path string, timestamp time.Time) (int, error)
-	OwnerPhoto(photoId int) (int, error)
+	OwnerPhoto(photoId int) (User, error)
 	GetLikes(photoId int) ([]Like, int, error)
+	GetNickname(id int) (string, error)
+	GetPhotoDate(photoId int) (time.Time, error)
+	DeleteCommentPhoto(idPhoto int) error
+	DeleteLikePhoto(idPhoto int) error
 	Ping() error
 }
 

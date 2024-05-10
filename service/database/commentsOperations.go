@@ -52,3 +52,33 @@ func (db *appdbimpl) DeleteComment(idComment int) error {
 	}
 	return nil
 }
+
+// Obtain all comments of a Photo
+
+func (db *appdbimpl) CommentsPhoto(photoId int) ([]Comments, error) {
+	var comments []Comments
+	rows, err := db.c.Query("SELECT id_comment, id_user, comment FROM comments WHERE id_photo=?", photoId)
+	if err != nil {
+		return comments, err
+	}
+	// defer the closing of the rows
+	defer rows.Close()
+	for rows.Next() {
+		var comment Comment
+		if err := rows.Scan(&comment.id_comment, &comment.id_user, &comment.comment); err != nil {
+			return Comments, err
+		}
+		comments = append(comments, comment)
+
+	}
+	return comments, nil
+}
+
+// Delete the comments of a photo
+func (db *appdbimpl) DeleteCommentPhoto(idPhoto int) error {
+	_, err := db.c.Exec("DELETE FROM comments WHERE id_photo = ?)", idPhoto)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -37,6 +37,7 @@ type Photo struct {
 	Likes    []User     `json:"likes"`
 	Comments []Comments `json:"comments"`
 	nLikes   int        `json:"nLIkes"`
+	Image    Image      `json:"image"`
 }
 
 // the complete Profile of the user
@@ -46,6 +47,8 @@ type User_Profile struct {
 	Followers  []User   `json:"followers"`
 	Followings []User   `json:"following"`
 	Photos     []Photos `json:"photos"`
+	NFollowers int      `json:"nFollowers"`
+	NFollowing int      `json:"nFollowing"`
 }
 
 type Image struct {
@@ -56,4 +59,9 @@ type Image struct {
 type Like struct {
 	IdPhoto int `json:"id_Photo"`
 	IdUser  int `json:"id_User"`
+}
+
+type PhotosProfile struct {
+	PhotoId   int     `json:"id_Photo"`
+	PhotoData image64 `json:"photo_Data"`
 }

@@ -53,3 +53,12 @@ func (db *appdbimpl) GetLikes(photoId int) ([]Like, int, error) {
 	}
 	return likes, totalLikes, nil
 }
+
+// Delete the likes of a photo
+func (db *appdbimpl) DeleteLikePhoto(idPhoto int) error {
+	_, err := db.c.Exec("DELETE FROM likes WHERE id_photo = ?)", idPhoto)
+	if err != nil {
+		return err
+	}
+	return nil
+}

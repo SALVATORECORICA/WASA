@@ -77,5 +77,6 @@ func (rt *_router) deleteFollowing(w http.ResponseWriter, r *http.Request, ps ht
 			return
 		}
 	}
-
+	// Respond with 204 http status
+	w.WriteHeader(http.StatusNoContent)
 }
