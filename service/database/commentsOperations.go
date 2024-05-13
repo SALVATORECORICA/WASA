@@ -1,8 +1,12 @@
 package database
 
+import (
+	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
+)
+
 // Query to insert a new comment on the db
 func (db *appdbimpl) PostComment(id_photo int, id_user int, comment string) error {
-	err := db.c.Exec("INSERT INTO comments (id_photo, id_user, comment) VALUES (?,?,?)", id_photo, id_user, comment)
+	_, err := db.c.Exec("INSERT INTO comments (id_photo, id_user, comment) VALUES (?,?,?)", id_photo, id_user, comment)
 	if err != nil {
 		return err
 	}
@@ -21,7 +25,7 @@ func (db *appdbimpl) ExistsComment(comment_id int) (bool, error) {
 
 // Query to check of the user is allowed to delete the comment
 func (db *appdbimpl) OwnerComment(commentId int, userId int) (bool, error) {
-	var idPhotoOwnerComment string
+	var idPhotoOwnerComment int
 	err := db.c.Query("SELECT id_user FROM comments WHERE id_comment = ?)", commentId).Scan(&idPhotoOwnerComment)
 	if err != nil {
 		return false, err
@@ -34,12 +38,12 @@ func (db *appdbimpl) OwnerComment(commentId int, userId int) (bool, error) {
 
 func (db *appdbimpl) OwnerPhoto(userId int, photoId int) (bool, error) {
 
-	var idPhotoOwnerPhoto string
-	err := db.c.Query("SELECT id_user FROM photos WHERE id_photo = ?)", photoId).Scan(&idPhotoOwnerComment)
+	var idPhotoOwner int
+	err := db.c.QueryRow("SELECT id_user FROM photos WHERE id_photo = ?)", photoId).Scan(&idPhotoOwner)
 	if err != nil {
 		return false, err
 	}
-	if userId != idPhotoOwnerPhoto {
+	if userId != idPhotoOwner {
 		return false, nil
 	}
 	return true, nil
@@ -55,8 +59,8 @@ func (db *appdbimpl) DeleteComment(idComment int) error {
 
 // Obtain all comments of a Photo
 
-func (db *appdbimpl) CommentsPhoto(photoId int) ([]Comments, error) {
-	var comments []Comments
+func (db *appdbimpl) CommentsPhoto(photoId int) ([]Struct.Comments, error) {
+	var comments []Struct.Comments
 	rows, err := db.c.Query("SELECT id_comment, id_user, comment FROM comments WHERE id_photo=?", photoId)
 	if err != nil {
 		return comments, err
@@ -64,9 +68,9 @@ func (db *appdbimpl) CommentsPhoto(photoId int) ([]Comments, error) {
 	// defer the closing of the rows
 	defer rows.Close()
 	for rows.Next() {
-		var comment Comment
-		if err := rows.Scan(&comment.id_comment, &comment.id_user, &comment.comment); err != nil {
-			return Comments, err
+		var comment Struct.Comments
+		if err := rows.Scan(&comment.Comment_id, &comment.User.Id, &comment.Comment); err != nil {
+			return comments, err
 		}
 		comments = append(comments, comment)
 

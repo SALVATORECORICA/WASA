@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -130,7 +131,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 	ImageEncoded := base64.StdEncoding.EncodeToString(imageData)
 
 	// Now we are ready to send the
-	var photo Photo
+	var photo Struct.Photo
 	photo.Photo_id = photoId
 	photo.Image = ImageEncoded
 	photo.Comments = comments

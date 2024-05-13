@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -14,7 +15,7 @@ func (rt *_router) postPhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	w.Header().Set("Content-Type", "application/json")
 
 	//
-	var image Image
+	var image Struct.Image
 
 	//Check of the Server is ready:
 	if err := rt.db.Ping(); err != nil {

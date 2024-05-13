@@ -1,5 +1,7 @@
 package api
 
+import "git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
+
 func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	// Set a reply as JSON
 	w.Header().Set("Content-Type", "application/json")
@@ -64,7 +66,7 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// Extract the comment from the request body
-	var comment Comments
+	var comment Struct.Comments
 	err = json.NewDecoder(r.Body).Decode(&comment)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("comment: error decoding json")

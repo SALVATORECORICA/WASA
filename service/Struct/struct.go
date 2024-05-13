@@ -1,6 +1,7 @@
-package api
+package Struct
 
 import (
+	"encoding/base64"
 	"time"
 )
 
@@ -52,7 +53,7 @@ type User_Profile struct {
 }
 
 type Image struct {
-	Photo_data image64 `json:"photo_Data"`
+	Photo_data base64.Encoding `json:"photo_Data"`
 }
 
 // the likes
@@ -62,6 +63,6 @@ type Like struct {
 }
 
 type PhotosProfile struct {
-	PhotoId   int     `json:"id_Photo"`
-	PhotoData image64 `json:"photo_Data"`
+	PhotoId   int             `json:"id_Photo"`
+	PhotoData base64.Encoding `json:"photo_Data"`
 }

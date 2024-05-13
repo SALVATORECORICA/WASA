@@ -1,28 +1,37 @@
 package database
 
-import "time"
+import (
+	"encoding/base64"
+	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
+	"io/ioutil"
+	"path/filepath"
+	"strconv"
+	"time"
+)
 
 // Query to insert a new photo on the db and return the id of the new photo inserted
 func (db *appdbimpl) PostNewPhoto(nickname string, path string, timestamp time.Time) (int, string, error) {
 	result, err := db.c.Exec("INSERT INTO photos (id_user, date, path) VALUES (?,?,?)", nickname, timestamp, path)
 	if err != nil {
-		return -1, err
+		return -1, "", err
 	}
 	id, err := result.LastInsertId()
-
 	if err != nil {
 		return -1, "", err
 	}
 
+	idStr := strconv.FormatInt(id, 64)
+	idInt := int(id)
+
 	// create the complete path of the photo
-	completePath := filepath.Join(path, id+".jpg")
+	completePath := filepath.Join(path, idStr+".jpg")
 	// Update the path
 	_, err = db.c.Exec("UPDATE photos SET path = ? WHERE id_photo= ?", completePath, id)
 
 	if err != nil {
 		return -1, "", err
 	}
-	return id, completePath, nil
+	return idInt, completePath, nil
 }
 
 // Query to check if the photo Exists
@@ -36,7 +45,7 @@ func (db *appdbimpl) ExistsPhoto(photoId int) (bool, error) {
 }
 
 // Extract the id of the owner
-func (db *appdbimpl) OwnerPhoto(photoId int) (User, error) {
+func (db *appdbimpl) OwnerPhotoExtractId(photoId int) (User, error) {
 	var user User
 	err := db.c.QueryRow("SELECT id_user FROM photos WHERE  id_photo = ?)", photoId).Scan(&user.Id)
 	if err != nil {
@@ -61,7 +70,7 @@ func (db *appdbimpl) GetPhotoDate(photoId int) (time.Time, error) {
 }
 
 func (db *appdbimpl) GetPhotoPath(photoId int) (string, error) {
-	var path sting
+	var path string
 	err := db.c.QueryRow("SELECT path FROM photos WHERE id_photo = ?", photoId).Scan(&path)
 	if err != nil {
 		return path, err
@@ -71,7 +80,7 @@ func (db *appdbimpl) GetPhotoPath(photoId int) (string, error) {
 
 func (db *appdbimpl) DeletePhoto(photoId int) error {
 
-	err := db.c.Exec("DELETE FROM photos WHERE id_photo = ?", photoId)
+	_, err := db.c.Exec("DELETE FROM photos WHERE id_photo = ?", photoId)
 	if err != nil {
 		return err
 	}
@@ -80,14 +89,15 @@ func (db *appdbimpl) DeletePhoto(photoId int) error {
 
 // Get all photos from the id
 
-func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]Image, error) {
-	var photos []Image
+func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]Struct.Image, error) {
+	var photos []Struct.Image
 	rows, err := db.c.Query("SELECT path FROM photos WHERE id_user = ? ORDER BY date DESC ", idProfileSearched)
 	if err != nil {
 		return photos, err
 	}
 	defer rows.Close()
 	for rows.Next() {
+		var photo Struct.Image
 		var path string
 		if err := rows.Scan(&path); err != nil {
 			return photos, err
@@ -101,7 +111,11 @@ func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]Image, err
 
 		// encode Photo
 		encodedData := base64.StdEncoding.EncodeToString(data)
-		photos = append(photos, encodedData)
+		photo.Photo_data = encodedData
+		photos = append(photos, photo)
+	}
+	if err = rows.Err(); err != nil {
+		return photos, err
 	}
 	return photos, nil
 

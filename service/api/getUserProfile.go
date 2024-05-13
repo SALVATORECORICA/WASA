@@ -1,6 +1,7 @@
 package api
 
 import (
+	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -102,7 +103,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// User Profile
-	var userProfile User_Profile
+	var userProfile Struct.User_Profile
 
 	userProfile.Id = idProfileSearched
 	userProfile.Nickname = nickname

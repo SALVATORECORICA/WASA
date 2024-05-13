@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
 	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -31,8 +32,8 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 
 	// the structure that take the values from the Json
 
-	var data Data
-	var Req DataId
+	var data Struct.Data
+	var Req Struct.DataId
 
 	// We read the nickname
 	err := json.NewDecoder(r.Body).Decode(&data)
