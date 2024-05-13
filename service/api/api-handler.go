@@ -13,11 +13,11 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/users", rt.wrap(rt.getUsersHandler)) // verificato
 
 	//user
-	// rt.router.GET("/users/:id", rt.wrap(rt.getUserProfile)) // controlla che non c´e´ il ban
+	rt.router.GET("/users/:id", rt.wrap(rt.getUserProfile)) // controlla che non c´e´ il ban
 	rt.router.PUT("/users/:id", rt.wrap(rt.putNewNickname)) // verificato
 
 	//ban
-	rt.router.PUT("/users/:id/banned_users/:banned_user_id", rt.wrap(rt.putNewBan))    // verificato
+	rt.router.PUT("/users/:id/banned_users/:banned_user_id", rt.wrap(rt.putNewBan))    //
 	rt.router.DELETE("/users/:id/banned_users/:banned_user_id", rt.wrap(rt.deleteBan)) // verificato
 
 	//followers

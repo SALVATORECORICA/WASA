@@ -94,6 +94,39 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 
 	// Obtain the photos of the profile searched (sorted chronologically)
 
-	photos, err := rt.db.GetPhotosProfile(idProfileSearched)
+	photos, err := rt.db.GetPhotosProfileSorted(idProfileSearched)
+	if err != nil {
+		http.Error(w, "Error by getting the photos", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error: By getting the photos")
+		return
+	}
 
+	// User Profile
+	var userProfile User_Profile
+
+	userProfile.Id = idProfileSearched
+	userProfile.Nickname = nickname
+	userProfile.Followers = followers
+	userProfile.NFollowers = nFollowers
+	userProfile.Followed = followed
+	userProfile.NFollowed = nFollowed
+	userProfile.Photos = photos
+
+
+	userProfileJSON, err := json.Marshal(photo)
+	if err != nil {
+		http.Error(w, "Error by creating the JSON, http.StatusInternalServerError)
+		ctx.Logger.WithError(err).Error("Error by creating the JSON")
+		return
+	}
+
+	// Set the Header
+	w.Header().Set("Content-Type", "application/json")
+
+	// Write the JSON in the reply
+	_, err = w.Write(userProfileJSON)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Error by writing the JSON")
+	}
 }
+

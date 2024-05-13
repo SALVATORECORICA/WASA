@@ -42,13 +42,13 @@ type Photo struct {
 
 // the complete Profile of the user
 type User_Profile struct {
-	Id         int      `json:"id"`
-	Nickname   string   `json:"nickname"`
-	Followers  []User   `json:"followers"`
-	Followings []User   `json:"following"`
-	Photos     []Photos `json:"photos"`
-	NFollowers int      `json:"nFollowers"`
-	NFollowing int      `json:"nFollowing"`
+	Id         int     `json:"id"`
+	Nickname   string  `json:"nickname"`
+	Followers  []User  `json:"followers"`
+	Followed   []User  `json:"following"`
+	Photos     []Image `json:"photos"`
+	NFollowers int     `json:"nFollowers"`
+	NFollowed  int     `json:"nFollowing"`
 }
 
 type Image struct {

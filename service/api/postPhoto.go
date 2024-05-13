@@ -91,14 +91,12 @@ func (rt *_router) postPhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	photoDir := "photos"
 	path = filepath.Join(path, nickname, photoDir)
 
-	idPhoto, err := rt.db.PostNewPhoto(nickname, path, timestamp)
+	completePath, _, err := rt.db.PostNewPhoto(nickname, path, timestamp)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Error by inserting of the photo in the DB")
 		http.Error(w, "Error by inserting of the photo in the DB", http.StatusBadRequest)
 
 	}
-	// create the complete path of the photo
-	completePath := filepath.Join(path, idPhoto+".jpg")
 
 	// Save the bytes
 	file, err := os.Create(completePath)

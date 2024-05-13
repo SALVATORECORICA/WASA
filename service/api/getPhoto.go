@@ -147,10 +147,10 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	// Impostare l'header della risposta
+	// Set the Header
 	w.Header().Set("Content-Type", "application/json")
 
-	// Scrivere il JSON nella risposta
+	// Write the JSON in the reply
 	_, err = w.Write(photoJSON)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Error by writing the JSON")

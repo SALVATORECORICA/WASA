@@ -3,17 +3,26 @@ package database
 import "time"
 
 // Query to insert a new photo on the db and return the id of the new photo inserted
-func (db *appdbimpl) PostNewPhoto(nickname string, complete_path string, timestamp time.Time) (int, error) {
-	result, err := db.c.Exec("INSERT INTO photos (id_user, date, path) VALUES (?,?,?)", nickname, timestamp, complete_path)
+func (db *appdbimpl) PostNewPhoto(nickname string, path string, timestamp time.Time) (int, string, error) {
+	result, err := db.c.Exec("INSERT INTO photos (id_user, date, path) VALUES (?,?,?)", nickname, timestamp, path)
 	if err != nil {
 		return -1, err
 	}
 	id, err := result.LastInsertId()
 
 	if err != nil {
-		return -1, err
+		return -1, "", err
 	}
-	return id, nil
+
+	// create the complete path of the photo
+	completePath := filepath.Join(path, id+".jpg")
+	// Update the path
+	_, err = db.c.Exec("UPDATE photos SET path = ? WHERE id_photo= ?", completePath, id)
+
+	if err != nil {
+		return -1, "", err
+	}
+	return id, completePath, nil
 }
 
 // Query to check if the photo Exists
@@ -71,6 +80,55 @@ func (db *appdbimpl) DeletePhoto(photoId int) error {
 
 // Get all photos from the id
 
-func (db *appdbimpl) GetPhotosProfile(idProfileSearched int) (string, error) {
+func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]Image, error) {
+	var photos []Image
+	rows, err := db.c.Query("SELECT path FROM photos WHERE id_user = ? ORDER BY date DESC ", idProfileSearched)
+	if err != nil {
+		return photos, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var path string
+		if err := rows.Scan(&path); err != nil {
+			return photos, err
+		}
 
+		// read the file
+		data, err := ioutil.ReadFile(path)
+		if err != nil {
+			return photos, err
+		}
+
+		// encode Photo
+		encodedData := base64.StdEncoding.EncodeToString(data)
+		photos = append(photos, encodedData)
+	}
+	return photos, nil
+
+}
+
+func (db *appdbimpl) GetStream(idProfile int) ([]Image, error) {
+	var photos []Image
+	rows, err := db.c.Query("SELECT path FROM followers f, photos p WHERE followed_id = ? AND f.follower_id = u.id_user ORDER BY date DESC ", idProfile)
+	if err != nil {
+		return photos, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var path string
+		if err := rows.Scan(&path); err != nil {
+			return photos, err
+		}
+
+		// read the file
+		data, err := ioutil.ReadFile(path)
+		if err != nil {
+			return photos, err
+		}
+
+		// encode Photo
+		encodedData := base64.StdEncoding.EncodeToString(data)
+		photos = append(photos, encodedData)
+	}
+	return photos, nil
 }
