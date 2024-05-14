@@ -2,11 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
+	"wasa-1967862/service/api/reqcontext"
+	"wasa-1967862/service/structures"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -54,14 +54,14 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		ctx.Logger.Error("The bearer and the user id not exist in the db")
 		return
 	}
 
 	// Get the new nickname from the body
-	var nick Struct.Data
+	var nick structures.Data
 	err = json.NewDecoder(r.Body).Decode(&nick)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("update-nickname: error decoding json")

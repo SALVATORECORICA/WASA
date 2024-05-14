@@ -1,12 +1,16 @@
 package api
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
+	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"strconv"
+	"wasa-1967862/service/api/reqcontext"
+	"wasa-1967862/service/structures"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -46,7 +50,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		fmt.Println("ciao")
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -131,11 +135,11 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 	ImageEncoded := base64.StdEncoding.EncodeToString(imageData)
 
 	// Now we are ready to send the
-	var photo Struct.Photo
+	var photo structures.Photo
 	photo.Photo_id = photoId
 	photo.Image = ImageEncoded
 	photo.Comments = comments
-	photo.nLikes = nLikes
+	photo.NLikes = nLikes
 	photo.Date = date
 	photo.Likes = likes
 	photo.Owner = owner
@@ -143,7 +147,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 	// We send the Photo
 	photoJSON, err := json.Marshal(photo)
 	if err != nil {
-		http.Error(w, "Error by creating the JSON, http.StatusInternalServerError)
+		http.Error(w, "Error by creating the JSON", http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("Error by creating the JSON")
 		return
 	}
@@ -157,4 +161,3 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		ctx.Logger.WithError(err).Error("Error by writing the JSON")
 	}
 }
-

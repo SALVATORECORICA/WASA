@@ -1,10 +1,10 @@
 package api
 
 import (
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
+	"wasa-1967862/service/api/reqcontext"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -49,7 +49,7 @@ func (rt *_router) putNewBan(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -65,7 +65,7 @@ func (rt *_router) putNewBan(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(banned_idInt); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(banned_idInt); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}

@@ -1,4 +1,4 @@
-package Struct
+package structures
 
 import (
 	"encoding/base64"
@@ -37,7 +37,7 @@ type Photo struct {
 	Date     time.Time  `json:"date"`
 	Likes    []User     `json:"likes"`
 	Comments []Comments `json:"comments"`
-	nLikes   int        `json:"nLIkes"`
+	NLikes   int        `json:"nLIkes"`
 	Image    Image      `json:"image"`
 }
 
@@ -53,7 +53,7 @@ type User_Profile struct {
 }
 
 type Image struct {
-	Photo_data base64.Encoding `json:"photo_Data"`
+	Photo_data string `json:"photo_Data"`
 }
 
 // the likes

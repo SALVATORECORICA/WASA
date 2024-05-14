@@ -1,7 +1,7 @@
 package database
 
 import (
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
+	"wasa-1967862/service/structures"
 )
 
 // Query to insert a new comment on the db
@@ -26,7 +26,7 @@ func (db *appdbimpl) ExistsComment(comment_id int) (bool, error) {
 // Query to check of the user is allowed to delete the comment
 func (db *appdbimpl) OwnerComment(commentId int, userId int) (bool, error) {
 	var idPhotoOwnerComment int
-	err := db.c.Query("SELECT id_user FROM comments WHERE id_comment = ?)", commentId).Scan(&idPhotoOwnerComment)
+	err := db.c.QueryRow("SELECT id_user FROM comments WHERE id_comment = ?)", commentId).Scan(&idPhotoOwnerComment)
 	if err != nil {
 		return false, err
 	}
@@ -59,8 +59,8 @@ func (db *appdbimpl) DeleteComment(idComment int) error {
 
 // Obtain all comments of a Photo
 
-func (db *appdbimpl) CommentsPhoto(photoId int) ([]Struct.Comments, error) {
-	var comments []Struct.Comments
+func (db *appdbimpl) CommentsPhoto(photoId int) ([]structures.Comments, error) {
+	var comments []structures.Comments
 	rows, err := db.c.Query("SELECT id_comment, id_user, comment FROM comments WHERE id_photo=?", photoId)
 	if err != nil {
 		return comments, err
@@ -68,7 +68,7 @@ func (db *appdbimpl) CommentsPhoto(photoId int) ([]Struct.Comments, error) {
 	// defer the closing of the rows
 	defer rows.Close()
 	for rows.Next() {
-		var comment Struct.Comments
+		var comment structures.Comments
 		if err := rows.Scan(&comment.Comment_id, &comment.User.Id, &comment.Comment); err != nil {
 			return comments, err
 		}

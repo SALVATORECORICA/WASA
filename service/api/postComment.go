@@ -1,7 +1,5 @@
 package api
 
-import "git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
-
 func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	// Set a reply as JSON
 	w.Header().Set("Content-Type", "application/json")
@@ -44,7 +42,7 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}

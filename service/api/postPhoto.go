@@ -1,13 +1,16 @@
 package api
 
 import (
+	"encoding/base64"
 	"encoding/json"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strconv"
 	"time"
+	"wasa-1967862/service/api/reqcontext"
+	"wasa-1967862/service/structures"
 )
 
 func (rt *_router) postPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
@@ -15,7 +18,7 @@ func (rt *_router) postPhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	w.Header().Set("Content-Type", "application/json")
 
 	//
-	var image Struct.Image
+	var image structures.Image
 
 	//Check of the Server is ready:
 	if err := rt.db.Ping(); err != nil {
@@ -55,7 +58,7 @@ func (rt *_router) postPhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}

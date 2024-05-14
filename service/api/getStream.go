@@ -2,9 +2,10 @@ package api
 
 
 import (
-"fmt"
-"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
-"github.com/julienschmidt/httprouter"
+	"encoding/json"
+	"wasa-1967862/service/api/reqcontext"
+
+	"github.com/julienschmidt/httprouter"
 "net/http"
 "strconv"
 )
@@ -46,8 +47,7 @@ func (rt *_router) getStream(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
-		fmt.Println("ciao")
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}

@@ -1,11 +1,12 @@
 package api
 
 import (
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
+	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
+	"wasa-1967862/service/api/reqcontext"
+	"wasa-1967862/service/structures"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -45,7 +46,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -103,7 +104,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// User Profile
-	var userProfile Struct.User_Profile
+	var userProfile structures.User_Profile
 
 	userProfile.Id = idProfileSearched
 	userProfile.Nickname = nickname
@@ -113,10 +114,9 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	userProfile.NFollowed = nFollowed
 	userProfile.Photos = photos
 
-
 	userProfileJSON, err := json.Marshal(photo)
 	if err != nil {
-		http.Error(w, "Error by creating the JSON, http.StatusInternalServerError)
+		http.Error(w, "Error by creating the JSON, http.StatusInternalServerError", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Error by creating the JSON")
 		return
 	}
@@ -130,4 +130,3 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		ctx.Logger.WithError(err).Error("Error by writing the JSON")
 	}
 }
-

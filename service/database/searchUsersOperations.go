@@ -1,6 +1,9 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
+	"wasa-1967862/service/structures"
+)
 
 // Query to search a user with the unique nickname and obtain the id
 func (db *appdbimpl) SearchUser(nickname string) (float64, error) {
@@ -29,7 +32,7 @@ func (db *appdbimpl) ExistsUser(id int) (bool, error) {
 }
 
 // Query to search a user with the unique nickname (also partially)
-func (db *appdbimpl) SearchUserFromNick(nickname string, idUser int) ([]User, error) {
+func (db *appdbimpl) SearchUserFromNick(nickname string, idUser int) ([]structures.User, error) {
 
 	// Search a users
 	rows, err := db.c.Query("SELECT * FROM users WHERE nickname LIKE ? AND id_user != ?", nickname+"%", idUser)
@@ -39,10 +42,10 @@ func (db *appdbimpl) SearchUserFromNick(nickname string, idUser int) ([]User, er
 	defer rows.Close()
 
 	// The slice for the user
-	var users []User
+	var users []structures.User
 
 	for rows.Next() {
-		var user User
+		var user structures.User
 		err := rows.Scan(&user.Id, &user.Nickname)
 		if err != nil {
 			return nil, err
@@ -71,10 +74,4 @@ func (db *appdbimpl) GetNickname(id int) (string, error) {
 		return "", err
 	}
 	return nickname, nil
-}
-
-// the Profile of the user
-type User struct {
-	Id       int    `json:"id"`
-	Nickname string `json:"nickname"`
 }

@@ -2,11 +2,11 @@ package database
 
 import (
 	"encoding/base64"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/Struct"
 	"io/ioutil"
 	"path/filepath"
 	"strconv"
 	"time"
+	"wasa-1967862/service/structures"
 )
 
 // Query to insert a new photo on the db and return the id of the new photo inserted
@@ -89,15 +89,15 @@ func (db *appdbimpl) DeletePhoto(photoId int) error {
 
 // Get all photos from the id
 
-func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]Struct.Image, error) {
-	var photos []Struct.Image
+func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]structures.Image, error) {
+	var photos []structures.Image
 	rows, err := db.c.Query("SELECT path FROM photos WHERE id_user = ? ORDER BY date DESC ", idProfileSearched)
 	if err != nil {
 		return photos, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var photo Struct.Image
+		var photo structures.Image
 		var path string
 		if err := rows.Scan(&path); err != nil {
 			return photos, err
@@ -121,8 +121,8 @@ func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]Struct.Ima
 
 }
 
-func (db *appdbimpl) GetStream(idProfile int) ([]Image, error) {
-	var photos []Image
+func (db *appdbimpl) GetStream(idProfile int) ([]structures.Image, error) {
+	var photos []structures.Image
 	rows, err := db.c.Query("SELECT path FROM followers f, photos p WHERE followed_id = ? AND f.follower_id = u.id_user ORDER BY date DESC ", idProfile)
 	if err != nil {
 		return photos, err
@@ -142,7 +142,9 @@ func (db *appdbimpl) GetStream(idProfile int) ([]Image, error) {
 
 		// encode Photo
 		encodedData := base64.StdEncoding.EncodeToString(data)
-		photos = append(photos, encodedData)
+		var photo structures.Image
+		photo.Photo_data = encodedData
+		photos = append(photos, photo)
 	}
 	return photos, nil
 }

@@ -3,10 +3,10 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
+	"wasa-1967862/service/api/reqcontext"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -46,7 +46,7 @@ func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps ht
 	}
 
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		fmt.Println("ciao")
 		w.WriteHeader(http.StatusForbidden)
 		return

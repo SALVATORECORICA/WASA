@@ -8,7 +8,7 @@ data source name from config), and then initialize an instance of AppDatabase fr
 For example, this code adds a parameter in `webapi` executable for the database data source name (add it to the
 main.WebAPIConfiguration structure):
 
-	DB struct {
+	DB structures {
 		Filename string `conf:""`
 	}
 
@@ -35,6 +35,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"wasa-1967862/service/structures"
 )
 
 var ErrUserDoesNotExist = errors.New("user does not exist")
@@ -45,9 +46,9 @@ type AppDatabase interface {
 	SetName(name string) error
 	SearchUser(nickname string) (float64, error)
 	PutNewUser(nickname string) (int, error)
-	SearchUserFromNick(nickname string, idUser int) ([]User, error)
-	SearchUserID(id int) (bool, error)
-	CheckBan(users []User, idUser int) ([]User, error)
+	SearchUserFromNick(nickname string, idUser int) ([]structures.User, error)
+	ExistsUser(id int) (bool, error)
+	CheckBan(users []structures.User, idUser int) ([]structures.User, error)
 	PutNewBan(id_banner int, id_banned int) error
 	ExistsBan(id_banner int, id_banned int) (bool, error)
 	DeleteBan(id_banner int, id_banned int) error
@@ -55,9 +56,8 @@ type AppDatabase interface {
 	ExistsFollowing(follower_id int, followed_id int) (bool, error)
 	DeleteFollowing(follower_id int, followed_id int) error
 	PutNewNickname(nicknameNew string, idUser int) error
-	SearchNickname(id int) (string, error)
-	PostNewPhoto(nickname string, complete_path string, timestamp time.Time) (int, error)
-	OwnerPhoto(photoId int) (User, error)
+	PostNewPhoto(nickname string, complete_path string, timestamp time.Time) (int, string, error)
+	OwnerPhotoExtractId(photoId int) (structures.User, error)
 	GetLikes(photoId int) ([]Like, int, error)
 	GetNickname(id int) (string, error)
 	GetPhotoDate(photoId int) (time.Time, error)
