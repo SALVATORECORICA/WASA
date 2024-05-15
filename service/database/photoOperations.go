@@ -45,8 +45,8 @@ func (db *appdbimpl) ExistsPhoto(photoId int) (bool, error) {
 }
 
 // Extract the id of the owner
-func (db *appdbimpl) OwnerPhotoExtractId(photoId int) (User, error) {
-	var user User
+func (db *appdbimpl) OwnerPhotoExtractId(photoId int) (structures.User, error) {
+	var user structures.User
 	err := db.c.QueryRow("SELECT id_user FROM photos WHERE  id_photo = ?)", photoId).Scan(&user.Id)
 	if err != nil {
 		return user, err

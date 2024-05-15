@@ -1,13 +1,12 @@
 package api
 
-
 import (
 	"encoding/json"
 	"wasa-1967862/service/api/reqcontext"
 
 	"github.com/julienschmidt/httprouter"
-"net/http"
-"strconv"
+	"net/http"
+	"strconv"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -47,18 +46,16 @@ func (rt *_router) getStream(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
 	photoStream, err := rt.db.GetStream(idUser)
 
-
-
 	photoStreamJSON, err := json.Marshal(photoStream)
 	if err != nil {
-		http.Error(w, "Error by creating the JSON, http.StatusInternalServerError)
+		http.Error(w, "Error by creating the JSON, http.StatusInternalServerError", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Error by creating the JSON")
 		return
 	}
@@ -69,11 +66,7 @@ func (rt *_router) getStream(w http.ResponseWriter, r *http.Request, ps httprout
 	// Write the JSON in the reply
 	_, err = w.Write(photoStreamJSON)
 	if err != nil {
-		ctx.Logger.WithError(err).Error("Error by writing the JSON")
+		ctx.Logger.WithError(err).Error("Error by writing the JSON", http.StatusBadRequest)
 	}
 
 }
-
-
-
-

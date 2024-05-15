@@ -27,7 +27,6 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 	}
 	// Extracting the id of the user
 	idUser := extractBearer(r.Header.Get("Authorization"))
-	print("id:", idOfUser)
 
 	// If the user is not logged in then respond with a 403 http status
 	if idUser == "" {
@@ -41,8 +40,8 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	// Convert the string to id
-	idUser, err := strconv.Atoi(idUser)
+	// Convert the string to int
+	idUserInt, err := strconv.Atoi(idUser)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -53,7 +52,7 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 	comment_id := ps.ByName("comment_id")
 
 	// Convert the comment id to int
-	comment_id, err = strconv.Atoi(comment_id)
+	comment_idInt, err := strconv.Atoi(comment_id)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -61,7 +60,7 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// Check of the comment id is present in the db
-	exists, err := rt.db.ExistsComment(comment_id)
+	exists, err := rt.db.ExistsComment(comment_idInt)
 	if err != nil {
 		http.Error(w, "Error by searching of the ban", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -76,7 +75,7 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 	photo_id := ps.ByName("photo_id")
 
 	// Convert the comment id to int
-	photo_id, err = strconv.Atoi(photo_id)
+	photo_idInt, err = strconv.Atoi(photo_id)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -84,7 +83,7 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// Check of the comment id is present in the db
-	exists, err = rt.db.ExistsPhoto(photo_id)
+	exists, err = rt.db.ExistsPhoto(photo_idInt)
 	if err != nil {
 		http.Error(w, "Error by searching of the photo", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -96,14 +95,14 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 	// Check of the user is the owner of the comment
-	allowedComment, err := rt.db.OwnerComment(idUser, comment_id)
+	allowedComment, err := rt.db.OwnerComment(idUserInt, comment_idInt)
 	if err != nil {
 		http.Error(w, "Error by deleting of the comment, the User is not allowed to do this action", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
 	// Check of the user is the owner of the photo
-	allowedOwner, err := rt.db.OwnerPhoto(idUser, comment_id)
+	allowedOwner, err := rt.db.OwnerPhoto(idUserInt, comment_idInt)
 	if err != nil {
 		http.Error(w, "Error by deleting of the comment, the User is not allowed to do this action", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -116,7 +115,7 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// Delete comment
-	err = rt.db.DeleteComment(comment_id)
+	err = rt.db.DeleteComment(comment_idInt)
 	if err != nil {
 		http.Error(w, "Error by deleting of the comment", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")

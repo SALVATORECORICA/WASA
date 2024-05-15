@@ -1,5 +1,15 @@
 package api
 
+import (
+	"encoding/json"
+	"wasa-1967862/service/api/reqcontext"
+	"wasa-1967862/service/structures"
+
+	"github.com/julienschmidt/httprouter"
+	"net/http"
+	"strconv"
+)
+
 func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 	// Set a reply as JSON
 	w.Header().Set("Content-Type", "application/json")
@@ -64,7 +74,7 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// Extract the comment from the request body
-	var comment Struct.Comments
+	var comment structures.Comments
 	err = json.NewDecoder(r.Body).Decode(&comment)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("comment: error decoding json")

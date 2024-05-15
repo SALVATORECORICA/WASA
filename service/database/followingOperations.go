@@ -1,5 +1,7 @@
 package database
 
+import "wasa-1967862/service/structures"
+
 // To put a new Ban
 func (db *appdbimpl) PutFollowing(follower_id int, followed_id int) error {
 	_, err := db.c.Exec("INSERT INTO followers (follower_id, followed_id) VALUES (?,?)", follower_id, followed_id)
@@ -25,9 +27,9 @@ func (db *appdbimpl) DeleteFollowing(follower_id int, followed_id int) error {
 }
 
 // Obtain all followers and the number of them
-func (db *appdbimpl) GetFollower(userId int) ([]User, int, error) {
+func (db *appdbimpl) GetFollower(userId int) ([]structures.User, int, error) {
 	var nFollowers int
-	var users []User
+	var users []structures.User
 	rows, err := db.c.Query("SELECT follower_id, nickname FROM followers f, users u WHERE f.followed_id= ? AND f.follower_id = u.id_user", userId)
 	if err != nil {
 		return users, 0, err
@@ -36,7 +38,7 @@ func (db *appdbimpl) GetFollower(userId int) ([]User, int, error) {
 	// defer the closing of the rows
 	defer rows.Close()
 	for rows.Next() {
-		var user User
+		var user structures.User
 		if err := rows.Scan(&user.Id, &user.Nickname); err != nil {
 			return users, 0, err
 		}
@@ -47,10 +49,10 @@ func (db *appdbimpl) GetFollower(userId int) ([]User, int, error) {
 }
 
 // Obtain all followed and the number of them
-func (db *appdbimpl) GetFollowed(userId int) ([]User, int, error) {
+func (db *appdbimpl) GetFollowed(userId int) ([]structures.User, int, error) {
 
 	var nFollowed int
-	var users []User
+	var users []structures.User
 	rows, err := db.c.Query("SELECT followed_id, nickname FROM followers f, users u WHERE f.follower_id= ? AND f.followed_id = u.id_user", userId)
 	if err != nil {
 		return users, 0, err
@@ -59,7 +61,7 @@ func (db *appdbimpl) GetFollowed(userId int) ([]User, int, error) {
 	// defer the closing of the rows
 	defer rows.Close()
 	for rows.Next() {
-		var user User
+		var user structures.User
 		if err := rows.Scan(&user.Id, &user.Nickname); err != nil {
 			return users, 0, err
 		}
