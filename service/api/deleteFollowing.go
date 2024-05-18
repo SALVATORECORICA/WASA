@@ -1,10 +1,10 @@
 package api
 
 import (
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
+	"wasa-1967862/service/api/reqcontext"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -50,16 +50,16 @@ func (rt *_router) deleteFollowing(w http.ResponseWriter, r *http.Request, ps ht
 	}
 
 	// ExTract the followed id
-	followed_id := ps.ByName("banned_user_id")
+	followedId := ps.ByName("banned_user_id")
 
 	// Convert the string to id
-	followed_idInt, err := strconv.Atoi(followed_id)
+	followedIdInt, err := strconv.Atoi(followedId)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
-	exists, err := rt.db.ExistsFollowing(idUser, followed_idInt)
+	exists, err := rt.db.ExistsFollowing(idUser, followedIdInt)
 	if err != nil {
 		http.Error(w, "Error by searching of the ban", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -70,7 +70,7 @@ func (rt *_router) deleteFollowing(w http.ResponseWriter, r *http.Request, ps ht
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	} else {
-		err = rt.db.DeleteFollowing(idUser, followed_idInt)
+		err = rt.db.DeleteFollowing(idUser, followedIdInt)
 		if err != nil {
 			http.Error(w, "Error by deleting of the ban", http.StatusBadRequest)
 			ctx.Logger.WithError(err).Error("Database has encountered an error")

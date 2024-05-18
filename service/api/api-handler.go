@@ -28,14 +28,14 @@ func (rt *_router) Handler() http.Handler {
 	// rt.router.GET("/users/:id/home", rt.wrap(rt.getStream))
 
 	//Upload photo
-	// rt.router.POST("/users/:id/photos", rt.wrap(rt.postPhoto))
+	rt.router.POST("/users/:id/photos", rt.wrap(rt.postPhoto))
 
 	//photo
 	// rt.router.GET("/users/:id/photos/:photo_id", rt.wrap(rt.getPhoto))
 	// rt.router.DELETE("/users/:id/photos/:photo_id", rt.wrap(rt.deletePhoto))
 
-	//comments
-	// rt.router.POST("users/:id/photos/:photo_id/comments", rt.wrap(rt.postComment))
+	//comment
+	rt.router.POST("/users/:id/photos/:photo_id/comments", rt.wrap(rt.postComment))
 	// rt.router.DELETE("users/:id/photos/:photo_id/comments/:comment_id", rt.wrap(rt.deleteComment))
 
 	//likes

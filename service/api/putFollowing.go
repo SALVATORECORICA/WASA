@@ -1,10 +1,10 @@
 package api
 
 import (
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
+	"wasa-1967862/service/api/reqcontext"
 )
 
 func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
@@ -47,7 +47,7 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(idUser); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -63,7 +63,7 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.SearchUserID(followed_idInt); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(followed_idInt); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}

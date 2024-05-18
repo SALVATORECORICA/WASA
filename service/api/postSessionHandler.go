@@ -2,9 +2,10 @@ package api
 
 import (
 	"encoding/json"
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"wasa-1967862/service/api/reqcontext"
+	"wasa-1967862/service/structures"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -31,8 +32,8 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 
 	// the structure that take the values from the Json
 
-	var data Data
-	var Req DataId
+	var data structures.UserNickname
+	var Req structures.UserId
 
 	// We read the nickname
 	err := json.NewDecoder(r.Body).Decode(&data)

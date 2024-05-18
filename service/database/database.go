@@ -34,6 +34,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
+	"wasa-1967862/service/structures"
 )
 
 var ErrUserDoesNotExist = errors.New("user does not exist")
@@ -44,9 +46,9 @@ type AppDatabase interface {
 	SetName(name string) error
 	SearchUser(nickname string) (float64, error)
 	PutNewUser(nickname string) (int, error)
-	SearchUserFromNick(nickname string, idUser int) ([]User, error)
-	SearchUserID(id int) (bool, error)
-	CheckBan(users []User, idUser int) ([]User, error)
+	SearchUserFromNick(nickname string, idUser int) ([]structures.User, error)
+	ExistsUser(id int) (bool, error)
+	CheckBan(users []structures.User, idUser int) ([]structures.User, error)
 	PutNewBan(id_banner int, id_banned int) error
 	ExistsBan(id_banner int, id_banned int) (bool, error)
 	DeleteBan(id_banner int, id_banned int) error
@@ -54,6 +56,12 @@ type AppDatabase interface {
 	ExistsFollowing(follower_id int, followed_id int) (bool, error)
 	DeleteFollowing(follower_id int, followed_id int) error
 	PutNewNickname(nicknameNew string, idUser int) error
+	ObtainIDFromNick(nickname string) (float64, error)
+	PostNewPhoto(nickname string, path string, timestamp time.Time) (int, string, error)
+	GetNickname(id int) (string, error)
+	ExistsPhoto(photoId int) (bool, error)
+	PostComment(id_photo int, id_user int, comment string) error
+	OwnerPhotoFromIdPhoto(photoId int) (structures.User, error)
 	Ping() error
 }
 

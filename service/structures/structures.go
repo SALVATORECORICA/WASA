@@ -1,16 +1,16 @@
-package api
+package structures
 
 import (
 	"time"
 )
 
 // only the nickname of the user
-type Data struct {
+type UserNickname struct {
 	Nickname string `json:"nickname"`
 }
 
 // only the id of the user
-type DataId struct {
+type UserId struct {
 	Id int `json:"id"`
 }
 
@@ -21,28 +21,31 @@ type User struct {
 }
 
 // the comments
-type Comments struct {
+type Comment struct {
 	Comment_id int    `json:"comment_id"`
 	Comment    string `json:"comment"`
-	photo_id   int    `json:"photo_id"`
+	Photo_id   int    `json:"photo_id"`
 	User       User   `json:"user"`
 }
 
 // the photos
 
 type Photos struct {
-	Photo_id int        `json:"photo_Id"`
-	Owner    User       `json:"owner"`
-	date     time.Time  `json:"date"`
-	likes    []User     `json:"likes"`
-	comments []Comments `json:"comments"`
+	PhotoId  int       `json:"photo_Id"`
+	Owner    User      `json:"owner"`
+	Date     time.Time `json:"date"`
+	Likes    []User    `json:"likes"`
+	Comments []Comment `json:"comments"`
 }
 
 // the complete Profile of the user
-type User_Profile struct {
+type UserProfile struct {
 	Id         int      `json:"id"`
 	Nickname   string   `json:"nickname"`
 	Followers  []User   `json:"followers"`
 	Followings []User   `json:"following"`
 	Photos     []Photos `json:"photos"`
+}
+type Image struct {
+	PhotoData string `json:"photo_data"`
 }

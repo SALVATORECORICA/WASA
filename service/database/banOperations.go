@@ -1,12 +1,15 @@
 package database
 
-import "fmt"
+import (
+	"fmt"
+	"wasa-1967862/service/structures"
+)
 
 // Get the list of users whose profiles can be viewed from a list of users
 // that match the search performed"
 
-func (db *appdbimpl) CheckBan(u []User, idUser int) ([]User, error) {
-	var updatedUsers []User
+func (db *appdbimpl) CheckBan(u []structures.User, idUser int) ([]structures.User, error) {
+	var updatedUsers []structures.User
 	var banner []int
 	rows, err := db.c.Query(`SELECT banner_id  FROM banned_users   WHERE banned_id = ?`, idUser)
 	if err != nil {

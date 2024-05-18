@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -53,4 +54,28 @@ func extractBearer(authorization string) string {
 		return strings.Trim(tokens[1], " ")
 	}
 	return ""
+}
+
+// function to check of the comment is valid
+
+func validComment(comment string) bool {
+	if len(comment) == 0 || len(comment) > 30 {
+		return false
+	}
+	return true
+}
+
+// Funzione per determinare il tipo di immagine basato sui primi byte
+func detectImageType(data []byte) bool {
+	if len(data) < 4 {
+		return false
+	}
+
+	if bytes.Equal(data[0:2], []byte{0xFF, 0xD8}) {
+		return true
+	} else if bytes.Equal(data[0:4], []byte{0x89, 0x50, 0x4E, 0x47}) {
+		return true
+	} else {
+		return false
+	}
 }

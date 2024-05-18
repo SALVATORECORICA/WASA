@@ -1,10 +1,10 @@
 package api
 
 import (
-	"git.sapienzaapps.it/fantasticcoffee/fantastic-coffee-decaffeinated/service/api/reqcontext"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
+	"wasa-1967862/service/api/reqcontext"
 )
 
 // HTTP handler that checks the API server status. If the server cannot serve requests (e.g., some
@@ -42,7 +42,7 @@ func (rt *_router) deleteBan(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// Convert the string to id
-	banner_id, err := strconv.Atoi(idOfUser)
+	bannerId, err := strconv.Atoi(idOfUser)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -50,16 +50,16 @@ func (rt *_router) deleteBan(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// ExTract the banned id
-	banned_id := ps.ByName("banned_user_id")
+	bannedId := ps.ByName("banned_user_id")
 
 	// Convert the string to id
-	banned_idInt, err := strconv.Atoi(banned_id)
+	bannedIdInt, err := strconv.Atoi(bannedId)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
-	exists, err := rt.db.ExistsBan(banner_id, banned_idInt)
+	exists, err := rt.db.ExistsBan(bannerId, bannedIdInt)
 	if err != nil {
 		http.Error(w, "Error by searching of the ban", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -70,7 +70,7 @@ func (rt *_router) deleteBan(w http.ResponseWriter, r *http.Request, ps httprout
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	} else {
-		err = rt.db.DeleteBan(banner_id, banned_idInt)
+		err = rt.db.DeleteBan(bannerId, bannedIdInt)
 		if err != nil {
 			http.Error(w, "Error by deleting of the ban", http.StatusBadRequest)
 			ctx.Logger.WithError(err).Error("Database has encountered an error")
