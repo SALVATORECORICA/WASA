@@ -70,13 +70,6 @@ func (rt *_router) postPhoto(w http.ResponseWriter, r *http.Request, ps httprout
 		http.Error(w, "Error: format must be PNG or JPEG", http.StatusBadRequest)
 	}
 
-	// obtain the nickname to find the folder where we want to save the photo
-	nickname, err := rt.db.GetNickname(idUser)
-	if err != nil {
-		http.Error(w, "failed by searching the nickname for the path", http.StatusBadRequest)
-		return
-	}
-	fmt.Println("nick e: ", nickname)
 	// obtain the path where we want to save the photo
 	path, err := os.Executable()
 	if err != nil {
@@ -86,9 +79,9 @@ func (rt *_router) postPhoto(w http.ResponseWriter, r *http.Request, ps httprout
 	timestamp := time.Now()
 	path = filepath.Dir(path)
 	photoDir := "photos"
-	path = filepath.Join(path, nickname, photoDir)
+	path = filepath.Join(path, idOfUser, photoDir)
 	fmt.Println("il path non completo e ", path)
-	_, completePath, err := rt.db.PostNewPhoto(nickname, path, timestamp)
+	_, completePath, err := rt.db.PostNewPhoto(idUser, path, timestamp)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("Error by inserting of the photo in the DB")
 		http.Error(w, "Error by inserting of the photo in the DB", http.StatusBadRequest)

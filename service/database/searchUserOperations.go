@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"wasa-1967862/service/structures"
 )
 
@@ -50,8 +51,8 @@ func (db *appdbimpl) ObtainIDFromNick(nickname string) (float64, error) {
 }
 
 // Query to search a user with the unique nickname
-func (db *appdbimpl) SearchUser(nickname string) (float64, error) {
-	var id float64
+func (db *appdbimpl) SearchUser(nickname string) (int, error) {
+	var id int
 	row := db.c.QueryRow(`SELECT id_user  FROM users   WHERE nickname = ?`, nickname)
 	err := row.Scan(&id)
 
@@ -61,6 +62,7 @@ func (db *appdbimpl) SearchUser(nickname string) (float64, error) {
 		}
 		return -1, err
 	}
+	fmt.Println("id dopo la ricerca dell utante nel db e,", id)
 	return id, nil
 }
 

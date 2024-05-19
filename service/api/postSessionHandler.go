@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"wasa-1967862/service/api/reqcontext"
@@ -32,11 +33,11 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 
 	// the structure that take the values from the Json
 
-	var data structures.UserNickname
-	var Req structures.UserId
+	var userNickname structures.UserNickname
+	var userId structures.UserId
 
 	// We read the nickname
-	err := json.NewDecoder(r.Body).Decode(&data)
+	err := json.NewDecoder(r.Body).Decode(&userNickname)
 
 	if err != nil {
 		http.Error(w, "Error by parsing of the JSON", http.StatusBadRequest)
@@ -45,14 +46,16 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 	}
 
 	//Check of the nickname is valid
-	if !isValidID(data.Nickname) {
+	if !isValidID(userNickname.Nickname) {
 		http.Error(w, "The username is not valid", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("The username is not valid")
 		return
 	}
 
 	// search the user in the db
-	id, err2 := rt.db.SearchUser(data.Nickname)
+	fmt.Println("entro in search")
+	id, err2 := rt.db.SearchUser(userNickname.Nickname)
+	fmt.Println("esco")
 	if err2 != nil {
 		http.Error(w, "Error by DB", http.StatusBadRequest)
 		ctx.Logger.WithError(err2).Error("Error by DB")
@@ -60,27 +63,29 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 	}
 	// user not in DB --> we create a new user
 	if id == -1 {
+		fmt.Println("utente non trovato")
 		// user not in DB --> we create a new user
-		id, err := rt.db.PutNewUser(data.Nickname)
+		id, err := rt.db.PutNewUser(userNickname.Nickname)
+		fmt.Println("id dopo averlo inserito nel db", id)
 		if err != nil {
+			fmt.Println("entro nell errore")
 			ctx.Logger.WithError(err).Error("Error by creating new user")
 			http.Error(w, "Error by creating new user", http.StatusBadRequest)
-			err = createFolders(data.Nickname)
-			if err != nil {
-				ctx.Logger.WithError(err).Error("Error by creating new user")
-				http.Error(w, "Error by creating the folder of the user", http.StatusBadRequest)
-				return
-			}
+		}
+		err = createFolders(id)
+		if err != nil {
+			ctx.Logger.WithError(err).Error("Error by creating new user")
+			http.Error(w, "Error by creating the folder of the user", http.StatusBadRequest)
 			return
 		}
-
-		Req.Id = id
-		_ = json.NewEncoder(w).Encode(Req)
+		userId.Id = id
+		_ = json.NewEncoder(w).Encode(userId)
 		return
 
 	}
-	Req.Id = int(id)
-	_ = json.NewEncoder(w).Encode(Req)
+	userId.Id = id
+	fmt.Println(userId.Id)
+	_ = json.NewEncoder(w).Encode(userId)
 	return
 
 }

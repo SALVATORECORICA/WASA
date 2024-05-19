@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -19,8 +20,8 @@ func isValidID(nickname string) bool {
 
 // function to create a new folder
 
-func createFolders(nickname string) error {
-
+func createFolders(id int) error {
+	fmt.Println(id)
 	// Obtain the complete path
 	path, err := os.Executable()
 	if err != nil {
@@ -30,8 +31,11 @@ func createFolders(nickname string) error {
 
 	fatherDir := filepath.Dir(path)
 
+	// Convert id from int to string
+	idString := strconv.Itoa(id)
+
 	//Create the folder
-	completePath := filepath.Join(fatherDir, nickname)
+	completePath := filepath.Join(fatherDir, idString)
 	err = os.Mkdir(completePath, 0777)
 	if err != nil {
 		return err

@@ -8,5 +8,5 @@ func (db *appdbimpl) PutNewUser(nickname string) (int, error) {
 		return 0, err
 	}
 	id, err := db.SearchUser(nickname)
-	return int(id), err
+	return id, err
 }

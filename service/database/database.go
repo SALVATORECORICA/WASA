@@ -44,7 +44,7 @@ var ErrUserDoesNotExist = errors.New("user does not exist")
 type AppDatabase interface {
 	GetName() (string, error)
 	SetName(name string) error
-	SearchUser(nickname string) (float64, error)
+	SearchUser(nickname string) (int, error)
 	PutNewUser(nickname string) (int, error)
 	SearchUserFromNick(nickname string, idUser int) ([]structures.User, error)
 	ExistsUser(id int) (bool, error)
@@ -57,7 +57,7 @@ type AppDatabase interface {
 	DeleteFollowing(follower_id int, followed_id int) error
 	PutNewNickname(nicknameNew string, idUser int) error
 	ObtainIDFromNick(nickname string) (float64, error)
-	PostNewPhoto(nickname string, path string, timestamp time.Time) (int, string, error)
+	PostNewPhoto(id_user int, path string, timestamp time.Time) (int, string, error)
 	GetNickname(id int) (string, error)
 	ExistsPhoto(photoId int) (bool, error)
 	PostComment(id_photo int, id_user int, comment string) error

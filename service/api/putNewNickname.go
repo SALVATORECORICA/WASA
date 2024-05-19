@@ -70,6 +70,18 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	// Search in the db if the Nickname already exists
+	exists, err := rt.db.SearchUser(nick.Nickname)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("update-nickname: error searching user")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if exists != -1 {
+		ctx.Logger.WithError(err).Error("update-nickname: the nickname was already assigned")
+		http.Error(w, "Operation not permitted", http.StatusForbidden)
+	}
+
 	// Update the nickname
 	fmt.Println(nick.Nickname)
 	err = rt.db.PutNewNickname(nick.Nickname, idUser)

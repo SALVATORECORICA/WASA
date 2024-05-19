@@ -8,8 +8,8 @@ import (
 )
 
 // Query to insert a new photo on the db and return the id of the new photo inserted
-func (db *appdbimpl) PostNewPhoto(nickname string, path string, timestamp time.Time) (int, string, error) {
-	result, err := db.c.Exec("INSERT INTO photos (id_user, date, path) VALUES (?,?,?)", nickname, timestamp, path)
+func (db *appdbimpl) PostNewPhoto(id_user int, path string, timestamp time.Time) (int, string, error) {
+	result, err := db.c.Exec("INSERT INTO photos (id_user, date, path) VALUES (?,?,?)", id_user, timestamp, path)
 	if err != nil {
 		return -1, "", err
 	}
@@ -42,7 +42,8 @@ func (db *appdbimpl) ExistsPhoto(photoId int) (bool, error) {
 // Extract the id of the owner
 func (db *appdbimpl) OwnerPhotoFromIdPhoto(photoId int) (structures.User, error) {
 	var user structures.User
-	err := db.c.QueryRow("SELECT id_user FROM photos WHERE  id_photo = ?)", photoId).Scan(&user.Id)
+	err := db.c.QueryRow("SELECT id_user FROM photos WHERE  id_photo = ?", photoId).Scan(&user.Id)
+
 	if err != nil {
 		return user, err
 	}
@@ -50,5 +51,6 @@ func (db *appdbimpl) OwnerPhotoFromIdPhoto(photoId int) (structures.User, error)
 	if err != nil {
 		return user, err
 	}
+
 	return user, nil
 }

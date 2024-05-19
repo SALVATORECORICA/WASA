@@ -82,6 +82,7 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 	if existsBan {
 		http.Error(w, "Operation not permitted", http.StatusForbidden)
+		return
 	}
 
 	// Extract the comment from the request body
