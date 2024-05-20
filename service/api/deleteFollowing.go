@@ -19,12 +19,6 @@ func (rt *_router) deleteFollowing(w http.ResponseWriter, r *http.Request, ps ht
 		return
 	}
 
-	// Check of the HTTP method is DELETE
-	if r.Method != http.MethodDelete {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		ctx.Logger.Error("Method is not correct, the method should be DELETE")
-		return
-	}
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
 	print("id:", idOfUser)
@@ -50,7 +44,7 @@ func (rt *_router) deleteFollowing(w http.ResponseWriter, r *http.Request, ps ht
 	}
 
 	// ExTract the followed id
-	followedId := ps.ByName("banned_user_id")
+	followedId := ps.ByName("followed_id")
 
 	// Convert the string to id
 	followedIdInt, err := strconv.Atoi(followedId)
@@ -61,12 +55,12 @@ func (rt *_router) deleteFollowing(w http.ResponseWriter, r *http.Request, ps ht
 	}
 	exists, err := rt.db.ExistsFollowing(idUser, followedIdInt)
 	if err != nil {
-		http.Error(w, "Error by searching of the ban", http.StatusBadRequest)
+		http.Error(w, "Error by searching of the following", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
 	if !exists {
-		http.Error(w, "The ban not exists also can not deleted", http.StatusBadRequest)
+		http.Error(w, "The following not exists also can not deleted", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	} else {

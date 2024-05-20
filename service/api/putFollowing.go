@@ -16,12 +16,6 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	// Check of the HTTP method is PUT
-	if r.Method != http.MethodPut {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		ctx.Logger.Error("Method is not correct, the method should be POST")
-		return
-	}
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
 	print("id:", idOfUser)
@@ -53,22 +47,56 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// Exract and check the followed id
-	followed_id := ps.ByName("followed_id")
+	followedId := ps.ByName("followed_id")
 
 	// Convert the string to id
-	followed_idInt, err := strconv.Atoi(followed_id)
+	followedIdInt, err := strconv.Atoi(followedId)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
 	// Search in the DB of the id is valid
-	if valid, err := rt.db.ExistsUser(followed_idInt); !valid || err != nil {
+	if valid, err := rt.db.ExistsUser(followedIdInt); !valid || err != nil {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
+
+	// Check if the user wants to follow themselves; it doesn't make sense
+	if idUser == followedIdInt {
+		http.Error(w, "Error by putting the following", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("The user cannot following themselves")
+		return
+	}
+
+	// Check if exists a ban
+	exists, err := rt.db.ExistsBan(followedIdInt, idUser)
+	if err != nil {
+		http.Error(w, "Error by searching of the ban", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	if exists {
+		http.Error(w, "Exists a ban from the user, the user cannot be followed", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+
+	// Check if exists a ban
+	exists, err = rt.db.ExistsBan(idUser, followedIdInt)
+	if err != nil {
+		http.Error(w, "Error by searching of the ban", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	if exists {
+		http.Error(w, "Exists a ban from the user, the user cannot be followed", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+
 	// Insert the following
-	err = rt.db.PutFollowing(idUser, followed_idInt)
+	err = rt.db.PutFollowing(idUser, followedIdInt)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("inserting-ban: error by the inserting of the ban")
 		w.WriteHeader(http.StatusBadRequest)
