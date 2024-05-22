@@ -56,6 +56,10 @@ paths:
                 $ref: "#/components/schemas/login_return"
   #=====================================================================================
   /users:
+  
+    parameters:
+        - $ref: "#/components/parameters/query_nickname"
+    
     get:
       tags:
         - search
@@ -63,8 +67,6 @@ paths:
       description: A user can find another user's profile only if he's not banned by the latter. Multiple users might match partially the nickname being searched
       operationId: getUserProfile
 
-      parameters:
-        - $ref: "#/components/parameters/query_id"
 
       responses:
         '200':
@@ -80,8 +82,9 @@ paths:
         - bearerAuth: []
   #=====================================================================================
   /users/{id}:
+    
     parameters:
-      - $ref: "#/components/parameters/identifier"
+      - $ref: "#/components/parameters/user_id"
 
     get:
       tags:
@@ -89,7 +92,7 @@ paths:
       summary: Obtain the profile
       description: Allows the user to obtain a profile complete info (can't be banned by the profile owner)
       operationId: getProfile
-
+    
       responses:
         '200':
           $ref: "#/components/responses/profile"
@@ -140,7 +143,7 @@ paths:
   #=====================================================================================
   /users/{id}/banned_users/{banned_user_id}:
     parameters:
-      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/user_id'
       - $ref: "#/components/parameters/banned_user_id"
 
     put:
@@ -189,8 +192,8 @@ paths:
   #=====================================================================================
   /users/{id}/followers/{follower_id}:
     parameters:
-      - $ref: "#/components/parameters/follower_id"
-      - $ref: '#/components/parameters/identifier'
+      - $ref: "#/components/parameters/user_id"
+      - $ref: '#/components/parameters/follower_id'
 
     put:
       tags:
@@ -240,7 +243,7 @@ paths:
   #=====================================================================================
   /users/{id}/home:
     parameters:
-      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/user_id'
 
     get:
       tags:
@@ -266,7 +269,7 @@ paths:
   #=====================================================================================
   /users/{id}/photos:
     parameters:
-      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/user_id'
 
     post:
       tags:
@@ -298,7 +301,7 @@ paths:
   #=====================================================================================
   /users/{id}/photos/{photo_id}:
     parameters:
-      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/user_id'
       - $ref: '#/components/parameters/photo_id'
 
 
@@ -348,7 +351,7 @@ paths:
   #=====================================================================================
   /users/{id}/photos/{photo_id}/comments:
     parameters:
-      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/user_id'
       - $ref: '#/components/parameters/photo_id'
 
     post:
@@ -383,7 +386,7 @@ paths:
   #=====================================================================================
   /users/{id}/photos/{photo_id}/comments/{comment_id}:
     parameters:
-      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/user_id'
       - $ref: '#/components/parameters/photo_id'
       - $ref: '#/components/parameters/comment_id'
 
@@ -411,7 +414,7 @@ paths:
   #=====================================================================================
   /users/{id}/photos/{photo_id}/likes:
     parameters:
-      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/user_id'
       - $ref: '#/components/parameters/photo_id'
 
 
@@ -436,10 +439,11 @@ paths:
 
       security:
         - bearerAuth: []
+  
   /users/{id}/photos/{photo_id}/likes/{like_id}:
 
     parameters:
-      - $ref: '#/components/parameters/identifier'
+      - $ref: '#/components/parameters/user_id'
       - $ref: '#/components/parameters/photo_id'
       - $ref: '#/components/parameters/like_id'
 
@@ -471,82 +475,80 @@ components:
 
   parameters:
 
-    identifier:
-      name: id
+    nickname:
+      name: nickname
       in: path
-      description: A user's unique id
-      required: true
-      schema:
-        description: String between 3-16 characters
-        type: string
-        pattern: '^.*?$'
-        example: Marietto64
-        minLength: 3
-        maxLength: 16
-        readOnly: true
-    #........................................................
-    photo_id:
-      name: photo_id
-      in: path
-      description: A photo unique identifier
-      required: true
-      schema:
-        description: Int64 between 0-9999
-        type: integer
-        format: int64
-        minimum: 0
-        maximum: 9999
-        example : 999
-        readOnly: true
-    #........................................................
-    comment_id:
-      name: comment_id
-      in: path
-      description: A comment unique identifier
-      required: true
-      schema:
-        $ref: "#/components/schemas/comment_identifier/properties/comment_id"
-      example: 118
-    #........................................................
-    follower_id:
-      name: follower_id
-      in: path
-      description: A follower's unique identifier. It's exactly his *identifier*
+      description: A user's unique nickname
       required: true
       schema:
         $ref: "#/components/schemas/user_nickname/properties/nickname"
       example: "Fefo"
     #........................................................
+    
+    
+    user_id:
+      name: id
+      in: path
+      description: A user's unique id
+      required: true
+      schema:
+         $ref: "#/components/schemas/identifier"
+      example: 52
+    #........................................................
+    
+    
+    photo_id:
+      name: photo_id
+      in: path
+      description: A photo unique *identifier
+      required: true
+      schema:
+        $ref: "#/components/schemas/identifier/properties/id"
+      example: 1
+    #........................................................
+    comment_id:
+      name: comment_id
+      in: path
+      description: A comment unique *identifier
+      required: true
+      schema:
+        $ref: "#/components/schemas/identifier/properties/id"
+      example: 118
+    #........................................................
+    follower_id:
+      name: follower_id
+      in: path
+      description: A follower's unique identifier. It's exactly his *identifier
+      required: true
+      schema:
+        $ref: "#/components/schemas/identifier/properties/id"
+      example: 17
+    #........................................................
     like_id:
       name: like_id
       in: path
-      description: A like unique identifier. It's exactly the *identifier* of the user that liked the photo
+      description: A like unique identifier. It's exactly the *identifier of the user that liked the photo
       required: true
       schema:
-        $ref: "#/components/schemas/user_nickname/properties/nickname"
-      example: "VanessaP"
+        $ref: "#/components/schemas/identifier/properties/id"
+      example: 178
     #........................................................
     banned_user_id:
       name: banned_user_id
       in: path
-      description: A banned user unique identifier. It's exactly the *identifier* of the user
+      description: A banned user unique identifier. It's exactly the *identifier of the user
       required: true
       schema:
-        $ref: "#/components/schemas/user_nickname/properties/nickname"
-      example: "Aristotele98"
+        $ref: "#/components/schemas/identifier/properties/id"
+      example: 13
     #........................................................
-    query_id:
-      name: id
+    query_nickname:
+      name: nickname
       in: query
-      description: id of the user that is being searched
+      description: nichkname of the user that is being searched
       schema:
-        description: usual *identifier*
-        type: string
-        pattern: '^.*?$'
-        minLength: 3
-        maxLength: 16
-        example: "Lambrene99"
-      example: "lambre98"
+        $ref: "#/components/schemas/user_nickname/properties/nickname"
+      example: "Fefo"
   #........................................................
   #_____________________________________________________________________________________________________
   schemas:
@@ -565,26 +567,15 @@ components:
       example:
         nickname: "Kaido"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-    complete_user:
-      description: Contains both *unique identifier and nickname of a user
+
+    identifier:
+      description: It's a user *unique* id
       type: object
       properties:
-        user_id:
-          $ref: "#/components/schemas/user_nickname/properties/nickname"
-        nickname:
-          $ref: "#/components/schemas/user_nickname/properties/nickname"
-      example:
-        user_id: "27"
-        nickname: "Luffy"
-    #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-    comment_identifier:
-      description: It's a comment *unique* id
-      type: object
-      properties:
-        comment_id:
+        id:
           description: Any number between 0-9999
           type: integer
-          format: int64
+          format: int
           minimum: 0
           maximum: 9999
           readOnly: true
@@ -592,14 +583,22 @@ components:
       example:
         comment_id: 965
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-    comment:
-      description: A user's comment contains the text of the comment and the *identifier* of who commented
+    complete_user:
+      description: Contains both *unique identifier and nickname of a user
       type: object
       properties:
         user_id:
-          $ref: "#/components/schemas/user_nickname/properties/nickname"
+          $ref: "#/components/schemas/identifier/properties/id"
         nickname:
           $ref: "#/components/schemas/user_nickname/properties/nickname"
+      example:
+        user_id: "27"
+        nickname: "Luffy"
+    #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+    comment:
+      description: A user's comment contains the text of the comment 
+      type: object
+      properties:
         comment:
           type: string
           minLength: 1
@@ -607,15 +606,22 @@ components:
           pattern: '^.*?$'
           example: "OK my bruh"
           description: String value of the comment
-        comment_id:
-          $ref: "#/components/schemas/comment_identifier/properties/comment_id"
       example:
-        user_id: "784512675"
-        nickname: "Luffy"
-        photo_id: 873
         comment: "Che tramonto!"
-        comment_id: 16
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+    
+    complete_comment:
+      description: Contains *unique identifier of a comment and the comment
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/identifier/properties/id"
+        comment:
+          $ref: "#/components/schemas/comment/properties/comment"
+      example:
+        user_id: "27"
+        nickname: "Luffy"
+        #||||||||||||||||||||||||||||||||||||||||||||||||||||
     raw_photo:
       description: Image content
       type: object
@@ -632,20 +638,23 @@ components:
       description: Contains the essential info of a photo
       type: object
       properties:
+        
+        photo_id:
+          $ref: "#/components/schemas/identifier/properties/id"
+        owner:
+          $ref: "#/components/schemas/complete_user"
         comments:
           description: Array of comments of a photo
           type: array
           minItems: 0
           maxItems: 9999
           items:
-            $ref: "#/components/schemas/comment"
+            $ref: "#/components/schemas/complete_comment"
           example:
-            - comments:
-                - user_id: "4618163"
-                  nickname: "Luffy"
-                  photo_id: 3821
-                  comment: "bella foto!"
-                  comment_id: 23
+            - id: 53
+              comment: "bella foto!"
+            - id: 78
+              comment: "How are you?"
         likes:
           description:  Array of users that liked a photo
           type: array
@@ -654,9 +663,9 @@ components:
           items:
             $ref: "#/components/schemas/complete_user"
           example:
-            -  user_id: "46518115"
+            -  user_id: 154
                nickname: "Kaido"
-            -  user_id: "648131861"
+            -  user_id: 84
                nickname: "Luccy"
         date:
           description: Date and time of upload.
@@ -664,23 +673,24 @@ components:
           format: date-time
           example: 2017-07-21T17:32:28Z
           readOnly: true
-        photo_id:
-          $ref: "#/components/schemas/comment_identifier/properties/comment_id"
-        owner:
-          $ref: "#/components/schemas/user_nickname/properties/nickname"
+        raw_data:
+           $ref: "#/components/schemas/raw_photo/properties/photo_data"
+          
       example:
+        photo_id:
+          id: 24
+        owner:
+           id: 78
+           nickname: "GattoSuperbo"
         comments:
-          - user_id: "1812721"
-            nickname: "Franky"
-            photo_id: 3821
-            comment: "bella foto!"
-            comment_id: 99
+          - id: 12
+            comment: "Bellissima foto amico mio"
         likes:
           - user_id: "181518181"
             nickname: "Doflamingo"
         date: 2017-07-21T17:32:28Z
-        photo_id: 3821
-        owner: "Mariucc"
+        raw_data: "1100011100"
+        
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     photos:
       description: Represents a list of photos
@@ -694,26 +704,40 @@ components:
           items:
             $ref: "#/components/schemas/photo"
           example:
-            - comments:
-                - user_id: "4828448"
-                  nickname: "Niko Robin"
-                  photo_id: 8321
-                  comment: "i love you"
-                  comment_id: 7
-                - user_id: "182489223"
-                  nickname: "Zoro"
-                  photo_id: 8321
-                  comment: "great goal!"
-                  comment_id: 76
-            - likes:
-                - user_id: "7562139"
-                  nickname: "Franky99"
-                - user_id: "78521582"
-                  nickname: "BabyReeinder"
-              date: 2017-07-21T17:32:28Z
-              photo_id: 8321
-              owner: "Corichetto"
-
+          - photo_id:
+              id: 8321
+            owner:
+              id: 123
+              nickname: "Corichetto"
+            comments:
+              - id: 7
+                user_id: 48
+                nickname: "Niko Robin"
+                comment: "i love you"
+              - id: 76
+                user_id: 182
+                nickname: "Zoro"
+                comment: "great goal!"
+            likes:
+              - user_id: 756
+                nickname: "Franky99"
+              - user_id: 78
+                nickname: "BabyReeinder"
+            date: 2017-07-21T17:32:28Z
+            raw_data: "1100011100"
+          - photo_id:
+              id: 8322
+            owner:
+              id: 124
+              nickname: "TonyMontana"
+            comments:
+              - id: 77
+                comment: "nice shot!"
+            likes:
+              - user_id: 123
+                nickname: "Sanji"
+            date: 2018-08-22T15:21:22Z
+            raw_data: "1100011111"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     users_list:
       description: List of users found
@@ -727,13 +751,13 @@ components:
           items:
             $ref: "#/components/schemas/complete_user"
           example:
-            - user_id: Currywurst15
+            - user_id: 34
               nickname: Marietto
-            - user_id: Carota
+            - user_id: 32
               nickname: Karrot
-            - user_id: Vegeta
+            - user_id: 13
               nickname: Sayan
-            - user_id: Goku
+            - user_id: 17
               nickname: GokuSS4
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     complete_profile:
@@ -741,11 +765,8 @@ components:
       type: object
       properties:
 
-        user_id:
-          $ref: "#/components/schemas/user_nickname/properties/nickname"
-
-        nickname:
-          $ref: "#/components/schemas/user_nickname/properties/nickname"
+        user:
+         $ref: "#/components/schemas/complete_user"
 
         followers:
           description: Array of followers
@@ -804,7 +825,7 @@ components:
       description: Identifier sent by user during the login
       type: object
       properties:
-        identifier:
+        nickname:
           $ref: "#/components/schemas/user_nickname/properties/nickname"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     login_return:
@@ -858,10 +879,10 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/comment_identifier"
+            $ref: "#/components/schemas/complete_comment"
     #''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     photo_uploaded:
-      description: photo has been uploaded successfully. Returns the *unique* id of the posted photo
+      description: photo has been uploaded successfully. Returns the posted photo
       content:
         application/json:
           schema:
@@ -875,11 +896,11 @@ components:
             $ref: "#/components/schemas/complete_profile"
     #''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     photo:
-      description: The binary data of a photo
+      description: The photo with all likes,comments exc.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/raw_photo"
+            $ref: "#/components/schemas/photo"
   #''''''''''''''''''''''''''''''''''''''''''''''''''''''''
   #_____________________________________________________________________________________________________
   securitySchemes:
