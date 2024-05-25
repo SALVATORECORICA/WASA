@@ -62,6 +62,12 @@ type AppDatabase interface {
 	ExistsPhoto(photoId int) (bool, error)
 	PostComment(id_photo int, id_user int, comment string) error
 	OwnerPhotoFromIdPhoto(photoId int) (structures.User, error)
+	ExistsComment(comment_id int) (bool, error)
+	OwnerComment(commentId int, userId int) (bool, error)
+	DeleteComment(idComment int) error
+	PutLike(idPhoto int, idUser int) error
+	ExistsLike(idUser int, photoId int) (bool, error)
+	DeleteLike(idUser int, photoId int) error
 	Ping() error
 }
 

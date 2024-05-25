@@ -95,6 +95,19 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
+	// Check if the following already exists
+	existsFollowing, err := rt.db.ExistsFollowing(idUser, followedIdInt)
+	if err != nil {
+		http.Error(w, "Error by searching if the following already exists", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Error by searching if the following already exists")
+		return
+	}
+	if existsFollowing {
+		http.Error(w, "Operation not permitted, the following was already putted", http.StatusMethodNotAllowed)
+		ctx.Logger.WithError(err).Error("The following was already putted")
+		return
+	}
+
 	// Insert the following
 	err = rt.db.PutFollowing(idUser, followedIdInt)
 	if err != nil {

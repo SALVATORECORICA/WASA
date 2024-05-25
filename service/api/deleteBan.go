@@ -76,6 +76,8 @@ func (rt *_router) deleteBan(w http.ResponseWriter, r *http.Request, ps httprout
 			ctx.Logger.WithError(err).Error("Database has encountered an error")
 			return
 		}
+		// Operation success
+		w.WriteHeader(http.StatusNoContent)
 	}
 
 }
