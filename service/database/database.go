@@ -68,6 +68,13 @@ type AppDatabase interface {
 	PutLike(idPhoto int, idUser int) error
 	ExistsLike(idUser int, photoId int) (bool, error)
 	DeleteLike(idUser int, photoId int) error
+	GetLikes(photoId int) ([]structures.User, int, error)
+	CommentsPhoto(photoId int) ([]structures.Comment, error)
+	GetPhotoDate(photoId int) (time.Time, error)
+	GetPhotoPath(photoId int) (string, error)
+	DeletePhoto(photoId int) error
+	DeleteCommentPhoto(idPhoto int) error
+	DeleteLikePhoto(idPhoto int) error
 	Ping() error
 }
 
@@ -111,7 +118,7 @@ func createDatabase(db *sql.DB) error {
 		`CREATE TABLE IF NOT EXISTS photos (
 			id_photo INTEGER PRIMARY KEY AUTOINCREMENT,
 			id_user INTEGER NOT NULL,
-			date DATETIME NOT NULL,
+			uploadDate DATETIME NOT NULL,
 			path VARCHAR(150) NOT NULL,
 			FOREIGN KEY(id_user) REFERENCES users (id_user) ON DELETE CASCADE
 			);`,

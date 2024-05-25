@@ -30,22 +30,25 @@ type Comment struct {
 
 // the photos
 
-type Photos struct {
-	PhotoId  int       `json:"photo_Id"`
-	Owner    User      `json:"owner"`
-	Date     time.Time `json:"date"`
-	Likes    []User    `json:"likes"`
-	Comments []Comment `json:"comments"`
+type Photo struct {
+	PhotoId   int       `json:"photo_Id"`
+	Owner     User      `json:"owner"`
+	Date      time.Time `json:"date"`
+	Likes     []User    `json:"likes"`
+	Comments  []Comment `json:"comments"`
+	NLikes    int       `json:"nLikes"`
+	PhotoData []byte    `json:"image"`
+	Liked     bool      `json:"liked"`
 }
 
 // the complete Profile of the user
 type UserProfile struct {
-	Id         int      `json:"id"`
-	Nickname   string   `json:"nickname"`
-	Followers  []User   `json:"followers"`
-	Followings []User   `json:"following"`
-	Photos     []Photos `json:"photos"`
+	Id         int     `json:"id"`
+	Nickname   string  `json:"nickname"`
+	Followers  []User  `json:"followers"`
+	Followings []User  `json:"following"`
+	Photos     []Photo `json:"photos"`
 }
 type Image struct {
-	PhotoData string `json:"photo_data"`
+	PhotoData []byte `json:"photo_data"`
 }

@@ -9,7 +9,7 @@ import (
 
 // Query to insert a new photo on the db and return the id of the new photo inserted
 func (db *appdbimpl) PostNewPhoto(id_user int, path string, timestamp time.Time) (int, string, error) {
-	result, err := db.c.Exec("INSERT INTO photos (id_user, date, path) VALUES (?,?,?)", id_user, timestamp, path)
+	result, err := db.c.Exec("INSERT INTO photos (id_user, uploadDate, path) VALUES (?,?,?)", id_user, timestamp, path)
 	if err != nil {
 		return -1, "", err
 	}
@@ -34,6 +34,7 @@ func (db *appdbimpl) ExistsPhoto(photoId int) (bool, error) {
 	var exists bool
 	err := db.c.QueryRow("SELECT EXISTS(SELECT * FROM photos WHERE  id_photo = ?)", photoId).Scan(&exists)
 	if err != nil {
+
 		return false, err
 	}
 	return exists, nil
@@ -53,4 +54,34 @@ func (db *appdbimpl) OwnerPhotoFromIdPhoto(photoId int) (structures.User, error)
 	}
 
 	return user, nil
+}
+
+// Obtain the date of the Photo
+
+func (db *appdbimpl) GetPhotoDate(photoId int) (time.Time, error) {
+	var uploadDate time.Time
+	err := db.c.QueryRow("SELECT uploadDate FROM photos WHERE id_photo = ?", photoId).Scan(&uploadDate)
+	if err != nil {
+		return uploadDate, err
+	}
+	return uploadDate, nil
+}
+
+// Obtain the path of the Photo
+func (db *appdbimpl) GetPhotoPath(photoId int) (string, error) {
+	var path string
+	err := db.c.QueryRow("SELECT path FROM photos WHERE id_photo = ?", photoId).Scan(&path)
+	if err != nil {
+		return path, err
+	}
+	return path, nil
+}
+
+func (db *appdbimpl) DeletePhoto(photoId int) error {
+
+	_, err := db.c.Exec("DELETE FROM photos WHERE id_photo = ?", photoId)
+	if err != nil {
+		return err
+	}
+	return nil
 }

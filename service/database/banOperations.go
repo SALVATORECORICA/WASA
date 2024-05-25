@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 	"wasa-1967862/service/structures"
 )
@@ -47,6 +48,9 @@ func (db *appdbimpl) ExistsBan(id_banner int, id_banned int) (bool, error) {
 	var exists bool
 	err := db.c.QueryRow("SELECT EXISTS(SELECT * FROM banned_users WHERE banner_id = ? AND banned_id = ?)", id_banner, id_banned).Scan(&exists)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, nil
+		}
 		return false, err
 	}
 	return exists, nil
