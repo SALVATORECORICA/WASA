@@ -78,7 +78,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	// Now we start to take the infos of the photo
+	// Now we take the infos of the photo
 
 	// obtain the likes
 	usersLikes, nLikes, err := rt.db.GetLikes(photoId)

@@ -78,13 +78,13 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	err = rt.db.DeletePhoto(photoIdInt)
 	if err != nil {
 		http.Error(w, "Error by deleting the Photo", http.StatusBadRequest)
-		ctx.Logger.WithError(err).Error("Database has encountered an error:Error by deleating the Photo from the DB")
+		ctx.Logger.WithError(err).Error("Database has encountered an error:Error by deleting the Photo from the DB")
 		return
 	}
 	err = os.Remove(path)
 	if err != nil {
 		http.Error(w, "Error by deleting the Photo", http.StatusBadRequest)
-		ctx.Logger.WithError(err).Error("Database has encountered an error:Error by deleating the Photo from the Folder")
+		ctx.Logger.WithError(err).Error("Database has encountered an error:Error by deleting the Photo from the Folder")
 		return
 	}
 

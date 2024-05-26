@@ -75,6 +75,11 @@ type AppDatabase interface {
 	DeletePhoto(photoId int) error
 	DeleteCommentPhoto(idPhoto int) error
 	DeleteLikePhoto(idPhoto int) error
+	GetFollower(userId int) ([]structures.User, int, error)
+	GetFollowed(userId int) ([]structures.User, int, error)
+	GetPhotosProfileSorted(idProfileSearched int) ([]structures.Photo, error)
+	GetStream(idProfile int) ([]structures.Photo, error)
+	GetPhotoComplete(photoId int, idUser int) (structures.Photo, error)
 	Ping() error
 }
 

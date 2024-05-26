@@ -48,6 +48,8 @@ type UserProfile struct {
 	Followers  []User  `json:"followers"`
 	Followings []User  `json:"following"`
 	Photos     []Photo `json:"photos"`
+	NFollowers int     `json:"nFollowers"`
+	NFollowed  int     `json:"nFollowing"`
 }
 type Image struct {
 	PhotoData []byte `json:"photo_data"`

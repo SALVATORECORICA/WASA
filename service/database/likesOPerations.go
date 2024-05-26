@@ -60,8 +60,11 @@ func (db *appdbimpl) GetLikes(photoId int) ([]structures.User, int, error) {
 
 // Delete all the likes of a photo
 func (db *appdbimpl) DeleteLikePhoto(idPhoto int) error {
-	_, err := db.c.Exec("DELETE FROM likes WHERE id_photo = ?)", idPhoto)
+	_, err := db.c.Exec("DELETE FROM likes WHERE id_photo = ?", idPhoto)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
 		return err
 	}
 	return nil

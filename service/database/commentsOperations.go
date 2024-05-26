@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 	"wasa-1967862/service/structures"
 )
@@ -72,6 +73,9 @@ func (db *appdbimpl) CommentsPhoto(photoId int) ([]structures.Comment, error) {
 func (db *appdbimpl) DeleteCommentPhoto(idPhoto int) error {
 	_, err := db.c.Exec("DELETE FROM comments WHERE id_photo = ?", idPhoto)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
 		return err
 	}
 	return nil

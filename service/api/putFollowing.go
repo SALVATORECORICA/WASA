@@ -42,7 +42,8 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 	// Search in the DB of the id is valid
 	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
-		w.WriteHeader(http.StatusForbidden)
+		http.Error(w, "Error by searching the User: THe User not exists ", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
 
@@ -58,7 +59,8 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 	// Search in the DB of the id is valid
 	if valid, err := rt.db.ExistsUser(followedIdInt); !valid || err != nil {
-		w.WriteHeader(http.StatusForbidden)
+		http.Error(w, "Error by searching the following User: TH User not exist", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
 

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"io/ioutil"
 	"path/filepath"
 	"strconv"
 	"time"
@@ -84,4 +85,111 @@ func (db *appdbimpl) DeletePhoto(photoId int) error {
 		return err
 	}
 	return nil
+}
+
+// Get all photos from the id
+
+func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]structures.Photo, error) {
+	var photos []structures.Photo
+	rows, err := db.c.Query("SELECT path FROM photos WHERE id_user = ? ORDER BY uploadDate DESC ", idProfileSearched)
+	if err != nil {
+		return photos, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var idPhoto int
+		if err := rows.Scan(&idPhoto); err != nil {
+			return photos, err
+		}
+		photo, err := db.GetPhotoComplete(idPhoto, idProfileSearched)
+		if err != nil {
+			return photos, err
+		}
+		photos = append(photos, photo)
+	}
+	return photos, nil
+}
+
+func (db *appdbimpl) GetStream(idProfile int) ([]structures.Photo, error) {
+	var photos []structures.Photo
+	rows, err := db.c.Query("SELECT id_photo FROM followers f, photos p WHERE followed_id = ? AND f.follower_id = u.id_user ORDER BY uploadDate DESC ", idProfile)
+	if err != nil {
+		return photos, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var idPhoto int
+		if err := rows.Scan(&idPhoto); err != nil {
+			return photos, err
+		}
+		photo, err := db.GetPhotoComplete(idPhoto, idProfile)
+		if err != nil {
+			return photos, err
+		}
+		photos = append(photos, photo)
+	}
+	return photos, nil
+}
+
+func (db *appdbimpl) GetPhotoComplete(photoId int, idUser int) (structures.Photo, error) {
+
+	// Declare the photo to return
+	var photo structures.Photo
+
+	// Obtain the owner of the photo
+
+	owner, err := db.OwnerPhotoFromIdPhoto(photoId)
+	if err != nil {
+		return photo, err
+	}
+
+	// obtain the likes
+
+	usersLikes, nLikes, err := db.GetLikes(photoId)
+	if err != nil {
+		return photo, err
+	}
+	// obtain the comments
+	comments, err := db.CommentsPhoto(photoId)
+	if err != nil {
+		return photo, err
+	}
+
+	// Obtain the date
+	date, err := db.GetPhotoDate(photoId)
+	if err != nil {
+		return photo, err
+	}
+	// Obtain the image
+
+	// Obtain the path where we can find the photo
+	path, err := db.GetPhotoPath(photoId)
+	if err != nil {
+		return photo, err
+	}
+
+	// Take the photo
+
+	photoData, err := ioutil.ReadFile(path)
+	if err != nil {
+		return photo, err
+	}
+
+	// Check if the user liked the photo
+	existsLike, err := db.ExistsLike(idUser, photoId)
+	if err != nil {
+		return photo, err
+	}
+	// Now we are ready to send the
+
+	photo.PhotoId = photoId
+	photo.Owner = owner
+	photo.Date = date
+	photo.Likes = usersLikes
+	photo.NLikes = nLikes
+	photo.PhotoData = photoData
+	photo.Comments = comments
+	photo.Liked = existsLike
+
+	return photo, nil
 }
