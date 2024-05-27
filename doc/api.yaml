@@ -568,7 +568,9 @@ components:
           description: Any number between 0-9999
           type: integer
           format: int
-          minimum: 0
+          minLength: 3
+          maxLength: 16
+          minimum: 100
           maximum: 9999
           readOnly: true
           example: 965
@@ -584,7 +586,7 @@ components:
         nickname:
           $ref: "#/components/schemas/user_nickname/properties/nickname"
       example:
-        user_id: "27"
+        user_id: "270"
         nickname: "Luffy"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     comment:
@@ -611,7 +613,7 @@ components:
         comment:
           $ref: "#/components/schemas/comment/properties/comment"
       example:
-        user_id: "27"
+        user_id: "270"
         nickname: "Luffy"
         #||||||||||||||||||||||||||||||||||||||||||||||||||||
     raw_photo:
@@ -622,6 +624,8 @@ components:
           description: "Raw data of the photo"
           type: string
           format: binary
+          minLength: 0
+          maxLength: 100
           example: "011100010011111100"
       example:
         photo_data: "010110010"
@@ -702,18 +706,18 @@ components:
               id: 123
               nickname: "Corichetto"
             comments:
-              - id: 7
-                user_id: 48
+              - id: 700
+                user_id: 480
                 nickname: "Niko Robin"
                 comment: "i love you"
-              - id: 76
+              - id: 760
                 user_id: 182
                 nickname: "Zoro"
                 comment: "great goal!"
             likes:
               - user_id: 756
                 nickname: "Franky99"
-              - user_id: 78
+              - user_id: 780
                 nickname: "BabyReeinder"
             date: 2017-07-21T17:32:28Z
             raw_data: "1100011100"
@@ -723,7 +727,7 @@ components:
               id: 124
               nickname: "TonyMontana"
             comments:
-              - id: 77
+              - id: 770
                 comment: "nice shot!"
             likes:
               - user_id: 123
@@ -743,13 +747,13 @@ components:
           items:
             $ref: "#/components/schemas/complete_user"
           example:
-            - user_id: 34
+            - user_id: 340
               nickname: Marietto
-            - user_id: 32
+            - user_id: 320
               nickname: Karrot
-            - user_id: 13
+            - user_id: 131
               nickname: Sayan
-            - user_id: 17
+            - user_id: 178
               nickname: GokuSS4
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     complete_profile:
@@ -768,9 +772,9 @@ components:
           items:
             $ref: "#/components/schemas/complete_user"
           example:
-            - user_id: "195195121172"
+            - user_id: 451
               nickname: "Usoppp"
-            - user_id: "48154815"
+            - user_id: 827
               nickname: "Cecchino74"
 
         following:
@@ -781,7 +785,7 @@ components:
           items:
             $ref: "#/components/schemas/complete_user"
           example:
-            - user_id: "481830"
+            - user_id: 741
               nickname: "Carpentiere22"
 
         photos:
@@ -793,25 +797,25 @@ components:
             $ref: "#/components/schemas/photo"
           example:
             - comments:
-                - user_id: "gatto"
+                - user_id: 451
                   nickname: "stivali"
                   comment: "special"
                   comment_id: 104
-                - user_id: "poca"
+                - user_id: 153
                   nickname: "ontas"
                   comment: "wow!"
-                  comment_id: 99
+                  comment_id: 990
             - likes:
-                - user_id: "mondo"
+                - user_id: 512
                   nickname: "marcio"
-                - user_id: "fabri"
+                - user_id: 632
                   nickname: "fibra"
-                - user_id: "Ingo"
+                - user_id: 852
                   nickname: "ohneFlamingo"
 
               date: 2022-11-22T13:10:14Z
               photo_id: 7836
-              owner: "Cecchino74"
+              owner: 412
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     user_login:
       description: Identifier sent by user during the login
