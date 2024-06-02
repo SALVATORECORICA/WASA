@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
@@ -15,7 +14,7 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 	// Set a reply as JSON
 	w.Header().Set("Content-Type", "application/json")
 
-	//Check of the Server is ready:
+	// Check of the Server is ready:
 	if err := rt.db.Ping(); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("The Server is not ready")
@@ -66,14 +65,14 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	//Devo trovare l id del proprietario tramite la photo id
+	// we search the id of the owner
 	user, err := rt.db.OwnerPhotoFromIdPhoto(idPhotoInt)
 	if err != nil {
 		http.Error(w, "Error by searching the User from the ID-photo", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Error by searching the User from the ID-photo")
 	}
 
-	//We check if exists a ban beetwen the photo owner and the comment owner
+	// We check if exists a ban beetwen the photo owner and the comment owner
 
 	existsBan, err := rt.db.ExistsBan(user.Id, idUser)
 	if err != nil {
@@ -88,7 +87,6 @@ func (rt *_router) postComment(w http.ResponseWriter, r *http.Request, ps httpro
 	// Extract the comment from the request body
 	var comment structures.Comment
 	err = json.NewDecoder(r.Body).Decode(&comment)
-	fmt.Println(comment.Comment)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("comment: error decoding json")
 		w.WriteHeader(http.StatusBadRequest)

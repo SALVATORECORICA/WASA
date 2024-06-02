@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
@@ -14,7 +13,7 @@ import (
 // We have 3 input parameters, the first is the reply of the HTTP Request, the second one is the URL and Body request, the third one is the parameters of the URL Path
 func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	//Check of the Server is ready:
+	// Check of the Server is ready:
 	if err := rt.db.Ping(); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("The Server is not ready")
@@ -47,7 +46,6 @@ func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps ht
 
 	// Search in the DB of the id is valid
 	if valid, err := rt.db.ExistsUser(idUser); !valid || err != nil {
-		fmt.Println("ciao")
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -79,5 +77,5 @@ func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps ht
 		return
 	}
 	w.WriteHeader(http.StatusInternalServerError)
-	return
+
 }

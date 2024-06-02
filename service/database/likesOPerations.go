@@ -55,6 +55,9 @@ func (db *appdbimpl) GetLikes(photoId int) ([]structures.User, int, error) {
 		users = append(users, user)
 		totalLikes++
 	}
+	if err := rows.Err(); err != nil {
+		return users, 0, err
+	}
 	return users, totalLikes, nil
 }
 

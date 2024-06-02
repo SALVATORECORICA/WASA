@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"wasa-1967862/service/structures"
 )
 
@@ -62,7 +61,6 @@ func (db *appdbimpl) SearchUser(nickname string) (int, error) {
 		}
 		return -1, err
 	}
-	fmt.Println("id dopo la ricerca dell utante nel db e,", id)
 	return id, nil
 }
 

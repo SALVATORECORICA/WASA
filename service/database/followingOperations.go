@@ -51,6 +51,10 @@ func (db *appdbimpl) GetFollower(userId int) ([]structures.User, int, error) {
 		users = append(users, user)
 		nFollowers++
 	}
+	// Check for errors from iterating over rows.
+	if err = rows.Err(); err != nil {
+		return users, 0, err
+	}
 	return users, nFollowers, nil
 }
 

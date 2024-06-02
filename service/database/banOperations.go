@@ -2,12 +2,11 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"wasa-1967862/service/structures"
 )
 
 // Get the list of users whose profiles can be viewed from a list of users
-// that match the search performed"
+// that match the search performed
 
 func (db *appdbimpl) CheckBan(u []structures.User, idUser int) ([]structures.User, error) {
 	var updatedUsers []structures.User
@@ -21,6 +20,10 @@ func (db *appdbimpl) CheckBan(u []structures.User, idUser int) ([]structures.Use
 		if err := rows.Scan(&banner); err != nil {
 			return nil, err
 		}
+	}
+	// Check for errors from iterating over rows.
+	if err := rows.Err(); err != nil {
+		return nil, err
 	}
 	for _, user := range u {
 		insert := true
@@ -59,7 +62,6 @@ func (db *appdbimpl) ExistsBan(id_banner int, id_banned int) (bool, error) {
 func (db *appdbimpl) DeleteBan(id_banner int, id_banned int) error {
 	_, err := db.c.Exec("DELETE FROM banned_users WHERE banner_id = ? AND banned_id = ?", id_banner, id_banned)
 	if err != nil {
-		fmt.Println("problema durante l eliminazione della entry")
 		return err
 	}
 	return nil

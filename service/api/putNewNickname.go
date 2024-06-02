@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
@@ -15,19 +14,13 @@ import (
 // We have 3 input parameters, the first is the reply of the HTTP Request, the second one is the URL and Body request, the third one is the parameters of the URL Path
 func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
 
-	//Check of the Server is ready:
+	// Check of the Server is ready:
 	if err := rt.db.Ping(); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		ctx.Logger.WithError(err).Error("The Server is not ready")
 		return
 	}
 
-	// Check of the HTTP method is PUT
-	if r.Method != http.MethodPut {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		ctx.Logger.Error("Method is not correct, the method should be POST")
-		return
-	}
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
 
@@ -83,7 +76,6 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	// Update the nickname
-	fmt.Println(nick.Nickname)
 	err = rt.db.PutNewNickname(nick.Nickname, idUser)
 	if err != nil {
 		ctx.Logger.WithError(err).Error("update-nickname: error by the updating of the nickname")

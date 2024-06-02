@@ -160,7 +160,6 @@ func createDatabase(db *sql.DB) error {
 
 	// Iteration to create all the needed sql schemas
 	for i := 0; i < len(tables); i++ {
-		fmt.Println(i)
 		sqlStmt := tables[i]
 		_, err := db.Exec(sqlStmt)
 

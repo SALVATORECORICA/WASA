@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -21,7 +20,6 @@ func isValidID(nickname string) bool {
 // function to create a new folder
 
 func createFolders(id int) error {
-	fmt.Println(id)
 	// Obtain the complete path
 	path, err := os.Executable()
 	if err != nil {
@@ -34,7 +32,7 @@ func createFolders(id int) error {
 	// Convert id from int to string
 	idString := strconv.Itoa(id)
 
-	//Create the folder
+	// Create the folder
 	completePath := filepath.Join(fatherDir, idString)
 	err = os.Mkdir(completePath, 0777)
 	if err != nil {
@@ -47,7 +45,6 @@ func createFolders(id int) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("IL path e: ", subfolderPath)
 	return nil
 }
 

@@ -8,5 +8,8 @@ func (db *appdbimpl) PutNewUser(nickname string) (int, error) {
 		return 0, err
 	}
 	id, err := db.SearchUser(nickname)
+	if err != nil {
+		return 0, err
+	}
 	return id, err
 }

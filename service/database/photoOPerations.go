@@ -107,6 +107,9 @@ func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]structures
 		}
 		photos = append(photos, photo)
 	}
+	if err := rows.Err(); err != nil {
+		return photos, err
+	}
 	return photos, nil
 }
 
@@ -127,6 +130,9 @@ func (db *appdbimpl) GetStream(idProfile int) ([]structures.Photo, error) {
 			return photos, err
 		}
 		photos = append(photos, photo)
+	}
+	if err := rows.Err(); err != nil {
+		return photos, err
 	}
 	return photos, nil
 }
