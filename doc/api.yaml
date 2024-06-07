@@ -485,7 +485,7 @@ components:
       required: true
       schema:
          $ref: "#/components/schemas/identifier"
-      example: 52
+      example: 123
     #........................................................
     
     
@@ -496,7 +496,7 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/identifier/properties/id"
-      example: 1
+      example: 145
     #........................................................
     comment_id:
       name: comment_id
@@ -514,7 +514,7 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/identifier/properties/id"
-      example: 17
+      example: 174
     #........................................................
     like_id:
       name: like_id
@@ -532,7 +532,7 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/identifier/properties/id"
-      example: 13
+      example: 137
     #........................................................
     query_nickname:
       name: nickname
@@ -561,21 +561,19 @@ components:
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
     identifier:
-      description: It's a user *unique* id
+      description: It's a object *unique* id
       type: object
       properties:
         id:
           description: Any number between 0-9999
           type: integer
           format: int
-          minLength: 3
-          maxLength: 16
           minimum: 100
           maximum: 9999
           readOnly: true
           example: 965
       example:
-        comment_id: 965
+        id: 965
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     complete_user:
       description: Contains both *unique identifier and nickname of a user
@@ -647,9 +645,9 @@ components:
           items:
             $ref: "#/components/schemas/complete_comment"
           example:
-            - id: 53
+            - id: 545
               comment: "bella foto!"
-            - id: 78
+            - id: 742
               comment: "How are you?"
         likes:
           description:  Array of users that liked a photo
@@ -661,7 +659,7 @@ components:
           example:
             -  user_id: 154
                nickname: "Kaido"
-            -  user_id: 84
+            -  user_id: 847
                nickname: "Luccy"
         date:
           description: Date and time of upload.
@@ -673,16 +671,15 @@ components:
            $ref: "#/components/schemas/raw_photo/properties/photo_data"
           
       example:
-        photo_id:
-          id: 24
+        photo_id: 247
         owner:
-           id: 78
+           id: 781
            nickname: "GattoSuperbo"
         comments:
-          - id: 12
+          - id: 125
             comment: "Bellissima foto amico mio"
         likes:
-          - user_id: "181518181"
+          - user_id: 452
             nickname: "Doflamingo"
         date: 2017-07-21T17:32:28Z
         raw_data: "1100011100"
@@ -700,8 +697,7 @@ components:
           items:
             $ref: "#/components/schemas/photo"
           example:
-          - photo_id:
-              id: 8321
+          - photo_id: 8321
             owner:
               id: 123
               nickname: "Corichetto"
@@ -721,11 +717,10 @@ components:
                 nickname: "BabyReeinder"
             date: 2017-07-21T17:32:28Z
             raw_data: "1100011100"
-          - photo_id:
-              id: 8322
+          - photo_id:  8322
             owner:
-              id: 124
-              nickname: "TonyMontana"
+              - id: 124
+                nickname: "TonyMontana"
             comments:
               - id: 770
                 comment: "nice shot!"
@@ -815,7 +810,9 @@ components:
 
               date: 2022-11-22T13:10:14Z
               photo_id: 7836
-              owner: 412
+            - owner: 
+                 id: 781
+                 nickname: "Franchino"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     user_login:
       description: Identifier sent by user during the login
