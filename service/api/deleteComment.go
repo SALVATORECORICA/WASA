@@ -107,6 +107,5 @@ func (rt *_router) deleteComment(w http.ResponseWriter, r *http.Request, ps http
 	// To delete the comment the user must be the owner of the comment or the owner of the photo
 	http.Error(w, "Operation not permitted", http.StatusForbidden)
 	ctx.Logger.WithError(err).Error("Database has encountered an error")
-	return
 
 }

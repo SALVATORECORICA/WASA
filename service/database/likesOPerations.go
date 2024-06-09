@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"wasa-1967862/service/structures"
 )
 
@@ -20,7 +21,7 @@ func (db *appdbimpl) ExistsLike(idUser int, photoId int) (bool, error) {
 	var exists bool
 	err := db.c.QueryRow("SELECT EXISTS(SELECT * FROM likes WHERE id_user = ? AND id_photo = ?)", idUser, photoId).Scan(&exists)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return false, nil
 		}
 		return false, err
@@ -65,7 +66,7 @@ func (db *appdbimpl) GetLikes(photoId int) ([]structures.User, int, error) {
 func (db *appdbimpl) DeleteLikePhoto(idPhoto int) error {
 	_, err := db.c.Exec("DELETE FROM likes WHERE id_photo = ?", idPhoto)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil
 		}
 		return err

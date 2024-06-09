@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"wasa-1967862/service/structures"
 )
 
@@ -41,7 +42,7 @@ func (db *appdbimpl) ObtainIDFromNick(nickname string) (float64, error) {
 	row := db.c.QueryRow(`SELECT id_user  FROM users   WHERE nickname = ?`, nickname)
 	err := row.Scan(&id)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return -1, nil
 		}
 		return -1, err
@@ -56,7 +57,7 @@ func (db *appdbimpl) SearchUser(nickname string) (int, error) {
 	err := row.Scan(&id)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return -1, nil
 		}
 		return -1, err
@@ -70,7 +71,7 @@ func (db *appdbimpl) ExistsUser(id int) (bool, error) {
 	err := row.Scan(&idUser)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return false, nil
 		} else {
 			return false, err
@@ -86,7 +87,7 @@ func (db *appdbimpl) GetNickname(id int) (string, error) {
 	err := row.Scan(&nickname)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return "", nil
 		}
 		return "", err

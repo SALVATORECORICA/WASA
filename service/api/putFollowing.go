@@ -115,7 +115,6 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 	if err != nil {
 		ctx.Logger.WithError(err).Error("inserting-ban: error by the inserting of the ban")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	} else {
 		// Respond with 204 http status
 		w.WriteHeader(http.StatusNoContent)

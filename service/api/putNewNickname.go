@@ -80,7 +80,6 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 	if err != nil {
 		ctx.Logger.WithError(err).Error("update-nickname: error by the updating of the nickname")
 		w.WriteHeader(http.StatusBadRequest)
-		return
 	} else {
 		// Respond with 204 http status
 		w.WriteHeader(http.StatusNoContent)
