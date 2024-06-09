@@ -56,10 +56,10 @@ paths:
                 $ref: "#/components/schemas/login_return"
   #=====================================================================================
   /users:
-  
+
     parameters:
-        - $ref: "#/components/parameters/query_nickname"
-    
+      - $ref: "#/components/parameters/query_nickname"
+
     get:
       tags:
         - search
@@ -82,7 +82,7 @@ paths:
         - bearerAuth: []
   #=====================================================================================
   /users/{id}:
-    
+
     parameters:
       - $ref: "#/components/parameters/user_id"
 
@@ -92,7 +92,7 @@ paths:
       summary: Obtain the profile
       description: Allows the user to obtain a profile complete info (can't be banned by the profile owner)
       operationId: getProfile
-    
+
       responses:
         '200':
           $ref: "#/components/responses/profile"
@@ -412,10 +412,11 @@ paths:
       security:
         - bearerAuth: []
   #=====================================================================================
-  /users/{id}/photos/{photo_id}/likes:
+  /users/{id}/photos/{photo_id}/likes/{like_id}:
     parameters:
       - $ref: '#/components/parameters/user_id'
       - $ref: '#/components/parameters/photo_id'
+      - $ref: '#/components/parameters/like_id'
 
 
     put:
@@ -439,7 +440,7 @@ paths:
 
       security:
         - bearerAuth: []
-  
+
     delete:
       tags:
         - likes
@@ -476,26 +477,26 @@ components:
         $ref: "#/components/schemas/user_nickname/properties/nickname"
       example: "Fefo"
     #........................................................
-    
-    
+
+
     user_id:
       name: id
       in: path
       description: A user's unique id
       required: true
       schema:
-         $ref: "#/components/schemas/identifier"
+        $ref: "#/components/schemas/identifier"
       example: 123
     #........................................................
-    
-    
+
+
     photo_id:
       name: photo_id
       in: path
       description: A photo unique *identifier
       required: true
       schema:
-        $ref: "#/components/schemas/identifier/properties/id"
+        $ref: "#/components/schemas/identifier"
       example: 145
     #........................................................
     comment_id:
@@ -504,7 +505,7 @@ components:
       description: A comment unique *identifier
       required: true
       schema:
-        $ref: "#/components/schemas/identifier/properties/id"
+        $ref: "#/components/schemas/identifier"
       example: 118
     #........................................................
     follower_id:
@@ -513,7 +514,7 @@ components:
       description: A follower's unique identifier. It's exactly his *identifier
       required: true
       schema:
-        $ref: "#/components/schemas/identifier/properties/id"
+        $ref: "#/components/schemas/identifier"
       example: 174
     #........................................................
     like_id:
@@ -522,7 +523,7 @@ components:
       description: A like unique identifier. It's exactly the *identifier of the user that liked the photo
       required: true
       schema:
-        $ref: "#/components/schemas/identifier/properties/id"
+        $ref: "#/components/schemas/identifier"
       example: 178
     #........................................................
     banned_user_id:
@@ -531,7 +532,7 @@ components:
       description: A banned user unique identifier. It's exactly the *identifier of the user
       required: true
       schema:
-        $ref: "#/components/schemas/identifier/properties/id"
+        $ref: "#/components/schemas/identifier"
       example: 137
     #........................................................
     query_nickname:
@@ -561,26 +562,21 @@ components:
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
     identifier:
-      description: It's a object *unique* id
-      type: object
-      properties:
-        id:
-          description: Any number between 0-9999
-          type: integer
-          format: int
-          minimum: 100
-          maximum: 9999
-          readOnly: true
-          example: 965
-      example:
-        id: 965
+      description: It's a *unique* id
+      type: integer
+      format: int
+      minimum: 100
+      maximum: 9999
+      readOnly: true
+      example: 965
+
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     complete_user:
       description: Contains both *unique identifier and nickname of a user
       type: object
       properties:
         user_id:
-          $ref: "#/components/schemas/identifier/properties/id"
+          $ref: "#/components/schemas/identifier"
         nickname:
           $ref: "#/components/schemas/user_nickname/properties/nickname"
       example:
@@ -588,7 +584,7 @@ components:
         nickname: "Luffy"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     comment:
-      description: A user's comment contains the text of the comment 
+      description: A user's comment contains the text of the comment
       type: object
       properties:
         comment:
@@ -601,17 +597,17 @@ components:
       example:
         comment: "Che tramonto!"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-    
+
     complete_comment:
       description: Contains *unique identifier of a comment and the comment
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/identifier/properties/id"
+          $ref: "#/components/schemas/identifier"
         comment:
           $ref: "#/components/schemas/comment/properties/comment"
       example:
-        user_id: "270"
+        user_id: 270
         nickname: "Luffy"
         #||||||||||||||||||||||||||||||||||||||||||||||||||||
     raw_photo:
@@ -632,9 +628,9 @@ components:
       description: Contains the essential info of a photo
       type: object
       properties:
-        
+
         photo_id:
-          $ref: "#/components/schemas/identifier/properties/id"
+          $ref: "#/components/schemas/identifier"
         owner:
           $ref: "#/components/schemas/complete_user"
         comments:
@@ -668,13 +664,13 @@ components:
           example: 2017-07-21T17:32:28Z
           readOnly: true
         raw_data:
-           $ref: "#/components/schemas/raw_photo/properties/photo_data"
-          
+          $ref: "#/components/schemas/raw_photo/properties/photo_data"
+
       example:
         photo_id: 247
         owner:
-           id: 781
-           nickname: "GattoSuperbo"
+          id: 781
+          nickname: "GattoSuperbo"
         comments:
           - id: 125
             comment: "Bellissima foto amico mio"
@@ -683,7 +679,7 @@ components:
             nickname: "Doflamingo"
         date: 2017-07-21T17:32:28Z
         raw_data: "1100011100"
-        
+
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     photos:
       description: Represents a list of photos
@@ -697,38 +693,38 @@ components:
           items:
             $ref: "#/components/schemas/photo"
           example:
-          - photo_id: 8321
-            owner:
-              id: 123
-              nickname: "Corichetto"
-            comments:
-              - id: 700
-                user_id: 480
-                nickname: "Niko Robin"
-                comment: "i love you"
-              - id: 760
-                user_id: 182
-                nickname: "Zoro"
-                comment: "great goal!"
-            likes:
-              - user_id: 756
-                nickname: "Franky99"
-              - user_id: 780
-                nickname: "BabyReeinder"
-            date: 2017-07-21T17:32:28Z
-            raw_data: "1100011100"
-          - photo_id:  8322
-            owner:
-              - id: 124
-                nickname: "TonyMontana"
-            comments:
-              - id: 770
-                comment: "nice shot!"
-            likes:
-              - user_id: 123
-                nickname: "Sanji"
-            date: 2018-08-22T15:21:22Z
-            raw_data: "1100011111"
+            - photo_id: 8321
+              owner:
+                id: 123
+                nickname: "Corichetto"
+              comments:
+                - id: 700
+                  user_id: 480
+                  nickname: "Niko Robin"
+                  comment: "i love you"
+                - id: 760
+                  user_id: 182
+                  nickname: "Zoro"
+                  comment: "great goal!"
+              likes:
+                - user_id: 756
+                  nickname: "Franky99"
+                - user_id: 780
+                  nickname: "BabyReeinder"
+              date: 2017-07-21T17:32:28Z
+              raw_data: "1100011100"
+            - photo_id:  8322
+              owner:
+                - id: 124
+                  nickname: "TonyMontana"
+              comments:
+                - id: 770
+                  comment: "nice shot!"
+              likes:
+                - user_id: 123
+                  nickname: "Sanji"
+              date: 2018-08-22T15:21:22Z
+              raw_data: "1100011111"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     users_list:
       description: List of users found
@@ -757,7 +753,7 @@ components:
       properties:
 
         user:
-         $ref: "#/components/schemas/complete_user"
+          $ref: "#/components/schemas/complete_user"
 
         followers:
           description: Array of followers
@@ -810,9 +806,9 @@ components:
 
               date: 2022-11-22T13:10:14Z
               photo_id: 7836
-            - owner: 
-                 id: 781
-                 nickname: "Franchino"
+            - owner:
+                id: 781
+                nickname: "Franchino"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     user_login:
       description: Identifier sent by user during the login
