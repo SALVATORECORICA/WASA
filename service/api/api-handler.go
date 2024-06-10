@@ -39,8 +39,8 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.DELETE("/users/:id/photos/:photo_id/comments/:comment_id", rt.wrap(rt.deleteComment))
 
 	// likes
-	rt.router.PUT("/users/:id/photos/:photo_id/likes", rt.wrap(rt.putLike))
-	rt.router.DELETE("/users/:id/photos/:photo_id/likes", rt.wrap(rt.deleteLike))
+	rt.router.PUT("/users/:id/photos/:photo_id/likes/:like_id", rt.wrap(rt.putLike))
+	rt.router.DELETE("/users/:id/photos/:photo_id/likes/:like_id", rt.wrap(rt.deleteLike))
 
 	// example
 	rt.router.GET("/context", rt.wrap(rt.getContextReply))
