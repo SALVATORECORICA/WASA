@@ -554,6 +554,7 @@ components:
 
     identifier:
       description: It's a *unique* id
+      type: integer
       format: int32
       minimum: 100
       maximum: 9999
