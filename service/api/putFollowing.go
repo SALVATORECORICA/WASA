@@ -18,7 +18,7 @@ func (rt *_router) putFollowing(w http.ResponseWriter, r *http.Request, ps httpr
 
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
-	print("id:", idOfUser)
+	
 
 	// If the user is not logged in then respond with a 403 http status
 	if idOfUser == "" {
