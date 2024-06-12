@@ -1,3 +1,4 @@
+
 openapi: 3.0.3
 info:
   title: WASA Sapienza API
@@ -580,7 +581,7 @@ components:
         nickname:
           $ref: "#/components/schemas/user_nickname/properties/nickname"
       example:
-        user_id: "270"
+        user_id: 270
         nickname: "Luffy"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     comment:
@@ -669,7 +670,7 @@ components:
       example:
         photo_id: 247
         owner:
-          id: 781
+          user_id: 781
           nickname: "GattoSuperbo"
         comments:
           - id: 125
@@ -695,7 +696,7 @@ components:
           example:
             - photo_id: 8321
               owner:
-                id: 123
+                user_id: 123
                 nickname: "Corichetto"
               comments:
                 - id: 700
@@ -715,7 +716,7 @@ components:
               raw_data: "1100011100"
             - photo_id:  8322
               owner:
-                - id: 124
+                - user_id: 124
                   nickname: "TonyMontana"
               comments:
                 - id: 770
@@ -807,7 +808,7 @@ components:
               date: 2022-11-22T13:10:14Z
               photo_id: 7836
             - owner:
-                id: 781
+                user_id: 781
                 nickname: "Franchino"
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     user_login:
