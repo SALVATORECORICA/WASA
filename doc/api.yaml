@@ -703,18 +703,7 @@ components:
                   nickname: "BabyReeinder"
               date: 2017-07-21T17:32:28Z
               raw_data: "1100011100"
-            - photo_id:  8322
-              owner:
-                - user_id: 124
-                  nickname: "TonyMontana"
-              comments:
-                - id: 770
-                  comment: "nice shot!"
-              likes:
-                - user_id: 123
-                  nickname: "Sanji"
-              date: 2018-08-22T15:21:22Z
-              raw_data: "1100011111"
+
     #||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     users_list:
       description: List of users found
