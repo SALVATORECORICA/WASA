@@ -469,16 +469,6 @@ components:
 
   parameters:
 
-    nickname:
-      name: nickname
-      in: path
-      description: A user's unique nickname
-      required: true
-      schema:
-        $ref: "#/components/schemas/user_nickname/properties/nickname"
-      example: "Fefo"
-    #........................................................
-
 
     user_id:
       name: id
@@ -564,8 +554,7 @@ components:
 
     identifier:
       description: It's a *unique* id
-      type: integer
-      format: int
+      format: int32
       minimum: 100
       maximum: 9999
       readOnly: true
