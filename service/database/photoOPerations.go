@@ -115,7 +115,7 @@ func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]structures
 
 func (db *appdbimpl) GetStream(idProfile int) ([]structures.Photo, error) {
 	var photos []structures.Photo
-	rows, err := db.c.Query("SELECT id_photo FROM followers f, photos p WHERE followed_id = ? AND f.follower_id = u.id_user ORDER BY uploadDate DESC ", idProfile)
+	rows, err := db.c.Query("SELECT id_photo FROM followers f, photos p WHERE follower_id = ? AND f.followed_id = p.id_user ORDER BY uploadDate DESC ", idProfile)
 	if err != nil {
 		return photos, err
 	}

@@ -68,7 +68,7 @@ func (rt *_router) postSessionHandler(w http.ResponseWriter, r *http.Request, ps
 		}
 		err = createFolders(id)
 		if err != nil {
-			ctx.Logger.WithError(err).Error("Error by creating new user")
+			ctx.Logger.WithError(err).Error("Error the folder of the user")
 			http.Error(w, "Error by creating the folder of the user", http.StatusBadRequest)
 			return
 		}

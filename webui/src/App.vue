@@ -1,28 +1,42 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
+
 </script>
 <script>
 export default {
-  data(){
+  data() {
     return {
       logged: false,
-      searchValue: ""
+      nickname : "",
+      id: 0
     }
   },
   created() {
-    if (!localStorage.getItem('notFirstStart')) {
+
+    if (localStorage.getItem('notFirstStart')) {
       localStorage.clear()
       localStorage.setItem('notFirstStart', true)
       // console.log("first start")
     }
   },
-  mounted(){
-      if (!localStorage.getItem('token')){
-        this.$router.replace("/login")
-      }else{
-        this.logged = true
-      }
-    },
+  mounted() {
+    if (!localStorage.getItem('token')) {
+      console.log(localStorage.getItem("token"))
+      this.$router.replace("/login")
+    } else {
+      this.logged = true
+    }
+  },
+  methods:{
+    endLogin(id, nickname){
+      this.logged = true;
+      this.id = id;
+      this.nickname = nickname
+    }
+
+  }
+
 }
 
 
@@ -30,15 +44,11 @@ export default {
 
 <template>
 <div>
-	<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+	 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
 		<a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#/">Wasagram</a>
-    <form v-if="!logged" class="d-flex ms-auto me-3 input-group" aria-label="Insert Nickname" style="max-width: 300px;">
-      <input class="form-control" type="search" placeholder="Insert Nickname"  style ="width:150px;">
-      <button class="btn btn-outline-light" type="submit">Enter</button>
-    </form>
 	</header>
 
-	<div v-if="logged" class="container-fluid">
+	<div v-if="logged" class="row flex-nowrap">
 		<div class="row">
 			<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 				<div class="position-sticky pt-3 sidebar-sticky">
@@ -80,13 +90,20 @@ export default {
 				</div>
 			</nav>
 
-			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-				<RouterView />
-			</main>
+
 		</div>
 	</div>
 </div>
+  <main :class= "logged ? 'col-md-9 ms-sm-auto col-lg-10  flex-grow-1' : 'col-md-12'">
+    <RouterView
+        @endLogin = "endLogin"
+        :nickname = "nickname"
+        :id ="id"
+    />
+  </main>
+
 </template>
+
 
 <style>
 .btn {
@@ -95,7 +112,7 @@ export default {
 }
 
 .btn-outline-light:hover {
-  background-color: red; /* Cambia lo sfondo in rosso al passaggio del mouse */
+  background-color: orangered; /* Cambia lo sfondo in rosso al passaggio del mouse */
   color: #fff; /* Il colore del testo rimane bianco */
   border-color: red; /* Cambia il colore del bordo in rosso al passaggio del mouse */
 }

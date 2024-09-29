@@ -22,6 +22,7 @@ func isValidID(nickname string) bool {
 func createFolders(id int) error {
 	// Obtain the complete path
 	path, err := os.Executable()
+	println(path)
 	if err != nil {
 		return err
 	}
