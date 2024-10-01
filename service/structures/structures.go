@@ -39,6 +39,7 @@ type Photo struct {
 	NLikes    int       `json:"nLikes"`
 	PhotoData []byte    `json:"image"`
 	Liked     bool      `json:"liked"`
+	Path      string    `json:"path"`
 }
 
 // the complete Profile of the user

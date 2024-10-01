@@ -33,6 +33,14 @@ export default {
       this.logged = true;
       this.id = id;
       this.nickname = nickname
+    },
+    logout(){
+      this.$router.replace("/");
+      localStorage.clear();
+      this.id = 0;
+      this.nickname = "";
+      this.logged = false;
+      localStorage.setItem('notFirstStart', false);
     }
 
   }
@@ -97,8 +105,10 @@ export default {
   <main :class= "logged ? 'col-md-9 ms-sm-auto col-lg-10  flex-grow-1' : 'col-md-12'">
     <RouterView
         @endLogin = "endLogin"
+        @logout="logout"
         :nickname = "nickname"
         :id ="id"
+
     />
   </main>
 
