@@ -66,7 +66,7 @@ export default {
       reader.onload = async () => {
         try {
           // Post photo: /users/:id/photos
-          let response = await this.$axios.post("/users/" + localStorage.getItem('token') + "/photos", reader.result, {
+          await this.$axios.post("/users/" + localStorage.getItem('token') + "/photos", reader.result, {
             headers: {
               'Content-Type': file.type,
               'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -106,9 +106,9 @@ export default {
 </script>
 
 <template>
-	<div class="flex-grow-1">
-    <nav class="navbar navbar-expand navbar-light bg-light sticky-top" style="background-color: transparent; border: none; box-shadow: none;">
-      <div class="container-fluid">
+	<div class="flex-grow-1 ">
+    <nav class="navbar navbar-expand navbar-light bg-light" style="background-color: transparent; border: none; box-shadow: none;">
+      <div class="container-fluid ">
         <span class="navbar-text h2">Welcome {{ this.nickname }} </span>
         <div class="ms-auto">
           <div class="btn-group me-2">

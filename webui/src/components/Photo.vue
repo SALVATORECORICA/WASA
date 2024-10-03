@@ -64,9 +64,9 @@ export default {
 
 <template>
   <div>
-    <div v-for="photo in photos" :key="photo.photo_Id" class="photo">
+    <div v-for="photo in photos" :key= " photo.photo_Id" class="photo">
       <h2>{{ photo.owner.nickname }} </h2>
-      <img src= "data:image/png;base64,photo.image" />
+      <img :src= "'data:image/png;base64, ' + photo.image" />
       <div class="info-container">
         <span class="like-text"> Comment </span>
         <button class="like-button"></button>
@@ -75,7 +75,6 @@ export default {
                 class="like-button"
                 :class="photo.liked ? 'text-primary': '' "    >
         </button>
-        <span> {{ photo.liked}}</span>
         <span class="like-text"> Likes:  {{ photo.nLikes }} </span>
       </div>
     </div>
@@ -91,7 +90,7 @@ export default {
 
 
 .like-text {
-  font-size: 15px;            /* Dimensione del testo più piccola */
+  font-size: 25px;            /* Dimensione del testo più piccola */
   margin-left: 20px;           /* Margine a sinistra per separare dall'icona */
   margin-right: 5px;
 }

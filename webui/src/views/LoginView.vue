@@ -56,7 +56,7 @@ export default {
   background-size: cover; /* Assicura che l'immagine riempia l'elemento */
   height: 100vh; /* Altezza della viewport */
   width: 100%;
-  position: relative; /* Consente l'uso di posizioni assolute nei contenuti figli, se necessario */
+  position: relative;
   margin: 0;
   padding: 0;
   overflow: hidden;
