@@ -1,0 +1,27 @@
+# Build frontend image from Dockerfile.frontend
+### build: docker build -t wasaphoto-frontend:latest -f Dockerfile.frontend .
+
+
+# Run frontend container
+### run: docker run -it -p 8080:80 --rm wasaphoto-frontend:latest
+
+### uses latest Node LTS to build
+FROM node:lts as builder
+
+### sets the working directory inside the container
+WORKDIR /app
+
+### copies the source Vue.js code from the host dir to the container dir
+COPY webui webui
+
+WORKDIR /app/webui
+
+### builds Vue.js into plain HTML/CSS/JS
+RUN npm run build-prod
+
+### sets the base image
+FROM nginx:stable
+
+### copies the (built) app from the builder image
+COPY --from=builder /app/webui/dist /usr/share/nginx/html
+					### the dist dir has been created before(it contains the build of the Vue.js app)

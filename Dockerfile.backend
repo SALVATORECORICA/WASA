@@ -1,0 +1,33 @@
+# Build backend image from Dockerfile.backend:
+### build: docker build -t wasaphoto-backend:latest -f Dockerfile.backend .
+
+# Run backend container:
+### run: docker run -it -p 3000:3000 --rm wasaphoto-backend:latest
+
+### uses a Go image to compile code in the container
+FROM golang:1.19.4 as builder
+
+### sets the working directory inside the container
+WORKDIR /src/
+
+### copies all the files from the curr directory to the working directory in the container
+COPY . .
+
+### compiles Go code and creates an executable called "webapi" in the /app directory of the container
+RUN go build -o /app/webapi ./cmd/webapi
+
+### sets the base image to a smaller one
+FROM debian:stable
+
+WORKDIR /app/
+
+### copy the build executable from the stage builder
+COPY --from=builder /app/webapi ./
+
+### used port
+EXPOSE 3000
+
+### sets the command to be executed when a container is ran
+CMD ["/app/webapi"]
+	 ### path of the executable
+

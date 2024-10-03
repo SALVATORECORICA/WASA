@@ -19,24 +19,10 @@ func (rt *_router) putLike(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	// Extracting the id of the user
-	idOfUser := extractBearer(r.Header.Get("Authorization"))
-
-	// If the user is not logged in then respond with a 403 http status
-	if idOfUser == "" {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
-
-	// Check of the path id correspond to the beaerer
 	pathId := ps.ByName("id")
-	if pathId != idOfUser {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
 
 	// Convert the id from string to int
-	idUser, err := strconv.Atoi(idOfUser)
+	idUser, err := strconv.Atoi(pathId)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")

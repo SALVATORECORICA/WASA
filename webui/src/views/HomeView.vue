@@ -20,7 +20,6 @@ export default {
   mounted() {
     //this.refresh()
     this.stream();
-    console.log(photos)
 
   },
 
@@ -110,7 +109,7 @@ export default {
 	<div class="flex-grow-1">
     <nav class="navbar navbar-expand navbar-light bg-light sticky-top" style="background-color: transparent; border: none; box-shadow: none;">
       <div class="container-fluid">
-        <span class="navbar-text h2">Welcome {{ this.nickname }}</span>
+        <span class="navbar-text h2">Welcome {{ this.nickname }} </span>
         <div class="ms-auto">
           <div class="btn-group me-2">
             <button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
@@ -134,7 +133,7 @@ export default {
 
 		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 	</div>
-  <photo :photos ="photos"></photo>
+  <Photo :photos ="photos"  :id="id" ></Photo>
 </template>
 
 <style>

@@ -21,7 +21,6 @@ func (rt *_router) deleteLike(w http.ResponseWriter, r *http.Request, ps httprou
 
 	// Extracting the id of the user
 	idOfUser := extractBearer(r.Header.Get("Authorization"))
-	
 
 	// If the user is not logged in then respond with a 403 http status
 	if idOfUser == "" {
