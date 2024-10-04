@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import ModalSearch from "./components/ModalSearch.vue";
 
 
 </script>
@@ -10,7 +11,8 @@ export default {
     return {
       logged: false,
       nickname : "",
-      id: 0
+      id: 0,
+      modalSearchOn: false,
     }
   },
   created() {
@@ -41,11 +43,19 @@ export default {
       this.id = 0;
       this.nickname = "";
       this.logged = false;
+      this.modalSearchOn=false;
       localStorage.setItem('notFirstStart', false);
-    }
+    },
+    openModalSearch(){
+      this.modalSearchOn=true;
+      document.body.classList.add('modal-open');
 
-  }
-
+    },
+    closeModalSearch(){
+      this.modalSearchOn=false;
+      document.body.classList.remove('modal-open'); // Rimuove la classe dal body
+    },
+  },
 }
 
 
@@ -78,10 +88,10 @@ export default {
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-							<RouterLink to="/link2" class="nav-link">
-								<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
+							<div class="nav-link" @click.self="openModalSearch">
+                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>
 								Search
-							</RouterLink>
+              </div>
 						</li>
 					</ul>
 				</div>
@@ -99,6 +109,9 @@ export default {
         :id ="id"
 
     />
+    <ModalSearch
+        :modalSearchOn="modalSearchOn"
+        @closeModalSearch="closeModalSearch"></ModalSearch>
   </main>
 
 </template>
@@ -115,4 +128,5 @@ export default {
   color: #fff; /* Il colore del testo rimane bianco */
   border-color: red; /* Cambia il colore del bordo in rosso al passaggio del mouse */
 }
+
 </style>
