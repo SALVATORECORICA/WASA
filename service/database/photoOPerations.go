@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"strconv"
@@ -201,7 +200,6 @@ func (db *appdbimpl) GetPhotoComplete(photoId int, idUser int) (structures.Photo
 	photo.Comments = comments
 	photo.Liked = existsLike
 	photo.Path = publicPath
-	fmt.Println("eccolo", path)
 
 	return photo, nil
 }
