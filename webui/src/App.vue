@@ -4,6 +4,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import ModalSearch from "./components/ModalSearch.vue";
 
 
+
 </script>
 <script>
 export default {
@@ -13,6 +14,7 @@ export default {
       nickname : "",
       id: 0,
       modalSearchOn: false,
+
     }
   },
   created() {
@@ -55,6 +57,7 @@ export default {
       this.modalSearchOn=false;
       document.body.classList.remove('modal-open'); // Rimuove la classe dal body
     },
+
   },
 }
 
@@ -111,7 +114,8 @@ export default {
     />
     <ModalSearch
         :modalSearchOn="modalSearchOn"
-        @closeModalSearch="closeModalSearch"></ModalSearch>
+        @closeModalSearch="closeModalSearch"
+        ></ModalSearch>
   </main>
 
 </template>

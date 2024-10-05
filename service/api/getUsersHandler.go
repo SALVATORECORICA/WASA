@@ -76,6 +76,5 @@ func (rt *_router) getUsersHandler(w http.ResponseWriter, r *http.Request, ps ht
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
 		return
 	}
-	w.WriteHeader(http.StatusInternalServerError)
 
 }

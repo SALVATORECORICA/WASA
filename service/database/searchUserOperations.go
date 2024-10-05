@@ -9,15 +9,18 @@ import (
 // Query to search a user with the unique nickname (also partially)
 func (db *appdbimpl) SearchUserFromNick(nickname string, idUser int) ([]structures.User, error) {
 
+	// The slice for the user
+	var users []structures.User
+	if nickname == "" {
+		return users, nil
+	}
+
 	// Search a users
 	rows, err := db.c.Query("SELECT * FROM users WHERE nickname LIKE ? AND id_user != ?", nickname+"%", idUser)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-
-	// The slice for the user
-	var users []structures.User
 
 	for rows.Next() {
 		var user structures.User

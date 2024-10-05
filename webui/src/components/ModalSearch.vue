@@ -3,15 +3,36 @@
 export default{
   data(){
     return{
+      profileSearched:"",
+      result: []
     }
   },
   props: ["modalSearchOn",],
 
   methods : {
     closeModalSearch(){
+      this.profileSearched = "";
+      this.result=[];
       this.$emit("closeModalSearch")
     },
   },
+  watch : {
+    async profileSearched(){
+      try {
+        let response = await this.$axios.get("/users", {
+          params: {
+            nickname: this.profileSearched
+          },
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+      });
+        this.result = response.data
+      } catch(e) {
+
+      }
+    }
+  }
 }
 </script>
 
@@ -21,9 +42,10 @@ export default{
 
   <div  v-if="modalSearchOn" class="overlay-background" @click.self="closeModalSearch">
     <div class="overlay">
-      <span class="label">aaaaaaa</span>
-      <span class="label">aaaaaaa</span>
-
+      <input v-model="profileSearched" placeholder="search profile" style="width:100% ">
+<div v-for ="user in result" :key=" user.id" class="label">
+  <span> {{ user.nickname }} </span>
+</div>
     </div>
   </div>
 
@@ -67,6 +89,7 @@ export default{
   width: 100%;
   border: 2px solid black;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .label:hover {
