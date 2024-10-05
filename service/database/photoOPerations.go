@@ -91,7 +91,7 @@ func (db *appdbimpl) DeletePhoto(photoId int) error {
 
 func (db *appdbimpl) GetPhotosProfileSorted(idProfileSearched int) ([]structures.Photo, error) {
 	var photos []structures.Photo
-	rows, err := db.c.Query("SELECT path FROM photos WHERE id_user = ? ORDER BY uploadDate DESC ", idProfileSearched)
+	rows, err := db.c.Query("SELECT id_photo FROM photos WHERE id_user = ? ORDER BY uploadDate DESC ", idProfileSearched)
 	if err != nil {
 		return photos, err
 	}

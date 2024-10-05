@@ -112,6 +112,20 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	isFollowing, err := rt.db.ExistsFollowing(idUser, idProfileSearchedInt)
+	if err != nil {
+		http.Error(w, "Error by checking the following", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error: By checking the following")
+		return
+	}
+
+	existsBan, err := rt.db.ExistsBan(idUser, idProfileSearchedInt)
+	if err != nil {
+		http.Error(w, "Error by searching the ban", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error: By Searching the Ban")
+		return
+	}
+
 	// User Profile
 	var userProfile structures.UserProfile
 
@@ -122,6 +136,8 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	userProfile.Followings = followings
 	userProfile.NFollowed = nFollowed
 	userProfile.Photos = photos
+	userProfile.IsFollowing = isFollowing
+	userProfile.ExistsBan = existsBan
 
 	userProfileJSON, err := json.Marshal(userProfile)
 	if err != nil {
