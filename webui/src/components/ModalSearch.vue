@@ -19,7 +19,7 @@ export default{
   watch : {
     async profileSearched(){
       try {
-        let response = await this.$axios.get("/users", {
+        let response = await this.$axios.get("/users" , {
           params: {
             nickname: this.profileSearched
           },
@@ -43,9 +43,9 @@ export default{
   <div  v-if="modalSearchOn" class="overlay-background" @click.self="closeModalSearch">
     <div class="overlay">
       <input v-model="profileSearched" placeholder="search profile" style="width:100% ">
-<div v-for ="user in result" :key=" user.id" class="label">
-  <span> {{ user.nickname }} </span>
-</div>
+      <div v-for ="user in result" :key=" user.id" class="label">
+        <span> {{ user.nickname }} </span>
+      </div>
     </div>
   </div>
 

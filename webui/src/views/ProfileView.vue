@@ -6,7 +6,7 @@ export default {
   data() {
     return {
       errormsg: null,
-      nickname: "",
+      nicknameProfileOwner: "",
       followers: [],
       following: [],
       photos: [],
@@ -15,19 +15,19 @@ export default {
       isFollowing: false,
       existsBan: false,
       requester: 0,
-      photoOpen: false,
+      modalPhoto: false,
+      selectedPhoto: [],
     };
   },
 
-  props: ["id"],
+  props: ["id", "nickname"],
 
   mounted() {
 
   },
 
   created() {
-
-    this.getProfile(this.id);
+    this.getProfile(this.id)
   },
 
   methods: {
@@ -40,7 +40,7 @@ export default {
         });
 
         // Assegna i dati dalla risposta alle proprietà del componente
-        this.nickname = response.data.nickname;
+        this.nicknameProfileOwner = response.data.nickname;
         this.followers = response.data.followers;
         this.following = response.data.following;
         this.photos = response.data.photos;
@@ -55,15 +55,27 @@ export default {
 
       }
     },
+    openPhoto(photo){
+      this.modalPhoto=true;
+      this.selectedPhoto = photo;
+    },
+    closePhoto(){
+      this.modalPhoto=false;
+      this.selectedPhoto= [];
+    }
   },
 };
 </script>
 
 <template>
+
+  <div v-if="!modalPhoto">
+
+
   <div>
     <div class="profile-bar">
       <div class="left-section">
-        <span>{{ nickname }}</span>
+        <span>{{ nicknameProfileOwner }}</span>
       </div>
       <div class="right-section">
         <p>Followers: {{ nFollowers }}</p>
@@ -83,10 +95,21 @@ export default {
 
 
   <div class="flex-container">
-    <div v-for="photo in photos" :key="photo.photo_Id"  class="mini-card" >
+    <div v-for="photo in photos" :key="photo.photo_Id"  class="mini-card" @click="openPhoto(photo)">
       <img :src="'data:image/png;base64, ' + photo.image" />
     </div>
   </div>
+
+  </div>
+
+  <div v-if="modalPhoto"  class="overlay-background" @click.self="closePhoto">
+    <photo :photos="[selectedPhoto]" :id="id" :nickname="nickname">
+      
+    </photo>
+
+  </div>
+
+
 
 
 
@@ -155,13 +178,13 @@ export default {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Aggiunge un'ombra per l'effetto di elevazione */
 }
 
-.overlay-background{
+.overlay-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8); /* Trasparenza per lo sfondo */
+  background-color: rgba(255, 255, 255, 0.8); /* Trasparenza per lo sfondo */
   display: flex;
   align-items: center;
   justify-content: center; /* Centra la modale */
@@ -169,17 +192,10 @@ export default {
   overflow: hidden;
 
 }
-
-
-.overlay{
-  background-color: white;
-  padding: 20px;
-  width: 400px; /* Larghezza fissa */
-  height: 350px; /* Altezza fissa */
-  overflow-y: auto; /* Abilita lo scroll solo per il contenuto */
-  border-radius: 10px;
-  flex-direction: column;
+photo{
+  color:white;
 }
+
 
 
 </style>

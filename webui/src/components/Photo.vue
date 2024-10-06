@@ -3,18 +3,22 @@ export default {
 
   props: {
     photos: {
-      type: Array,
-      required: true
     },
-    id: {
+    id: {   // id of the logged User
       type: Number,
       required: true
     },
+    nickname: {  // nickname of the logged User
+
+    }
   },
 
   data() {
     return {
       errormsg: null,
+      commentModal:false,
+      openedPhoto: null,
+      newComment:"",
     }
   },
 
@@ -57,14 +61,51 @@ export default {
         }
       }
     },
+    openComments(photo){
+      this.openedPhoto=photo;
+      this.commentModal=true;
+    },
+    closeComments(){
+      this.openedPhoto=null;
+      this.commentModal=false;
+      this.newComment="";
+    },
+    async addComment(){
+      try {
+        await this.$axios.post("/users/" +  this.id  + "/photos/" + this.openedPhoto.photo_Id + "/comments" , {
+            "comment": this.newComment,
+          }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+        });
+      } catch(e) {
+      }
+    }
   },
 }
 
 </script>
 
 <template>
-  <div>
-    <div v-for="photo in photos" :key= " photo.photo_Id" class="photo">
+  <div v-if="commentModal" @click.self="closeComments" class="overlay-background">
+    <div class="overlay">
+      <div class="comments-container">
+        <div v-for="comment in openedPhoto.comments">
+          <span> {{ comment.user}}</span>
+          <span> {{comment.comment}}</span>
+          <span> Delete Comment</span>
+        </div>
+      </div>
+      <div class="fixed-bottom">
+        <input placeholder="Insert your comment" v-model="newComment">
+        <button @click="addComment"> Add comment</button>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="!commentModal">
+    <div v-for="photo in photos" :key= " photo.photo_Id" class="photo" @click="openComments(photo)">
       <h2>{{ photo.owner.nickname }} </h2>
       <img :src= "'data:image/png;base64, ' + photo.image" />
       <div class="info-container">
@@ -117,7 +158,7 @@ export default {
 }
 
 .like-button {
-  font-size: 30x; /* Dimensione dell'icona */
+  font-size: 30px; /* Dimensione dell'icona */
 
 }
 
@@ -127,6 +168,47 @@ export default {
 
 .like-button:hover i {
   color: #6c757d;  /* Cambia colore al passaggio del mouse */
+}
+
+.overlay-background{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Trasparenza per lo sfondo */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra la modale */
+  z-index: 1000;
+  overflow: hidden;
+
+}
+
+
+.overlay{
+  background-color: white;
+  padding: 20px;
+  width: 400px; /* Larghezza fissa */
+  height: 350px; /* Altezza fissa */
+  overflow-y: auto; /* Abilita lo scroll solo per il contenuto */
+  border-radius: 10px;
+  flex-direction: column;
+  display: flex;
+  position: relative; /* Posizione relativa per il posizionamento degli elementi */
+}
+
+.fixed-bottom {
+  position: absolute;
+  bottom: 0; /* Posiziona il div in basso */
+  left: 0; /* Inizia dall'angolo sinistro */
+  width: 100%; /* Occupa tutta la larghezza dello schermo */
+  justify-content: flex-start; /* Allinea gli elementi a sinistra */
+  padding: 10px; /* Spaziatura interna */
+  margin: 0;
+}
+.comments-container{
+  width: 100%;
 }
 
 

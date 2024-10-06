@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import ModalSearch from "./components/ModalSearch.vue";
 
 

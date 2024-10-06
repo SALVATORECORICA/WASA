@@ -59,7 +59,10 @@ func (db *appdbimpl) CommentsPhoto(photoId int) ([]structures.Comment, error) {
 		if err := rows.Scan(&comment.Comment_id, &comment.User.Id, &comment.Comment); err != nil {
 			return comments, err
 		}
-
+		comment.User.Nickname, err = db.GetNickname(comment.User.Id)
+		if err != nil {
+			return comments, err
+		}
 		comments = append(comments, comment)
 
 	}
