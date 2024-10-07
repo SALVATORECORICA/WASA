@@ -2,8 +2,7 @@
 export default {
 
   props: {
-    photos: {
-    },
+    photos: {},
     id: {   // id of the logged User
       type: Number,
       required: true
@@ -16,12 +15,11 @@ export default {
   data() {
     return {
       errormsg: null,
-      commentModal:false,
+      commentModal: false,
       openedPhoto: null,
-      newComment:"",
+      newComment: "",
     }
   },
-
 
 
   methods: {
@@ -38,22 +36,22 @@ export default {
           try {
             await this.$axios.put("/users/" + this.id + "/photos/" + p.photo_Id + "/likes/" + localStorage.getItem('token'), {
               headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-          });
-            p.nLikes = p.nLikes +1
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              },
+            });
+            p.nLikes = p.nLikes + 1
           } catch (e) {
             p.liked = !p.liked;
             this.errormsg = e.toString();
           }
         } else {
           try {
-            await this.$axios.delete("/users/" +  this.id  + "/photos/" + p.photo_Id + "/likes/" + localStorage.getItem('token'), {
+            await this.$axios.delete("/users/" + this.id + "/photos/" + p.photo_Id + "/likes/" + localStorage.getItem('token'), {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
               },
             });
-            p.nLikes = p.nLikes -1
+            p.nLikes = p.nLikes - 1
           } catch (e) {
             p.liked = !p.liked;
             this.errormsg = e.toString();
@@ -61,28 +59,81 @@ export default {
         }
       }
     },
-    openComments(photo){
-      this.openedPhoto=photo;
-      this.commentModal=true;
-    },
-    closeComments(){
-      this.openedPhoto=null;
-      this.commentModal=false;
-      this.newComment="";
-    },
-    async addComment(){
+    async openComments(photo) {
+      // Recupera nuovamente i dati della foto per aggiornare i commenti
       try {
-        await this.$axios.post("/users/" +  this.id  + "/photos/" + this.openedPhoto.photo_Id + "/comments" , {
-            "comment": this.newComment,
-          }, {
+        const response = await this.$axios.get(`/users/${this.id}/photos/${photo.photo_Id}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            "Authorization": `Bearer ${localStorage.getItem('token')}`,
           },
         });
-      } catch(e) {
+
+        // Aggiorna la foto selezionata con i nuovi dati
+        this.openedPhoto = response.data;
+        this.commentModal = true;
+      } catch (e) {
+        console.error(e); // Gestione dell'errore nella richiesta GET
       }
-    }
-  },
+    },
+
+    closeComments() {
+      this.openedPhoto = null;
+      this.commentModal = false;
+      this.newComment = "";
+    },
+    async addComment() {
+      try {
+        // Invia il commento con una richiesta POST
+        await this.$axios.post(`/users/${this.id}/photos/${this.openedPhoto.photo_Id}/comments`, {
+          comment: this.newComment,
+        }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        await this.fetchPhoto();
+
+          // Reset del campo di input
+          this.newComment = "";
+        } catch (e) {
+          console.error(e); // Gestione dell'errore nella richiesta GET
+        }
+    },
+
+    async deleteComment(comment) {
+      try {
+        // Invia il commento con una richiesta DELETE
+        await this.$axios.delete(`/users/${this.id}/photos/${this.openedPhoto.photo_Id}/comments/${comment.comment_id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        // Recupera nuovamente i dati della foto per aggiornare i commenti
+        await this.fetchPhoto();
+      } catch (e) {
+        console.error(e); // Gestione dell'errore nella richiesta DELETE
+      }
+    },
+
+    
+
+    async fetchPhoto() {
+      try {
+        const response = await this.$axios.get(`/users/${this.id}/photos/${this.openedPhoto.photo_Id}`, {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        // Aggiorna la foto selezionata con i nuovi dati
+        this.openedPhoto = response.data;
+      } catch (e) {
+        console.error(e); // Gestione dell'errore nella richiesta GET
+      }
+    },
+  }
 }
 
 </script>
@@ -91,10 +142,15 @@ export default {
   <div v-if="commentModal" @click.self="closeComments" class="overlay-background">
     <div class="overlay">
       <div class="comments-container">
-        <div v-for="comment in openedPhoto.comments">
-          <span> {{ comment.user}}</span>
+        <div v-for="comment in openedPhoto.comments" :key="comment.comment_id">
+          <span> {{ comment.user.nickname}}</span>
           <span> {{comment.comment}}</span>
-          <span> Delete Comment</span>
+          <button  v-if=" (id === openedPhoto.owner.id) ||
+                           (id === comment.user.id)"
+                   class="button-delete"
+                   @click="deleteComment(comment)">
+                   Delete Comment
+          </button>
         </div>
       </div>
       <div class="fixed-bottom">
@@ -105,12 +161,12 @@ export default {
   </div>
 
   <div v-if="!commentModal">
-    <div v-for="photo in photos" :key= " photo.photo_Id" class="photo" @click="openComments(photo)">
+    <div v-for="photo in photos" :key= " photo.photo_Id" class="photo">
       <h2>{{ photo.owner.nickname }} </h2>
       <img :src= "'data:image/png;base64, ' + photo.image" />
       <div class="info-container">
         <span class="like-text"> Comment </span>
-        <button class="like-button"></button>
+        <button class="like-button" @click="openComments(photo)"></button>
         <span class="like-text"> Put a Like  </span>
         <button @click="toggleLike(photo.photo_Id)"
                 class="like-button"
@@ -191,11 +247,15 @@ export default {
   padding: 20px;
   width: 400px; /* Larghezza fissa */
   height: 350px; /* Altezza fissa */
-  overflow-y: auto; /* Abilita lo scroll solo per il contenuto */
   border-radius: 10px;
   flex-direction: column;
   display: flex;
   position: relative; /* Posizione relativa per il posizionamento degli elementi */
+}
+.comments-container {
+  flex: 1;                    /* Occupa lo spazio disponibile */
+  overflow-y: auto;           /* Rende la lista dei commenti scrollabile */
+  margin-bottom: 50px;        /* Lascia spazio per l'input */
 }
 
 .fixed-bottom {
@@ -203,13 +263,35 @@ export default {
   bottom: 0; /* Posiziona il div in basso */
   left: 0; /* Inizia dall'angolo sinistro */
   width: 100%; /* Occupa tutta la larghezza dello schermo */
-  justify-content: flex-start; /* Allinea gli elementi a sinistra */
+  justify-content: space-between;
   padding: 10px; /* Spaziatura interna */
   margin: 0;
+  display: flex;
 }
-.comments-container{
-  width: 100%;
+.comments-container div {
+  padding: 10px;
+  border-bottom: 1px solid #eaeaea;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative; /* Posizionamento relativo per il pulsante */
 }
+
+
+
+/* Stile per il nickname dell'utente in alto */
+.comments-container span:first-child {
+  font-weight: bold;
+  color: #333; /* Colore più scuro per il nome */
+  margin-bottom: 5px;
+}
+
+/* Stile per il testo del commento in basso */
+.comments-container span:nth-child(2) {
+  color: #555;
+  margin-bottom: 10px; /* Spazio sotto il commento */
+}
+
 
 
 </style>

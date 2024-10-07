@@ -55,9 +55,18 @@ export default {
 
       }
     },
-    openPhoto(photo){
-      this.modalPhoto=true;
-      this.selectedPhoto = photo;
+    async openPhoto(photo) {
+      try {
+        const response = await this.$axios.get(`/users/${this.id}/photos/${photo.photo_Id}`, {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('token')}`,
+          }
+        });
+        this.selectedPhoto = response.data;
+        this.modalPhoto = true;
+      } catch (e) {
+        this.errormsg = e.toString();
+      }
     },
     closePhoto(){
       this.modalPhoto=false;
