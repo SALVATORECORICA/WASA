@@ -20,14 +20,15 @@ export default {
     };
   },
 
-  props: ["id", "nickname"],
+
 
   mounted() {
 
   },
 
   created() {
-    this.getProfile(this.id)
+    const id= this.$route.params.id;
+    this.getProfile(id)
   },
 
   methods: {
@@ -57,7 +58,7 @@ export default {
     },
     async openPhoto(photo) {
       try {
-        const response = await this.$axios.get(`/users/${this.id}/photos/${photo.photo_Id}`, {
+        const response = await this.$axios.get(`/users/${this.requester}/photos/${photo.photo_Id}`, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem('token')}`,
           }
@@ -92,7 +93,7 @@ export default {
       </div>
     </div>
 
-    <div v-if="Number(requester) === id" class="button-section">
+    <div v-if="Number(requester) !== id" class="button-section">
       <button @click="toggleFollow" class="button" :style="{ backgroundColor: isFollowing ? 'orange' : 'blue' }">
         {{ isFollowing? "UnFollow" : "Follow" }}
       </button>
@@ -112,7 +113,7 @@ export default {
   </div>
 
   <div v-if="modalPhoto"  class="overlay-background" @click.self="closePhoto">
-    <photo :photos="[selectedPhoto]" :id="id" :nickname="nickname">
+    <photo :photos="[selectedPhoto]"  >
       
     </photo>
 

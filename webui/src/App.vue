@@ -84,11 +84,11 @@ export default {
 							</RouterLink>
 						</li>
 						<li class="nav-item">
-              <RouterLink to="/users/${id}" class="nav-link">
+              <RouterLink :to="`/users/${id}`" class="nav-link">
                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#layout"/></svg>
                 Profile of {{ nickname }}
               </RouterLink>
-						</li>
+            </li>
 						<li class="nav-item">
 							<div class="nav-link" @click.self="openModalSearch">
                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#key"/></svg>

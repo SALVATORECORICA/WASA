@@ -3,13 +3,6 @@ export default {
 
   props: {
     photos: {},
-    id: {   // id of the logged User
-      type: Number,
-      required: true
-    },
-    nickname: {  // nickname of the logged User
-
-    }
   },
 
   data() {
@@ -18,6 +11,7 @@ export default {
       commentModal: false,
       openedPhoto: null,
       newComment: "",
+      requester: Number(localStorage.getItem('token'))
     }
   },
 
@@ -34,7 +28,7 @@ export default {
         p.liked = !p.liked;
         if (p.liked) {
           try {
-            await this.$axios.put("/users/" + this.id + "/photos/" + p.photo_Id + "/likes/" + localStorage.getItem('token'), {
+            await this.$axios.put("/users/" + this.requester + "/photos/" + p.photo_Id + "/likes/" + localStorage.getItem('token'), {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
               },
@@ -46,7 +40,7 @@ export default {
           }
         } else {
           try {
-            await this.$axios.delete("/users/" + this.id + "/photos/" + p.photo_Id + "/likes/" + localStorage.getItem('token'), {
+            await this.$axios.delete("/users/" + this.requester + "/photos/" + p.photo_Id + "/likes/" + localStorage.getItem('token'), {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
               },
@@ -62,7 +56,7 @@ export default {
     async openComments(photo) {
       // Recupera nuovamente i dati della foto per aggiornare i commenti
       try {
-        const response = await this.$axios.get(`/users/${this.id}/photos/${photo.photo_Id}`, {
+        const response = await this.$axios.get("/users/" + this.requester + "/photos/" + photo.photo_Id, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem('token')}`,
           },
@@ -84,7 +78,7 @@ export default {
     async addComment() {
       try {
         // Invia il commento con una richiesta POST
-        await this.$axios.post(`/users/${this.id}/photos/${this.openedPhoto.photo_Id}/comments`, {
+        await this.$axios.post(`/users/${this.requester}/photos/${this.openedPhoto.photo_Id}/comments`, {
           comment: this.newComment,
         }, {
           headers: {
@@ -104,7 +98,7 @@ export default {
     async deleteComment(comment) {
       try {
         // Invia il commento con una richiesta DELETE
-        await this.$axios.delete(`/users/${this.id}/photos/${this.openedPhoto.photo_Id}/comments/${comment.comment_id}`, {
+        await this.$axios.delete(`/users/${this.requester}/photos/${this.openedPhoto.photo_Id}/comments/${comment.comment_id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
@@ -121,7 +115,7 @@ export default {
 
     async fetchPhoto() {
       try {
-        const response = await this.$axios.get(`/users/${this.id}/photos/${this.openedPhoto.photo_Id}`, {
+        const response = await this.$axios.get(`/users/${this.requester}/photos/${this.openedPhoto.photo_Id}`, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem('token')}`,
           },
@@ -145,8 +139,8 @@ export default {
         <div v-for="comment in openedPhoto.comments" :key="comment.comment_id">
           <span> {{ comment.user.nickname}}</span>
           <span> {{comment.comment}}</span>
-          <button  v-if=" (id === openedPhoto.owner.id) ||
-                           (id === comment.user.id)"
+          <button  v-if=" (requester === openedPhoto.owner.id) ||
+                           (requester === comment.user.id)"
                    class="button-delete"
                    @click="deleteComment(comment)">
                    Delete Comment

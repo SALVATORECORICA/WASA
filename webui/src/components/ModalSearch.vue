@@ -16,6 +16,7 @@ export default{
       this.$emit("closeModalSearch")
     },
   },
+
   watch : {
     async profileSearched(){
       try {
@@ -44,10 +45,14 @@ export default{
     <div class="overlay">
       <input v-model="profileSearched" placeholder="search profile" style="width:100% ">
       <div v-for ="user in result" :key=" user.id" class="label">
-        <span> {{ user.nickname }} </span>
+        <router-link :to="`/users/${user.id}`"
+        @click.prevent="closeModalSearch">
+          <span> {{ user.nickname }} </span>
+        </router-link>
       </div>
     </div>
   </div>
+
 
 </template>
 
