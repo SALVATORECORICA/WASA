@@ -25,24 +25,12 @@ func (rt *_router) putNewBan(w http.ResponseWriter, r *http.Request, ps httprout
 		ctx.Logger.Error("Method is not correct, the method should be POST")
 		return
 	}
-	// Extracting the id of the user
-	idOfUser := extractBearer(r.Header.Get("Authorization"))
-
-	// If the user is not logged in then respond with a 403 http status
-	if idOfUser == "" {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
 
 	// Check of the path id correspond to the beaerer
 	pathId := ps.ByName("id")
-	if pathId != idOfUser {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
 
 	// Convert the id from string to int
-	idUser, err := strconv.Atoi(idOfUser)
+	idUser, err := strconv.Atoi(pathId)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")
@@ -69,6 +57,34 @@ func (rt *_router) putNewBan(w http.ResponseWriter, r *http.Request, ps httprout
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
+	exists, err := rt.db.ExistsFollowing(idUser, banned_idInt)
+	if err != nil {
+		http.Error(w, "Error by searching of the following", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	if exists {
+		err = rt.db.DeleteFollowing(idUser, banned_idInt)
+		if err != nil {
+			http.Error(w, "Error by deleting of the ban", http.StatusBadRequest)
+			ctx.Logger.WithError(err).Error("Database has encountered an error")
+		}
+	}
+
+	exists, err = rt.db.ExistsFollowing(banned_idInt, idUser)
+	if err != nil {
+		http.Error(w, "Error by searching of the following", http.StatusBadRequest)
+		ctx.Logger.WithError(err).Error("Database has encountered an error")
+		return
+	}
+	if exists {
+		err = rt.db.DeleteFollowing(banned_idInt, idUser)
+		if err != nil {
+			http.Error(w, "Error by deleting of the ban", http.StatusBadRequest)
+			ctx.Logger.WithError(err).Error("Database has encountered an error")
+		}
+	}
+
 	// Insert the Ban
 	err = rt.db.PutNewBan(idUser, banned_idInt)
 	if err != nil {

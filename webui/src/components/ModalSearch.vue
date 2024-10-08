@@ -10,10 +10,10 @@ export default{
   props: ["modalSearchOn",],
 
   methods : {
-    closeModalSearch(){
+    closeModalSearch(id){
       this.profileSearched = "";
       this.result=[];
-      this.$emit("closeModalSearch")
+      this.$emit("closeModalSearch", id)
     },
   },
 
@@ -45,10 +45,7 @@ export default{
     <div class="overlay">
       <input v-model="profileSearched" placeholder="search profile" style="width:100% ">
       <div v-for ="user in result" :key=" user.id" class="label">
-        <router-link :to="`/users/${user.id}`"
-        @click.prevent="closeModalSearch">
-          <span> {{ user.nickname }} </span>
-        </router-link>
+          <span @click="closeModalSearch(user.id)"> {{ user.nickname }} </span>
       </div>
     </div>
   </div>

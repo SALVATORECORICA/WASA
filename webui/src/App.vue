@@ -52,9 +52,10 @@ export default {
       document.body.classList.add('modal-open');
 
     },
-    closeModalSearch(){
+    closeModalSearch(id){
       this.modalSearchOn=false;
       document.body.classList.remove('modal-open'); // Rimuove la classe dal body
+      this.$router.replace(`/users/${id}`);
     },
 
   },

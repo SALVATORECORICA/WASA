@@ -86,7 +86,7 @@ func (rt *_router) getPhoto(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 	// obtain the comments
-	comments, err := rt.db.CommentsPhoto(photoId)
+	comments, err := rt.db.CommentsPhoto(photoId, idUser)
 	if err != nil {
 		http.Error(w, "Error by obtaining the comments of the Photo", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error: by obtaining the comments of the Photo")

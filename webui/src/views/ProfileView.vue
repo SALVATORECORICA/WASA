@@ -14,21 +14,17 @@ export default {
       nFollowing: 0,
       isFollowing: false,
       existsBan: false,
-      requester: 0,
+      requester: localStorage.getItem('token'),
       modalPhoto: false,
-      selectedPhoto: [],
+      selectedPhoto: {},
+      id: this.$route.params.id,
     };
   },
 
 
-
-  mounted() {
-
-  },
-
   created() {
-    const id= this.$route.params.id;
-    this.getProfile(id)
+
+    this.getProfile(this.id)
   },
 
   methods: {
@@ -48,8 +44,11 @@ export default {
         this.nFollowers = response.data.nFollowers;
         this.nFollowing = response.data.nFollowing;
         this.isFollowing = response.data.isFollowing;
-        this.existsBan = response.data.existsBan
-        this.requester = localStorage.getItem('token')
+        this.existsBan = response.data.existsBan;
+        this.requester = localStorage.getItem('token');
+        this.errormsg = null;
+        this.modalPhoto = false;
+        this.selectedPhoto = [];
 
       } catch (e) {
         this.errormsg = e.toString();
@@ -71,10 +70,61 @@ export default {
     },
     closePhoto(){
       this.modalPhoto=false;
-      this.selectedPhoto= [];
-    }
+      this.selectedPhoto= {};
+    },
+    async toggleFollow() {
+      if (this.isFollowing) {
+        try {
+          await this.$axios.delete("/users/" + this.requester + "/followers/" + this.id, {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem('token')}`
+            },
+          });
+          await this.getProfile(this.id)
+        } catch (e) {
+          console.log(e.toString());
+        }
+      } else {
+        try {
+          await this.$axios.put("/users/" + this.requester + "/followers/" + this.id, {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem('token')}`
+            },
+          });
+          await this.getProfile(this.id)
+        } catch (e) {
+          console.log(e.toString());
+        }
+      }
+    },
+    async toggleBan(){
+      if (this.existsBan) {
+        try {
+          await this.$axios.delete("/users/" + this.requester + "/banned_users/" + this.id, {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem('token')}`
+            },
+          });
+          await this.getProfile(this.id)
+        } catch (e) {
+          console.log(e.toString());
+        }
+      } else {
+        try {
+          await this.$axios.put("/users/" + this.requester + "/banned_users/" + this.id, {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem('token')}`
+            },
+          });
+          await this.getProfile(this.id)
+        } catch (e) {
+          console.log(e.toString());
+        }
+      }
+    },
   },
 };
+
 </script>
 
 <template>
@@ -82,39 +132,40 @@ export default {
   <div v-if="!modalPhoto">
 
 
-  <div>
-    <div class="profile-bar">
-      <div class="left-section">
-        <span>{{ nicknameProfileOwner }}</span>
+    <div>
+      <div class="profile-bar">
+        <div class="left-section">
+          <span>{{ nicknameProfileOwner }}</span>
+        </div>
+        <div class="right-section">
+          <p>Followers: {{ nFollowers }}</p>
+          <p style="margin-top: 8px;">Following: {{ nFollowing }}</p>
+        </div>
       </div>
-      <div class="right-section">
-        <p>Followers: {{ nFollowers }}</p>
-        <p style="margin-top: 8px;">Following: {{ nFollowing }}</p>
+
+      <div v-if="Number(requester) !== Number(id)" class="button-section">
+        <button v-if= "!existsBan " @click="toggleFollow" class="button" :style="{ backgroundColor: isFollowing ? 'orange' : 'blue' }">
+          {{ isFollowing? "UnFollow" : "Follow" }}
+        </button>
+        <button @click="toggleBan" class="button" :style="{ backgroundColor: existsBan ? 'green' : 'red'}">
+          {{ existsBan? "Unblock" : "Block" }}
+        </button>
       </div>
     </div>
 
-    <div v-if="Number(requester) !== id" class="button-section">
-      <button @click="toggleFollow" class="button" :style="{ backgroundColor: isFollowing ? 'orange' : 'blue' }">
-        {{ isFollowing? "UnFollow" : "Follow" }}
-      </button>
-      <button @click="toggleBlock" class="button" :style="{ backgroundColor: existsBan ? 'green' : 'red'}">
-        {{ existsBan? "Unblock" : "Block" }}
-      </button>
-    </div>
-  </div>
 
-
-  <div class="flex-container">
-    <div v-for="photo in photos" :key="photo.photo_Id"  class="mini-card" @click="openPhoto(photo)">
-      <img :src="'data:image/png;base64, ' + photo.image" />
+    <div class="flex-container">
+      <div v-for="photo in photos" :key="photo.photo_Id"  class="mini-card" @click="openPhoto(photo)">
+        <img :src="'data:image/png;base64, ' + photo.image" />
+      </div>
     </div>
-  </div>
 
   </div>
 
   <div v-if="modalPhoto"  class="overlay-background" @click.self="closePhoto">
-    <photo :photos="[selectedPhoto]"  >
-      
+    <photo :photos="[selectedPhoto]"
+           @photoDeleted="getProfile(id)"
+    >
     </photo>
 
   </div>

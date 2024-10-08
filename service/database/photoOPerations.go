@@ -156,7 +156,7 @@ func (db *appdbimpl) GetPhotoComplete(photoId int, idUser int) (structures.Photo
 		return photo, err
 	}
 	// obtain the comments
-	comments, err := db.CommentsPhoto(photoId)
+	comments, err := db.CommentsPhoto(photoId, idUser)
 	if err != nil {
 		return photo, err
 	}

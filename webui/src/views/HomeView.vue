@@ -123,6 +123,10 @@ export default {
             <button  v-if="isPhotoSelected" @click="uploadPhoto" class="upload">Upload selected Photo</button>
           </div>
           <div class="btn-group me-2">
+            <input placeholder="Insert your new Nickname">
+            <button  type="button" class="btn btn-sm btn-outline-primary">
+              Change Name
+            </button>
             <button @click="logout" type="button" class="btn btn-sm btn-outline-primary">
               Logout
             </button>

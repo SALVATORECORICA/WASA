@@ -46,7 +46,7 @@ func (db *appdbimpl) DeleteComment(idComment int) error {
 
 // Obtain all comments of a Photo
 
-func (db *appdbimpl) CommentsPhoto(photoId int) ([]structures.Comment, error) {
+func (db *appdbimpl) CommentsPhoto(photoId int, userId int) ([]structures.Comment, error) {
 	var comments []structures.Comment
 	rows, err := db.c.Query("SELECT id_comment, id_user, comment FROM comments WHERE id_photo=?", photoId)
 	if err != nil {
@@ -63,8 +63,14 @@ func (db *appdbimpl) CommentsPhoto(photoId int) ([]structures.Comment, error) {
 		if err != nil {
 			return comments, err
 		}
-		comments = append(comments, comment)
 
+		exists, err := db.ExistsBan(comment.User.Id, userId)
+		if err != nil {
+			return comments, err
+		}
+		if !exists {
+			comments = append(comments, comment)
+		}
 	}
 	// Check for errors from iterating over rows.
 	if err := rows.Err(); err != nil {

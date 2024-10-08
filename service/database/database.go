@@ -69,7 +69,7 @@ type AppDatabase interface {
 	ExistsLike(idUser int, photoId int) (bool, error)
 	DeleteLike(idUser int, photoId int) error
 	GetLikes(photoId int) ([]structures.User, int, error)
-	CommentsPhoto(photoId int) ([]structures.Comment, error)
+	CommentsPhoto(photoId int, idUser int) ([]structures.Comment, error)
 	GetPhotoDate(photoId int) (time.Time, error)
 	GetPhotoPath(photoId int) (string, error)
 	DeletePhoto(photoId int) error

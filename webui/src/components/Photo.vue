@@ -127,7 +127,20 @@ export default {
         console.error(e); // Gestione dell'errore nella richiesta GET
       }
     },
-  }
+    async deletePhoto(photo_Id) {
+      try {
+        await this.$axios.delete("/users/" + this.requester + "/photos/" + photo_Id, {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+          },
+        });
+        this.$emit("photoDeleted");
+      } catch (e) {
+        console.log(e.toString());
+      }
+    }
+  },
+
 }
 
 </script>
@@ -167,6 +180,11 @@ export default {
                 :class="photo.liked ? 'text-primary': '' "    >
         </button>
         <span class="like-text"> Likes:  {{ photo.nLikes }} </span>
+        <span  v-if=" (requester === photo.owner.id) "
+               class="like-text delete-photo"
+               @click="deletePhoto(photo.photo_Id)">
+          Delete
+        </span>
       </div>
     </div>
   </div>
@@ -284,6 +302,17 @@ export default {
 .comments-container span:nth-child(2) {
   color: #555;
   margin-bottom: 10px; /* Spazio sotto il commento */
+}
+
+.delete-photo {
+  color: deeppink;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.delete-photo:hover {
+  transform: translateY(-3px); /* Alza leggermente il testo */
+  color: red; /* Cambia il colore al passaggio del mouse */
 }
 
 
