@@ -139,11 +139,6 @@ export default {
         <span class="navbar-text h2">Welcome {{ localnickname }} </span>
         <div class="ms-auto">
           <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
-              Refresh
-            </button>
-          </div>
-          <div class="btn-group me-2">
             <!--Uso di key per deselezionare il file, aggiornando la key il framework forza un nuovo rendering -->
             <input type="file" ref="fileInput" class="btn btn-sm btn-outline-secondary"  @input="selectPhoto" accept=".jpg, .png" :key="inputKey">
             <button  @click="deselectPhoto">Deselect Photo</button>

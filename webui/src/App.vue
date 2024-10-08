@@ -52,10 +52,10 @@ export default {
       document.body.classList.add('modal-open');
 
     },
-    closeModalSearch(id){
+    closeModalSearch(){
       this.modalSearchOn=false;
       document.body.classList.remove('modal-open'); // Rimuove la classe dal body
-      this.$router.replace(`/users/${id}`);
+
     },
     changeName(newName){
       this.nickname = newName
