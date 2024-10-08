@@ -57,6 +57,10 @@ export default {
       document.body.classList.remove('modal-open'); // Rimuove la classe dal body
       this.$router.replace(`/users/${id}`);
     },
+    changeName(newName){
+      this.nickname = newName
+    }
+
 
   },
 }
@@ -108,6 +112,7 @@ export default {
     <RouterView
         @endLogin = "endLogin"
         @logout="logout"
+        @changeName="changeName"
         :nickname = "nickname"
         :id ="id"
 

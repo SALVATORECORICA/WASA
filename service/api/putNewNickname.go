@@ -21,26 +21,11 @@ func (rt *_router) putNewNickname(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	// Extracting the id of the user
-	idOfUser := extractBearer(r.Header.Get("Authorization"))
-
-	// If the user is not logged in then respond with a 403 http status
-	if idOfUser == "" {
-		w.WriteHeader(http.StatusForbidden)
-		ctx.Logger.Error("The user is not logged")
-		return
-	}
-
 	// Confirm the identity of the user
 	pathId := ps.ByName("id")
-	if pathId != idOfUser {
-		w.WriteHeader(http.StatusForbidden)
-		ctx.Logger.Error("The user is not allowed to change the nickname of other users")
-		return
-	}
 
 	// Convert the string to int
-	idUser, err := strconv.Atoi(idOfUser)
+	idUser, err := strconv.Atoi(pathId)
 	if err != nil {
 		http.Error(w, "Error by converting the id of the User", http.StatusBadRequest)
 		ctx.Logger.WithError(err).Error("Database has encountered an error")

@@ -12,6 +12,8 @@ export default {
       photo: null,
       inputKey: Date.now(),
       photos: [],
+      changedName: "",
+      localnickname : this.nickname
     }
   },
 
@@ -28,7 +30,7 @@ export default {
       this.loading = true;
       this.errormsg = null;
       try {
-        let response = await this.$axios.get("/");
+        await this.$axios.get("/");
       } catch (e) {
         this.errormsg = e.toString();
       }
@@ -101,6 +103,31 @@ export default {
       this.$emit("logout")
 
     },
+    async changeName() {
+      if (this.changedName.length >= 3 && this.changedName.length <= 16) {
+        try {
+          // Effettua la richiesta PUT
+          console.log(this.id)
+          await this.$axios.put("/users/" + this.id, {
+            "nickname": this.changedName
+          }, {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+
+          // Aggiorna il nickname e resetta il campo
+          this.localnickname = this.changedName;
+          this.changedName = "";
+          this.$emit("changeName", this.localnickname);
+        } catch (e) {
+          console.log("Errore durante il cambio del nickname:", e);  // gestisci eventuali errori
+        }
+      } else {
+        console.log("Il nickname deve essere lungo tra 3 e 16 caratteri");
+      }
+    }
+
   }
 }
 </script>
@@ -109,7 +136,7 @@ export default {
 	<div class="flex-grow-1 ">
     <nav class="navbar navbar-expand navbar-light bg-light" style="background-color: transparent; border: none; box-shadow: none;">
       <div class="container-fluid ">
-        <span class="navbar-text h2">Welcome {{ this.nickname }} </span>
+        <span class="navbar-text h2">Welcome {{ localnickname }} </span>
         <div class="ms-auto">
           <div class="btn-group me-2">
             <button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
@@ -123,8 +150,8 @@ export default {
             <button  v-if="isPhotoSelected" @click="uploadPhoto" class="upload">Upload selected Photo</button>
           </div>
           <div class="btn-group me-2">
-            <input placeholder="Insert your new Nickname">
-            <button  type="button" class="btn btn-sm btn-outline-primary">
+            <input v-model="changedName" placeholder="Insert your new Nickname">
+            <button  @click="changeName" type="button" class="btn btn-sm btn-outline-primary">
               Change Name
             </button>
             <button @click="logout" type="button" class="btn btn-sm btn-outline-primary">
