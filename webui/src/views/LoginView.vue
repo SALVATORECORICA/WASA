@@ -10,18 +10,15 @@ export default {
       nickname : ""
     }
   },
-  mounted() {
-    if (localStorage.getItem('token')){
-      this.$router.replace("/home")
-    }
-    console.log("LoginView mounted!");
-  },
+
   methods:{
     async login(){
       this.errormsg ="";
       try{
         let response = await this.$axios.post("/session", {nickname: this.nickname.trim()});
         localStorage.setItem("token", response.data.id)
+        localStorage.setItem("nickname", this.nickname)
+        localStorage.setItem('notFirstStart', true)
         this.$router.replace("/home")
         this.$emit("endLogin",response.data.id, this.nickname)
       }

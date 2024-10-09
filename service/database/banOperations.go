@@ -18,9 +18,11 @@ func (db *appdbimpl) CheckBan(u []structures.User, idUser int) ([]structures.Use
 	}
 	defer rows.Close()
 	for rows.Next() {
-		if err := rows.Scan(&banner); err != nil {
+		var bannerId int
+		if err := rows.Scan(&bannerId); err != nil {
 			return nil, err
 		}
+		banner = append(banner, bannerId)
 	}
 	// Check for errors from iterating over rows.
 	if err := rows.Err(); err != nil {

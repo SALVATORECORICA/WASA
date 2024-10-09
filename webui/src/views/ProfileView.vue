@@ -26,7 +26,12 @@ export default {
 
     this.getProfile(this.id)
   },
-
+  watch: {
+    // Quando l'ID nella route cambia, carica di nuovo i dati
+    '$route.params.id': function(newId) {
+      this.getProfile(Number(newId)); // Carica i dati con il nuovo ID
+    }
+  },
   methods: {
     async getProfile(id) {
       try {

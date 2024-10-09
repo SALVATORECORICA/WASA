@@ -13,11 +13,12 @@ export default {
       inputKey: Date.now(),
       photos: [],
       changedName: "",
-      localnickname : this.nickname
+      localnickname : localStorage.getItem('nickname'),
+      id : Number(localStorage.getItem('token'))
     }
   },
 
-  props: ["nickname", "id"],
+  props: ["nickname",],
 
   mounted() {
     //this.refresh()
@@ -117,7 +118,7 @@ export default {
           });
 
           // Aggiorna il nickname e resetta il campo
-          this.localnickname = this.changedName;
+          localStorage.setItem("nickname", this.changedName)
           this.changedName = "";
           this.$emit("changeName", this.localnickname);
         } catch (e) {

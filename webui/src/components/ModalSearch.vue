@@ -15,6 +15,11 @@ export default{
       this.result=[];
       this.$emit("closeModalSearch", id)
     },
+    closeModalSearch2(){
+      this.profileSearched = "";
+      this.result=[];
+      this.$emit("closeModalSearch2")
+    },
   },
 
   watch : {
@@ -41,11 +46,11 @@ export default{
 
 <template>
 
-  <div  v-if="modalSearchOn" class="overlay-background" @click.self="closeModalSearch">
+  <div  v-if="modalSearchOn" class="overlay-background" @click.self="closeModalSearch2">
     <div class="overlay">
       <input v-model="profileSearched" placeholder="search profile" style="width:100% ">
       <div v-for ="user in result" :key=" user.id" class="label">
-          <span @click="closeModalSearch(user.id)"> {{ user.nickname }} </span>
+          <span @click.self="closeModalSearch(Number(user.id))"> {{ user.nickname }} </span>
       </div>
     </div>
   </div>
